@@ -1,0 +1,36 @@
+SystemID NES
+0012	b	u	0	RAM	RNG 1
+0013	b	u	0	RAM	RNG 2
+6098	b	u	0	System Bus	Taloon HP
+00C4	b	h	0	System Bus	Treasure Drop
+727E	b	u	0	System Bus	E1 HP
+128C	b	u	0	WRAM	E2 HP
+729A	b	u	0	System Bus	E3 HP
+0518	b	u	0	RAM	Day Night
+006F	w	u	0	RAM	Armor Shop Offer
+7361	b	u	0	System Bus	Dmg
+00FD	b	u	0	System Bus	Next Stat
+0096	b	u	0	RAM	Turn?
+735B	b	u	0	System Bus	Turn Number
+6E0F	b	u	0	System Bus	Who's Turn
+72E7	b	u	0	System Bus	Crit stuff
+0000	b	u	0	RAM	
+00FD	b	u	0	RAM	Stats
+008B	b	u	0	System Bus	In Battle
+7328	b	u	0	System Bus	isOnGuard
+6E45	b	h	0	System Bus	EG1 Type
+6E46	b	h	0	System Bus	EG2 Type
+6E49	b	h	0	System Bus	EG1 Count
+6E4A	b	h	0	System Bus	EG2 Count
+00AA	b	h	0	WRAM	Inv Slot 1
+00AB	b	h	0	WRAM	Inv Slot 2
+00AC	b	h	0	WRAM	Inv Slot 3
+00AC	b	h	0	WRAM	Inv Slot 4
+00AE	b	h	0	WRAM	Inv Slot 5
+00AF	b	h	0	WRAM	Inv Slot 6
+00B0	b	h	0	WRAM	Inv Slot 7
+00B1	b	h	0	WRAM	Inv Slot 8
+0157	w	u	0	WRAM	Gold
+00E3	b	u	0	System Bus	
+609D	b	u	0	System Bus	Taloon Str
+

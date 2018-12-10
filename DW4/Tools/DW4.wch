@@ -1,0 +1,17 @@
+SystemID NES
+0012	b	u	0	RAM	RNG 1
+0013	b	u	0	RAM	RNG 2
+00B6	b	u	0	WRAM	P1 HP
+00727E	b	u	0	System Bus	E1 HP
+128C	b	u	0	WRAM	E2 HP
+00729A	b	u	0	System Bus	E3 HP
+007361	b	u	0	System Bus	Dmg
+0060B6	b	u	0	System Bus	Ragnar HP
+00735F	b	u	0	System Bus	Dmg
+0000FD	b	u	0	System Bus	Next Stat
+00C1	b	u	0	WRAM	Ragnar Max HP
+008B	b	u	0	RAM	Encounter Flag
+006E45	b	u	0	System Bus	eg1Type
+006E46	b	u	0	System Bus	eg2Type
+008B	b	u	0	RAM	Battleflag
+

@@ -1,0 +1,15 @@
+EmuHawk.exe
+EmuHawk.exe.config
+config.ini
+defctrl.json
+
+**/gamedb/**
+**/dll/**
+**/Movies/backup/**
+**/State/**
+**/SaveRAM/**
+**/Palettes/**
+**/shaders/**
+
+*.nes
+
