@@ -1,8 +1,9 @@
 local c = require("DW4-ManipCore")
-
 c.InitSession()
 c.reportFrequency = 100
-c.maxDelay = 5
+c.maxDelay = 1
+
+fromPreviousLv = true
 best = 999999
 
 function _readHp()
@@ -25,8 +26,27 @@ function _readLv()
 	return c.Read(0x60BA)
 end
 
+function _nextInputFrame()
+	c.Save(600)
+
+	while emu.islagged() == true do
+		c.Save(600)
+		c.WaitFor(1)
+	end
+
+	c.Load(600)
+end
+
 while not c.done do
 	c.Load(0)
+
+	if (fromPreviousLv) then
+		c.RndAorB()
+		c.WaitFor(220)
+		_nextInputFrame()
+	end
+
+	local delay = 0
 	oag = _readAg()
 	olu = _readLuck()
 	ohp = _readHp()
@@ -59,14 +79,18 @@ while not c.done do
 		hpInc = hp - ohp;
 		if (hpInc < best) then
 			best = hpInc
-			c.LogProgress(' Found HP: ' .. hpInc, true)
+			c.LogProgress(' Found HP: ' .. hpInc .. ' delay: ' .. delay, true)
 			c.Save(9)
 			c.Save(99)
+			if (delay < c.maxDelay) then
+				c.maxDelay = delay
+			end
 		end
 
-	end
+	end 
 
 	c.Increment()
+
 end
 
 c.Finish()

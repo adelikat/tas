@@ -19,19 +19,18 @@ best = 999999
 
 while not c.done do
 	c.Load(0)
+
 	c.RndAtLeastOne()
-	c.RandomFor(1)
+	c.WaitFor(10)
+	c.PushFor('A', 300)
 	_nextInputFrame()
 	count = emu.framecount()
 	if count < best then
-		best = count
+		c.Debug('New best: ' .. count, true)
 		c.Save(9)
-		c.LogProgress('New Best: ' .. count, true)
+		best = count
 	end
 
-	c.WaitFor(2)
-
-	c.Increment()
 end
 
 c.Finish()
