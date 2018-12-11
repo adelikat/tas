@@ -1,12 +1,12 @@
 -----------------
 -- Settings
 -----------------
-_wait3 = 0
-_wait2 = 0 --47
-_wait1 = 27 --28
+_wait3 = 50
+_wait2 = 15 --47
+_wait1 = 41 --28
 
-_odds = 128
-_hpAddr = 0x60B6
+_odds = 64
+_hpAddr = 0x60D4
 _attack = 76
 _miss = 98
 
@@ -21,6 +21,10 @@ function _readBattle()
 	return c.Read(c.Addr.BattleFlag)
 end
 
+function _readHp()
+	return c.Read(_hpAddr)
+end
+
 function _step(wait)
 	if (wait > 0) then
 		delay = delay + c.DelayUpTo(c.maxDelay - delay)
@@ -32,37 +36,33 @@ end
 
 while not c.done do
 	c.Load(0)
+	oHp = _readHp()
 
-	originalHP = c.Read(_hpAddr)
-	delay = 0
-	wait = 23
+	_step(_wait3)
+	_step(_wait2)
+	_step(_wait1)
 
-	delay = delay + c.DelayUpTo(c.maxDelay - delay)
-		c.RndAtLeastOne()
-		c.RandomFor(wait - 2)
-		c.WaitFor(2)
-
-	delay = delay + c.DelayUpTo(c.maxDelay - delay)
+	
 	battle = _readBattle()
 	c.RndAtLeastOne()
 	c.RandomFor(2)
 	c.WaitFor(50) -- Ensure damage is calculated and in memory
 	postBattle = _readBattle()
 	--------------------------------------
-	newHP = c.Read(_hpAddr)
-	if newHP == originalHP
+	newHP = _readHp()
+	if newHP == oHp
 		and battle == _attack
 		and postBattle == _miss
 	 then
 	 	found = true
-	 	c.LogProgress('Miss! ' .. ' newHP: ' .. newHP, true)
+	 	c.LogProgress('Miss! ' .. ' delay: ' .. delay, true)
 	 	c.maxDelay = delay - 1
 	 	c.Save(9)
 	else
 		found = false
 	end
 
-	dmg = originalHP - newHP
+	dmg = oHp - newHP
 	c.Increment('dmg: ' .. dmg .. ' newHP: ' .. newHP .. ' action: ' .. battle)
 
 	if (found == true and delay == 0) then
