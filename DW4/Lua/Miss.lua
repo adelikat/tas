@@ -1,20 +1,18 @@
------------------
--- Settings
------------------
-_wait3 = 50
-_wait2 = 15 --47
-_wait1 = 41 --28
-
-_odds = 64
-_hpAddr = 0x60D4
-_attack = 76
-_miss = 98
-
--------------------------
 local c = require("DW4-ManipCore")
 c.InitSession()
 c.reportFrequency = 100
 c.maxDelay = _odds
+
+_wait3 = 51
+_wait2 = 15 --47
+_wait1 = 41 --28
+
+_odds = 64
+_hpAddr = c.Addr.CristoHP
+_attack = 76
+_miss = 98
+
+-------------------------
 local delay = 0
 
 function _readBattle()
@@ -36,6 +34,7 @@ end
 
 while not c.done do
 	c.Load(0)
+	delay = 0
 	oHp = _readHp()
 
 	_step(_wait3)
@@ -63,7 +62,7 @@ while not c.done do
 	end
 
 	dmg = oHp - newHP
-	c.Increment('dmg: ' .. dmg .. ' newHP: ' .. newHP .. ' action: ' .. battle)
+	c.Increment('delay: ' .. delay .. ' dmg: ' .. dmg .. ' newHP: ' .. newHP .. ' action: ' .. battle)
 
 	if (found == true and delay == 0) then
 		c.done = true

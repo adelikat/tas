@@ -1,15 +1,13 @@
-_odds = 17 --1 in x
+_odds = 0 --1 in x
 _minDmg = 10
 _idealDmg = 10 --Max critical
 _wait3 = 0
---alena rnd 1: _wait2 = 62
---alena rnd 1: _wait1 = 33
-_wait2 = 51
+_wait2 = 50
 _wait1 = 31
 
 local c = require("DW4-ManipCore")
 c.InitSession()
-c.reportFrequency = 100
+c.reportFrequency = 10
 c.maxDelay = _odds
 local bestDmg = 0
 local delay = 0
@@ -48,15 +46,15 @@ while not c.done do
 	dmg = _readDmg()
 	battle = _readBattle()
 
-	if dmg >= _minDmg and dmb ~= 13
-		--and battle == 76
+	if dmg >= _minDmg
+		and battle ~= 76 and battle ~= 102
 		then
 		found = true
 		c.LogProgress('Critical! dmg: ' .. dmg .. ' delay: ' .. delay, true)
 		c.maxDelay = delay - 1
 		c.Save(9)
 		bestDmg = dmg
-	elseif dmg  > bestDmg and battle == 76 then
+	elseif _minDmg < _idealDmg and dmg  > bestDmg then
 		bestDmg = dmg
 		c.Save(9)
 		c.LogProgress('New Best for this delay: ' .. dmg .. ' delay: ' .. delay, true)

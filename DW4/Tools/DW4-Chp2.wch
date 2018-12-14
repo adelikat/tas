@@ -27,7 +27,6 @@ SystemID NES
 00734E	b	u	0	System Bus	Battle Order 7
 00734F	b	u	0	System Bus	Battle Order 8
 0072E7	b	u	0	System Bus	Crit stuff
-0000	b	u	0	RAM	
 00FD	b	u	0	RAM	Stats
 00D9	b	u	0	WRAM	Alena Str
 00DA	b	u	0	WRAM	Alena Agility
@@ -35,7 +34,6 @@ SystemID NES
 00DC	b	u	0	WRAM	Alena Int
 00DD	b	u	0	WRAM	Alena Luck
 00DE	w	u	1	WRAM	Alena HP
-00008B	b	u	0	System Bus	In Battle
 0060E9	b	u	0	System Bus	 Alena Inv Slot
 007328	b	u	0	System Bus	isOnGuard
 00C4	b	u	0	RAM	treasure drop
@@ -43,3 +41,4 @@ SystemID NES
 008B	b	u	0	RAM	Battleflag
 02ED	b	u	0	WRAM	Step counter
 03CF	b	u	0	RAM	Menu pos
+

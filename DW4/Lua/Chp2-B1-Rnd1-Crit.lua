@@ -1,14 +1,15 @@
 local c = require("DW4-ManipCore")
 
 c.InitSession()
-c.reportFrequency = 1000
-c.maxDelay = 0
+c.reportFrequency = 5000
+c.maxDelay = 5
 
 chameleonTurn = 5
 attacks = 76
 alenaTargeted = 0
 cristoTargeted = 1
 breyTargeted = 2
+delay = 0
 
 function _readMenu()
 	return c.Read(c.Addr.MenuPos)
@@ -34,6 +35,63 @@ function _readRabBTarget()
 	return c.Read(0x7306)
 end
 
+function _step(wait)
+	if (wait > 0) then
+		delay = delay + c.DelayUpTo(c.maxDelay - delay)
+		c.RndAtLeastOne()
+		c.RandomFor(wait - 2)
+		c.WaitFor(2)
+	end
+end
+
+function _getCritical()
+	c.Save(20)
+	local cap = 6000
+	local cur = 0
+	local found = false
+	local wait2 = 62
+	local wait1 = 33
+	local minDmg = 12
+	local asleep = false
+	while cur < cap do
+		delay = 0
+		c.Load(20)
+		_step(wait2)
+		_step(wait1)
+			if _readBattle() == 102 then
+				c.Debug('Cristo asleep')
+				asleep = true
+			end
+		delay = delay + c.DelayUpTo(c.maxDelay - delay)
+		c.RndAtLeastOne()
+		c.Save(21)
+		battle = _readBattle()
+		c.WaitFor(35)
+		dmg = _readDmg()
+		if dmg >= minDmg and asleep == false and battle ~= 102 then --102 can happen if cristo falls asleep
+			found = true
+			c.LogProgress('Critical! delay: ' .. delay, true)
+			c.Load(21)
+			c.Save(700 + delay)
+			c.maxDelay = delay - 1
+		elseif dmg >= 10 and battle ~= 102 then
+			c.LogProgress('Low Critical: ' .. dmg)
+		end
+		if delay == 0 then
+			cur = cap
+		else
+			cur = cur + 1
+			c.Increment('delay: ' .. delay .. ' dmg: ' .. dmg)
+		end
+	end
+
+	if found == false then
+		return 999
+	else
+		return c.maxDelay
+	end
+end
+
 
 while not c.done do
 	c.Load(0)
@@ -46,6 +104,7 @@ while not c.done do
 			bail = true
 		end
 
+	orderManipulated= false
 	if bail == false then
 		c.WaitFor(14)
 		c.RndAtLeastOne()
@@ -118,19 +177,25 @@ while not c.done do
 						and bo3
 						then
 						c.Save(3)
-						c.Done()
+						orderManipulated = true
 					end
 				end
 			end
-			
 		end
-		
 	end
 
-	
+	if orderManipulated then
+		c.LogProgress('Order manipulated, attempting Alena critical', true)
+		result = _getCritical()
+		if result == -1 then
+			c.Done()
+		else
+			c.Log('Failed to find optimal critical, continuing', true)
+		end
+	end
+
 	c.Increment()
 end
 
 c.Finish()
-
 
