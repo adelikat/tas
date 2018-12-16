@@ -1,45 +1,21 @@
 SystemID NES
 0012	b	u	0	RAM	RNG 1
 0013	b	u	0	RAM	RNG 2
-00B6	b	u	0	WRAM	P1 HP
 00727E	b	u	0	System Bus	E1 HP
-128C	b	u	0	WRAM	E2 HP
-00729A	b	u	0	System Bus	E3 HP
-0060D4	b	h	0	System Bus	Alena HP
-006020	b	h	0	System Bus	Cristo HP
-00607A	b	h	0	System Bus	Brey HP
 0518	b	u	0	RAM	Day Night
 007361	b	u	0	System Bus	Dmg
-00735F	b	u	0	System Bus	Dmg
 0000FD	b	u	0	System Bus	Next Stat
 0096	b	u	0	RAM	Turn
-00735B	b	u	0	System Bus	Turn Number
-006E0F	b	u	0	System Bus	Who's Turn
-007304	b	u	0	System Bus	RHound A Target
-007305	b	u	0	System Bus	Chameleon Targeting
-007306	b	u	0	System Bus	RHound B Target
-007348	b	u	0	System Bus	Battle Order 1
-007349	b	u	0	System Bus	Battle Order 2
-00734A	b	u	0	System Bus	Battle Order 3
-00734B	b	u	0	System Bus	Battle Order 4
-00734C	b	u	0	System Bus	Battle Order 5
-00734D	b	u	0	System Bus	Battle Order 6
-00734E	b	u	0	System Bus	Battle Order 7
-00734F	b	u	0	System Bus	Battle Order 8
-0072E7	b	u	0	System Bus	Crit stuff
-00FD	b	u	0	RAM	Stats
-00D9	b	u	0	WRAM	Alena Str
-00DA	b	u	0	WRAM	Alena Agility
-00DB	b	u	0	WRAM	Alena Vit
-00DC	b	u	0	WRAM	Alena Int
-00DD	b	u	0	WRAM	Alena Luck
-00DE	w	u	1	WRAM	Alena HP
+0060D9	b	u	0	System Bus	Alena Str
+0060DA	b	u	0	System Bus	Alena Agility
+0060DB	b	u	0	System Bus	Alena Vit
+0060DC	b	u	0	System Bus	Alena Int
+0060DD	b	u	0	System Bus	Alena Luck
+0060DE	w	u	1	System Bus	Alena HP
 0060E9	b	u	0	System Bus	 Alena Inv Slot
-007328	b	u	0	System Bus	isOnGuard
 00C4	b	u	0	RAM	treasure drop
 00D8	b	u	0	WRAM	Alena LV
 008B	b	u	0	RAM	Battleflag
 02ED	b	u	0	WRAM	Step counter
 03CF	b	u	0	RAM	Menu pos
-1301	b	u	0	WRAM	CristoTargeting
 
