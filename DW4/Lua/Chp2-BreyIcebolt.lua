@@ -4,6 +4,7 @@ c.reportFrequency = 100
 c.maxDelay = 0
 _minDmg = 16
 delay = 0
+
 _wait1 = 53
 
 function _readDmg()

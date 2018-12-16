@@ -1,0 +1,33 @@
+SystemID NES
+0012	b	u	0	RAM	RNG 1
+0013	b	u	0	RAM	RNG 2
+00727E	b	u	0	System Bus	E1 HP
+00728C	b	u	0	System Bus	E2 HP
+00729A	b	u	0	System Bus	E3 HP
+007300	b	u	0	System Bus	Alena Target
+007301	b	u	0	System Bus	Crist Targeting
+007302	b	u	0	System Bus	Brey Target
+007304	b	u	0	System Bus	Rab A Target
+007305	b	u	0	System Bus	Cham Target
+007306	b	u	0	System Bus	Rab B Target
+0060D4	b	u	0	System Bus	Alena HP
+006020	b	u	0	System Bus	Cristo HP
+00607A	b	u	0	System Bus	Brey HP
+007361	b	u	0	System Bus	Dmg
+0096	b	u	0	RAM	Turn
+00735B	b	u	0	System Bus	Turn Number
+006E0F	b	u	0	System Bus	Who's Turn
+007348	b	u	0	System Bus	BOr 1
+007349	b	u	0	System Bus	BOr 2
+00734A	b	u	0	System Bus	BOr 3
+00734B	b	u	0	System Bus	BOr 4
+00734C	b	u	0	System Bus	BOr 5
+00734D	b	u	0	System Bus	BOr 6
+00734E	b	u	0	System Bus	BOr 7
+00734F	b	u	0	System Bus	BOr 8
+0072E7	b	u	0	System Bus	Crit stuff
+007328	b	u	0	System Bus	isOnGuard
+008B	b	u	0	RAM	Battleflag
+03CE	b	u	0	RAM	Menu X
+03CF	b	u	0	RAM	Menu Y
+

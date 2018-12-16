@@ -194,11 +194,12 @@ function _toHex(val)
 end
 
 function _save(slot)
-	if (tonumber(slot) == nil) then
-		error("slot must be a number")
+	if slot == nil then
+		error("slot can not be nil")
 	end
 
-	if slot >= 0 and slot <= 9 then
+	slotNum = tonumber(slot)
+	if slotNum ~= nill and slotNum >= 0 and slotNum <= 9 then
 		savestate.saveslot(slot)
 	else
 		savestate.save('../NES/State/LuaSave' .. slot .. '.State')
@@ -206,11 +207,13 @@ function _save(slot)
 end
 
 function _load(slot)
-	if (tonumber(slot) == nil) then
+	if slot == nil then
 		error("slot must be a number")
 	end
 
-	if slot >= 0 and slot <= 9 then
+	slotNum = tonumber(slot)
+
+	if slotNum ~= nil and slotNum >= 0 and slotNum <= 9 then
 		savestate.loadslot(tonumber(slot))
 	else
 		savestate.load('../NES/State/LuaSave' .. slot .. '.State')
@@ -825,7 +828,8 @@ M.Addr["CaveX"] = 0x0044
 M.Addr["CaveY"] = 0x0045
 M.Addr["BattleFlag"] = 0x008B
 M.Addr["Turn"] = 0x0096
-M.Addr["MenuPos"] = 0x03CF
+M.Addr["MenuPosX"] = 0x03CE
+M.Addr["MenuPosY"] = 0x03CF
 M.Addr["CristoHP"] = 0x6020
 M.Addr["BreyHP"] = 0x607A
 M.Addr["RagnarLv"] = 0x60BA

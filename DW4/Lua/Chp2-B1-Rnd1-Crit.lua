@@ -12,7 +12,7 @@ breyTargeted = 2
 delay = 0
 
 function _readMenu()
-	return c.Read(c.Addr.MenuPos)
+	return c.Read(c.Addr.MenuPosY)
 end
 
 function _readBattle()
@@ -118,6 +118,7 @@ while not c.done do
 		c.PushA()
 		c.RandomFor(1)
 		c.WaitFor(5)
+		delay = delay + c.DelayUpTo(c.maxDelay - delay)
 		c.PushA() -- Alena > Rabidhound A
 		c.WaitFor(8)
 			bail = false
@@ -131,6 +132,7 @@ while not c.done do
 			c.PushA()
 			c.RandomFor(1)
 			c.WaitFor(5)
+			delay = delay + c.DelayUpTo(c.maxDelay - delay)
 			c.PushA() -- Cristo -> Rabidhound A
 			c.WaitFor(8)
 			bail = false
@@ -145,6 +147,7 @@ while not c.done do
 				c.PushA()
 				c.RandomFor(1)
 				c.WaitFor(5)
+				delay = delay + c.DelayUpTo(c.maxDelay - delay)
 				c.PushA() -- Icebolt
 				c.RandomFor(1)
 				c.WaitFor(7)

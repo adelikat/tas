@@ -41,4 +41,5 @@ SystemID NES
 008B	b	u	0	RAM	Battleflag
 02ED	b	u	0	WRAM	Step counter
 03CF	b	u	0	RAM	Menu pos
+1301	b	u	0	WRAM	CristoTargeting
 

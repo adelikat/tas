@@ -1,16 +1,31 @@
-_odds = 0 --1 in x
-_minDmg = 10
-_idealDmg = 10 --Max critical
-_wait3 = 0
-_wait2 = 50
-_wait1 = 31
+--alena
+--_odds = 2 --1 in x
+--_minDmg = 12
+--_idealDmg = 13 --Max critical
+--_idealDelay = 0
+
+--_wait3 = 0
+--_wait2 = 62
+--_wait1 = 32
+
+_odds = 256 --1 in x
+_minDmg = 11
+_idealDmg = 11 --Max critical
+_idealDelay = 0
+
+_wait3 = 61
+_wait2 = 21
+_wait1 = 51
 
 local c = require("DW4-ManipCore")
 c.InitSession()
-c.reportFrequency = 10
+c.reportFrequency = 1000
 c.maxDelay = _odds
 local bestDmg = 0
 local delay = 0
+attackBegin = 76
+sleep = 102
+miss = 7
 
 function _readDmg()
 	return c.Read(c.Addr.Dmg)
@@ -20,43 +35,65 @@ function _readBattle()
 	return c.Read(c.Addr.BattleFlag)
 end
 
-function _step(wait)
+function _step(wait, noDelay)
 	if (wait > 0) then
-		delay = delay + c.DelayUpTo(c.maxDelay - delay)
+		if not noDelay then
+			delay = delay + c.DelayUpTo(c.maxDelay - delay)
+		end
 		c.RndAtLeastOne()
 		c.RandomFor(wait - 2)
 		c.WaitFor(2)
 	end
 end
 
+function _saveBest(delay)
+	c.Save(9)
+	c.Save('Critical' .. delay)
+end
+
+function _checkBattleFlag(battle)
+	if battle == attackBegin then
+		c.Debug('Attack delayed, still attempting to attack')
+	elseif battle == sleep then
+		c.Debug('Someone is aleep!')
+	elseif battle == miss then
+		c.Debug('Attack missed')
+	end
+	return battle ~= attackBegin and battle ~= sleep and battle ~= miss
+end
+
 while not c.done do
 	c.Load(0)
 	delay = 0
 
-	_step(_wait3)
+	_step(_wait3, true)
 	_step(_wait2)
 	_step(_wait1)
 
 	delay = delay + c.DelayUpTo(c.maxDelay - delay)
 	c.RndAtLeastOne()
-	c.WaitFor(35)
+	c.WaitFor(10)
 
 	-- Eval
 	--------------------------------------
 	dmg = _readDmg()
 	battle = _readBattle()
+	c.Debug('dmg: ' .. dmg .. ' battle: ' .. battle)
 
-	if dmg >= _minDmg
-		and battle ~= 76 and battle ~= 102
+	if dmg >= _minDmg and dmg <= _idealDmg
+		and _checkBattleFlag(battle)
 		then
 		found = true
 		c.LogProgress('Critical! dmg: ' .. dmg .. ' delay: ' .. delay, true)
 		c.maxDelay = delay - 1
-		c.Save(9)
+		_saveBest(delay)
+		
 		bestDmg = dmg
-	elseif _minDmg < _idealDmg and dmg  > bestDmg then
+	elseif _minDmg < _idealDmg and dmg  > bestDmg
+		and _checkBattleFlag(battle)
+		then
 		bestDmg = dmg
-		c.Save(9)
+		_saveBest(delay)
 		c.LogProgress('New Best for this delay: ' .. dmg .. ' delay: ' .. delay, true)
 	else
 		found = false
@@ -64,7 +101,7 @@ while not c.done do
 
 	c.Increment('dmg: ' .. dmg)
 
-	if (found == true and delay == 0 and bestDmg == _idealDmg) then
+	if (found == true and delay <= _idealDelay and bestDmg == _idealDmg) then
 		c.done = true
 	end
 end
