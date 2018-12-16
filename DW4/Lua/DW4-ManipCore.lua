@@ -202,7 +202,7 @@ function _save(slot)
 	if slotNum ~= nill and slotNum >= 0 and slotNum <= 9 then
 		savestate.saveslot(slot)
 	else
-		savestate.save('../NES/State/LuaSave' .. slot .. '.State')
+		savestate.save(slot .. '.State')
 	end
 end
 
@@ -216,7 +216,7 @@ function _load(slot)
 	if slotNum ~= nil and slotNum >= 0 and slotNum <= 9 then
 		savestate.loadslot(tonumber(slot))
 	else
-		savestate.load('../NES/State/LuaSave' .. slot .. '.State')
+		savestate.load(slot .. '.State')
 	end
 end
 
@@ -448,6 +448,12 @@ function Abort()
 	M.fail = true
 end
 
+function PokeRng()
+	memory.writebyte(0x0012, math.random(0, 255))
+	memory.writebyte(0x0013, math.random(0, 255))
+end
+
+M.PokeRng = PokeRng;
 M.Abort = Abort;
 M.Log = Log;
 M.DebugAddr = DebugAddr;
@@ -835,12 +841,21 @@ M.Addr["CristoHP"] = 0x6020
 M.Addr["BreyHP"] = 0x607A
 M.Addr["RagnarLv"] = 0x60BA
 M.Addr["AlenaHP"] = 0x60D4
+M.Addr["AlenaLv"] = 0x60D8
 M.Addr["AlenaStr"] = 0x60D9
 M.Addr["AlenaAg"] = 0x60DA
 M.Addr["AlenaVit"] = 0x60DB
 M.Addr["AlenaInt"] = 0x60DC
 M.Addr["AlenaLuck"] = 0x60DD
 M.Addr["AlenaMaxHP"] = 0x60DE
+M.Addr["AlenaSlot1"] = 0x60E6
+M.Addr["AlenaSlot2"] = 0x60E7
+M.Addr["AlenaSlot3"] = 0x60E8
+M.Addr["AlenaSlot4"] = 0x60E9
+M.Addr["AlenaSlot5"] = 0x60EA
+M.Addr["AlenaSlot6"] = 0x60EB
+M.Addr["AlenaSlot7"] = 0x60EC
+M.Addr["AlenaSlot8"] = 0x60ED
 
 M.Addr["EGroup1Type"] = 0x6E45
 M.Addr["EGroup2Type"] = 0x6E46
