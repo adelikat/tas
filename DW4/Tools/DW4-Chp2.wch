@@ -12,10 +12,12 @@ SystemID NES
 0060DC	b	u	0	System Bus	Alena Int
 0060DD	b	u	0	System Bus	Alena Luck
 0060DE	w	u	1	System Bus	Alena HP
-0060E9	b	u	0	System Bus	 Alena Inv Slot
-00C4	b	u	0	RAM	treasure drop
+0060E7	b	h	0	System Bus	 Alena Inv Slot 2
+0060E9	b	h	0	System Bus	 Alena Inv Slot 4
+00C4	b	h	0	RAM	treasure drop
 00D8	b	u	0	WRAM	Alena LV
 008B	b	u	0	RAM	Battleflag
 02ED	b	u	0	WRAM	Step counter
 03CF	b	u	0	RAM	Menu pos
+0059	b	u	0	RAM	Menu
 
