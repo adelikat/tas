@@ -1,8 +1,8 @@
 local c = require("DW4-ManipCore")
 
 c.InitSession()
-c.reportFrequency = 100
-c.maxDelay = 19
+c.reportFrequency = 10000
+c.maxDelay = 0
 local delay = 0
 local wing = 0x56
 
@@ -30,15 +30,15 @@ end
 function _getDrop()
 	c.Save(20)
 	local dropFound = false
-	local maxDelay = 5
-	delay = 0
+	local dropDelay = 0
+
 	while not dropFound do
 		c.Load(20)
 		c.RndAtLeastOne() -- Alena attacks
 		c.RandomFor(1)
 		c.WaitFor(19)
 
-		delay = delay + c.DelayUpTo(maxDelay - delay)
+		dropDelay = delay + c.DelayUpTo(c.maxDelay - delay)
 		c.RndAtLeastOne() -- Alena critical
 		c.RandomFor(1)
 		c.WaitFor(46)
@@ -52,18 +52,17 @@ function _getDrop()
 		c.WaitFor(70)
 		drop = _readDrop()
 		if _readDrop() == wing then
-			c.LogProgress('Wing Drop Found! delay: ' .. delay .. ' Rng2: ' .. c.ReadRng2(), true)
+			c.LogProgress('Wing Drop Found! delay: ' .. dropDelay .. ' Rng2: ' .. c.ReadRng2(), true)
 			dropFound = true
 			c.UntilNextMenu()
 			c.Save(4)
 			c.Save("Chp2DropFound")
+			delay = dropDelay
 		end
 	end
 end
 
 function _str3()
-	
-	local delay = 0
 	local cur = 0
 	local cap = 300
 	local str3Done = false
@@ -86,15 +85,17 @@ function _str3()
 		c.RandomFor(1) -- Magic frame
 		bail = false
 		if emu.islagged() then
-			c.Debug('Lagged at Lv 2 Up, aborting')
-			bail = true
+			c.Debug('Lagged at Lv 2 Up, counting as a delay frame')
+			c.WaitFor(1)
+			delay = delay + 1
+			--bail = true
 		end
 		if not bail then
 			c.UntilNextMenu()
 			c.RndAorB()
 			c.UntilNextMenu()
 			str = _readStr()
-			if str - ostr == 3 then
+			if str - ostr >= 2 then
 				c.LogProgress("Str Manipulated", true)
 				str3Done = true
 				cur = cap
@@ -110,20 +111,23 @@ end
 
 function _noVit()
 	c.Save(22)
+	local vitDelay = delay
 	local cur = 0
-	local cap = c.maxDelay * 20
+	local cap = (c.maxDelay - delay) * 15
 	local vitDone = -1
-	ovit = _readVit()
+	ovit = 8 --_readVit()
 	while cur <= cap do
 		c.Load(22)
-		delay = delay + c.DelayUpTo(c.maxDelay - delay)
+		vitDelay = delay + c.DelayUpTo(c.maxDelay - delay)
+		c.Debug('vitDelay: ' .. vitDelay)
 		c.RndAorB()
 		c.WaitFor(5) --Hack, sometimes the menu value is already on the next value
 		c.UntilNextMenu()
 		vit = _readVit()
 		if vit == ovit then
 			vitDone = delay
-			c.LogProgress('Vit 0!!!! delay: ' .. delay, true)
+			c.LogProgress('Vit 0!!!! delay: ' .. vitDelay, true)
+			delay = vitDelay
 			c.maxDelay = delay - 1
 			c.Save(6)
 			c.Save("Chp2Lv2")			
@@ -138,89 +142,9 @@ function _noVit()
 	
 	return vitDone
 end
-
-function _lv1()
-	c.Save(21)
-	local delay = 0
-	local cur = 0
-	local cap = 1000
-	local lv1Done = false
-	ostr = _readStr()
-	while cur <= cap do
-		c.Load(21)
-		delay = delay + c.DelayUpTo(c.maxDelay - delay)
-		c.RndAorB()
-		c.UntilNextMenu()
-		c.RndAorB()
-		c.UntilNextMenu()
-
-		c.RndAorB()
-		c.WaitFor(212)
-		c.WaitFor(39)
-
-		olv = _readLv()
-		c.RandomFor(1) -- Magic frame
-		bail = false
-		if emu.islagged() then
-			c.Debug('Lagged at Lv 2 Up, aborting')
-			bail = true
-		end
-		if not bail then
-			c.UntilNextMenu()
-			delay = delay + c.DelayUpTo(c.maxDelay - delay)
-			c.RndAorB()
-			c.UntilNextMenu()
-			lv = _readLv()
-			c.Debug('Check no stats')
-			if lv == olv + 1 then
-				c.Log('Jackpot!! Lv 2 no stats')
-				c.Done()
-				c.Save(9)
-				c.Save("Chp2Lv2Jackpot")
-				cur = cap
-				lv1Done = true
-			else
-				str = _readStr()
-				if str - ostr == 3 then
-					c.Debug("Str 3 found")
-					-- Continue to manip more things
-					delay = delay + c.DelayUpTo(c.maxDelay - delay)
-					c.RndAorB()
-					c.UntilNextMenu()
-					lv = _readLv()
-					c.Debug('Check 2 stat')
-					if lv == olv + 1 then
-						c.Log('Lv 1 Manipulated!', true)
-						cur = cap
-						lv1Done = true
-						c.done = true
-						c.Save(9)
-						c.Save("Chp2Lv2Done")
-					else
-						delay = delay + c.DelayUpTo(c.maxDelay - delay)
-						c.RndAorB()
-						c.UntilNextMenu()
-						lv = _readLv()
-						if lv == olv + 1 then
-							c.Log('Lv 1 3-stat found delay: ' .. delay, true)
-							c.Save(9)
-							c.Save("Chp2Lv2TripleStat")
-							cur = cap
-							c.done = true
-						end
-					end
-				end
-			end
-		end
-		cur = cur + 1
-	end
-
-	c.Save(5)
-	return lv1Done
-end
-
 while not c.done do
 	c.Load(0)
+	delay = 0
 	_getDrop()
 	str3Result = _str3()
 	if str3Result then
@@ -231,7 +155,7 @@ while not c.done do
 			c.LogProgress('Failed to manip no vit, continuing', true)
 		end
 	else
-		c.LogProgress('Failed to manip str 3, continuing', true)
+		--c.LogProgress('Failed to manip str 3, continuing', true)
 	end
 
 	c.Increment()
