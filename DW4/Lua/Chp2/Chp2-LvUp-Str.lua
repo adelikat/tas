@@ -4,11 +4,19 @@ c.reportFrequency = 100
 c.maxDelay = 50
 
 fromPreviousLv = true
-previousLvDelay = 218
+previousLvDelay = 204
 
 
 function _readStr()
 	return c.Read(c.Addr.AlenaStr)
+end
+
+function _readInt()
+	return c.Read(c.Addr.AlenaInt)
+end
+
+function _readMHP()
+	return c.Read(c.Addr.AlenaMaxHP)
 end
 
 while not c.done do
@@ -16,14 +24,26 @@ while not c.done do
 	delay = 0
 	found = false
 	ostr = _readStr()
+	oint = _readInt()
+	omhp = _readMHP()
+
 	if fromPreviousLv then
 		delay = delay + c.DelayUpTo(c.maxDelay - delay)
 		c.RndAorB()
 		c.WaitFor(previousLvDelay)
 	end
 
+	int = _readInt()
+	mhp = _readMHP()
+
+	if oint ~= int and omhp ~= mhp then
+		c.Log('Got unwanted stat increases, bailing', true)
+		bail = true
+	else
+		bail = false
+	end
+
 	-- Magic frame
-	bail = false
 	c.RandomFor(1)
 		if fromPreviousLv and emu.islagged() then
 			c.Log('Lagged at lv up', true)
