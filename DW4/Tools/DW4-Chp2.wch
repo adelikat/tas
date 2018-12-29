@@ -20,4 +20,5 @@ SystemID NES
 02ED	b	u	0	WRAM	Step counter
 03CF	b	u	0	RAM	Menu pos
 0059	b	u	0	RAM	Menu
+006E45	b	h	0	System Bus	E1 Type
 

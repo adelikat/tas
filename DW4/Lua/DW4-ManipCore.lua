@@ -304,6 +304,14 @@ function GenerateRndBool()
 	return _rndBool();
 end
 
+function GenerateRndDirection()
+	x = math.random(0, 3);
+	if x == 0 then return 'P1 Left' end
+	if x == 1 then return 'P1 Right' end
+	if x == 2 then return 'P1 Up' end
+	return 'P1 Down'
+end
+
 function RndButtons()
 	_doFrame(_rndButtons());
 end
@@ -453,6 +461,30 @@ function PokeRng()
 	memory.writebyte(0x0013, math.random(0, 255))
 end
 
+
+function UntilNextInputFrame()
+	c.Save("CoreTemp")
+
+	while emu.islagged() == true do
+		c.Save("CoreTemp")
+		c.WaitFor(1)
+	end
+
+	c.Load("CoreTemp")
+end
+
+M.UntilNextInputFrame = function ()
+	Save("CoreTemp")
+
+	while emu.islagged() == true do
+		Save("CoreTemp")
+		WaitFor(1)
+	end
+
+	Load("CoreTemp")
+end
+
+M.GenerateRndDirection = GenerateRndDirection
 M.PokeRng = PokeRng;
 M.Abort = Abort;
 M.Log = Log;
