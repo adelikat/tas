@@ -1,28 +1,20 @@
---alena
---_odds = 2 --1 in x
---_minDmg = 12
---_idealDmg = 13 --Max critical
---_idealDelay = 0
-
---_wait3 = 0
---_wait2 = 62
---_wait1 = 32
-
-_odds = 0 --1 in x
-_minDmg = 16
-_idealDmg = 16 --Max critical
+_odds = 4 --1 in x
+_minDmg = 21
+_idealDmg = 21 --Max critical
 _idealDelay = 0
 
 _wait3 = 0
-_wait2 = 0
-_wait1 = 60
+_wait2 = 17
+_wait1 = 36
 
 local c = require("DW4-ManipCore")
 c.InitSession()
-c.reportFrequency = 1
+c.reportFrequency = 100
 c.maxDelay = _odds
+
 local bestDmg = 0
 local delay = 0
+
 attackBegin = 76
 sleep = 102
 miss = 7
