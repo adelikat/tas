@@ -888,9 +888,10 @@ M.Addr["AlenaSlot5"] = 0x60EA
 M.Addr["AlenaSlot6"] = 0x60EB
 M.Addr["AlenaSlot7"] = 0x60EC
 M.Addr["AlenaSlot8"] = 0x60ED
-
+M.Addr["StepCounter"] = 0x62ED
 M.Addr["EGroup1Type"] = 0x6E45
 M.Addr["EGroup2Type"] = 0x6E46
+M.Addr["E1Count"] = 0x6E49
 M.Addr["Dmg"] = 0x7361
 
 M.ReadRng1 = function()
@@ -899,6 +900,27 @@ end
 
 M.ReadRng2 = function()
 	return M.Read(M.Addr.Rng2)
+end
+
+
+M.ReadBattle = function()
+	return M.Read(M.Addr.BattleFlag)
+end
+
+M.ReadStepCounter = function()
+	return M.Read(M.Addr.StepCounter)
+end
+
+M.ReadEGroup1Type = function()
+	return M.Read(M.Addr.EGroup1Type)
+end
+
+M.ReadEGroup2Type = function()
+	return M.Read(M.Addr.EGroup2Type)
+end
+
+M.ReadE1Count = function()
+return M.Read(M.Addr.E1Count)
 end
 
 return M

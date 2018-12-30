@@ -1,23 +1,21 @@
-walking = 60
-direction = 'Right'
-cap = 50
+walking = 48
+direction = 'Left'
+cap = 40
 best = 999999999
 
 local c = require("DW4-ManipCore")
 c.InitSession()
 c.reportFrequency = 100
 
-function _readBattle()
-	return c.Read(c.Addr.BattleFlag)
+function _isEncounter()
+	return c.Read(c.Addr.EGroup1Type) ~= 0xFF
 end
 
 while not c.done do
 	c.Load(0)
-	obattle = _readBattle()
 	encounter = false
 	for i = 0, walking, 1 do
-		battle = _readBattle()
-		if battle ~= obattle then
+		if _isEncounter() then
 			encounter = true
 			break
 		else
@@ -35,8 +33,6 @@ while not c.done do
 			c.WaitFor(1)
 		end
 
-
-		
 		frames = emu.framecount()
 		if (frames < best) then
 			best = frames
