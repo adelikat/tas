@@ -18,7 +18,7 @@ SystemID NES
 00D8	b	u	0	WRAM	Alena LV
 008B	b	u	0	RAM	Battleflag
 02ED	b	u	0	WRAM	Step counter
-03CF	b	u	0	RAM	Menu pos
+03CF	b	u	0	RAM	Menu Y
 0059	b	u	0	RAM	Menu
 006E45	b	h	0	System Bus	E1 Type
 

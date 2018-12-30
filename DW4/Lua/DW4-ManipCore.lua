@@ -222,11 +222,12 @@ end
 
 -------------------------------------
 function InitSession()
-	M.attempts = 0;
-	M.done = false;
-	math.randomseed(os.time());
+	M.attempts = 0
+	M.done = false
+	M.maxDelay = 0
+	math.randomseed(os.time())
 	--client.displaymessages(false);
-	memory.usememorydomain('System Bus');
+	memory.usememorydomain('System Bus')
 	--client.unpause();
 end
 
@@ -449,6 +450,7 @@ end
 
 function Done()
 	M.done = true
+	M.fail = false
 end
 
 function Abort()
@@ -920,7 +922,19 @@ M.ReadEGroup2Type = function()
 end
 
 M.ReadE1Count = function()
-return M.Read(M.Addr.E1Count)
+	return M.Read(M.Addr.E1Count)
+end
+
+M.ReadMenuPosY = function()
+	return M.Read(M.Addr.MenuPosY)
+end
+
+M.ReadTurn = function()
+	return M.Read(M.Addr.Turn)
+end
+
+M.ReadDmg = function()
+	return M.Read(M.Addr.Dmg)
 end
 
 return M
