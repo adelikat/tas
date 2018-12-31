@@ -21,4 +21,5 @@ SystemID NES
 03CF	b	u	0	RAM	Menu Y
 0059	b	u	0	RAM	Menu
 006E45	b	h	0	System Bus	E1 Type
+01BE	b	u	0	RAM	
 

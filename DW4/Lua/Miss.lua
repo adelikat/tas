@@ -3,12 +3,12 @@ c.InitSession()
 c.reportFrequency = 100
 c.maxDelay = _odds
 
-_wait3 = 51
-_wait2 = 15 --47
-_wait1 = 41 --28
+_wait3 = 0
+_wait2 = 46
+_wait1 = 24 
 
 _odds = 64
-_hpAddr = c.Addr.CristoHP
+_hpAddr = c.Addr.AlenaHP
 _attack = 76
 _miss = 98
 

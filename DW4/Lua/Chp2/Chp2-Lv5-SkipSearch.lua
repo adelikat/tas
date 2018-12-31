@@ -40,64 +40,7 @@ function _readMHP()
 	return c.Read(c.Addr.AlenaMaxHP)
 end
 
-function _noVit()
-	c.Save(21)
 
-	local cur = 0
-	local cap = c.maxDelay * 20
-
-	local vitResult = -1
-	ovit = _readVit()
-	oag = _readAg()
-	while cur <= cap do
-		c.Load(21)
-		delay = 0
-
-		-- Alena's Level goes up
-		delay = delay + c.DelayUpTo(c.maxDelay - delay)
-		c.Debug('delay before Ag: ' .. delay)
-		c.RndAorB()
-		c.WaitFor(2) -- Ensure menu isn't already on 248
-		c.UntilNextMenu()
-		ag = _readAg()
-
-		-- Strength goes up 2 points!
-		delay = delay + c.DelayUpTo(c.maxDelay - delay)
-		c.Debug('delay before Vit: ' .. delay)
-		c.RndAorB()
-		c.WaitFor(2) -- Ensure menu isn't already on 248
-		c.UntilNextMenu()
-
-		vit = _readVit()
-		agInc = ag - oag
-		vitInc = vit - ovit
-
-		if vitInc == 0 then
-			if agInc == 0 then
-				c.LogProgress('------', true)
-				c.LogProgress('Jackpot!!! delay ' .. delay, true)
-				cur = cap;
-				c.Save(9)
-				c.Save(900 + delay)
-				c.Done()
-			else
-				c.LogProgress('Vit 0!!!! delay: ' .. delay, true)
-				c.maxDelay = delay - 1
-				c.Save(6)
-				c.Save(800 + delay)
-			end
-
-			if delay == 0 then
-				cur = cap
-			end
-		end
-
-		c.Increment()
-		cur = cur + 1
-	end
-
-	return vitResult
-end
 while not c.done do
 	c.Load(0)
 	delay = 0
@@ -114,7 +57,7 @@ while not c.done do
 	c.RndAorB()
 	c.WaitFor(2) -- Ensure menu isn't already on 248
 	c.UntilNextMenu()
-	
+
 	-- Alena str goes up
 	delay = delay + c.DelayUpTo(c.maxDelay - delay)
 	c.Debug('delay After Ag: ' .. delay)
@@ -122,33 +65,34 @@ while not c.done do
 	c.WaitFor(2) -- Ensure menu isn't already on 248
 	c.UntilNextMenu()
 
+	ag = _readAg()
+	if ag == oag then
+		c.LogProgress('ag skipped!')
+		c.Save(9)
+		c.Save(800 + delay)
+	end
+
 	-- (Probably) Alena ag goes up
 	delay = delay + c.DelayUpTo(c.maxDelay - delay)
 	c.RndAorB()
 	c.WaitFor(2) -- Ensure menu isn't already on 248
 	c.UntilNextMenu()
 
-	-- (Probably) Alena vit goes up
-	delay = delay + c.DelayUpTo(c.maxDelay - delay)
-	c.RndAorB()
-	c.WaitFor(2) -- Ensure menu isn't already on 248
-	c.UntilNextMenu()
-
-	ag = _readAg()
-	vit = _readVit()
 	luck = _readLuck()
 	int = _readInt()
-	mhp = _readMHP()
-
-	anySkip = ag == oag or vit == ovit or oluck == luck
 
 	found = false
-	if int == oint and anySkip then
+	if int == oint and luck == oluck then
 		found = true
-		c.LogProgress('Skip!!! delay: .. ' .. delay, true)
+		c.LogProgress('Luck Skip!!! delay: .. ' .. delay, true)
 		c.Save(9)
 		c.Save(900 + delay)
 		c.maxDelay = delay - 1
+
+		if ag == oag then
+			c.LogProgress('Double skip!!! delay: ' .. delay, true)
+			c.Done()
+		end
 	end
 
 	if found and delay == 0 then

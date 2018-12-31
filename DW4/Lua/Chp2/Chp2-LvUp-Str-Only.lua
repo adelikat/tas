@@ -3,8 +3,8 @@ c.InitSession()
 c.reportFrequency = 100
 c.maxDelay = 50
 
-fromPreviousLv = true
-previousLvDelay = 245
+fromPreviousLv = false
+previousLvDelay = 204
 
 
 function _readStr()

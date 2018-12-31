@@ -1,15 +1,15 @@
-_odds = 4 --1 in x
-_minDmg = 21
-_idealDmg = 21 --Max critical
+_odds = 0 --1 in x
+_minDmg = 60
+_idealDmg = 60 --Max critical
 _idealDelay = 0
 
 _wait3 = 0
-_wait2 = 17
-_wait1 = 36
+_wait2 = 24
+_wait1 = 12
 
 local c = require("DW4-ManipCore")
 c.InitSession()
-c.reportFrequency = 100
+c.reportFrequency = 1000
 c.maxDelay = _odds
 
 local bestDmg = 0
