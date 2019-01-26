@@ -66,11 +66,11 @@ while not c.done do
 	c.UntilNextMenu()
 
 	ag = _readAg()
-	if ag == oag then
-		c.LogProgress('ag skipped!')
-		c.Save(9)
-		c.Save(800 + delay)
-	end
+	--if ag == oag then
+	--	c.LogProgress('ag skipped!')
+	--	c.Save(9)
+	--	c.Save(800 + delay)
+	--end
 
 	-- (Probably) Alena ag goes up
 	delay = delay + c.DelayUpTo(c.maxDelay - delay)
@@ -82,7 +82,7 @@ while not c.done do
 	int = _readInt()
 
 	found = false
-	if int == oint and luck == oluck then
+	if int == oint and luck == oluck and ag >= oag + 2 then
 		found = true
 		c.LogProgress('Luck Skip!!! delay: .. ' .. delay, true)
 		c.Save(9)

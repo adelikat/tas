@@ -1,11 +1,11 @@
 _odds = 0 --1 in x
-_minDmg = 60
-_idealDmg = 60 --Max critical
+_minDmg = 22
+_idealDmg = 0 --Max critical
 _idealDelay = 0
 
 _wait3 = 0
-_wait2 = 24
-_wait1 = 12
+_wait2 = 11
+_wait1 = 23
 
 local c = require("DW4-ManipCore")
 c.InitSession()
@@ -72,7 +72,7 @@ while not c.done do
 	battle = _readBattle()
 	c.Debug('dmg: ' .. dmg .. ' battle: ' .. battle)
 
-	if dmg >= _minDmg and dmg <= _idealDmg
+	if dmg >= _minDmg and (_idealDmg == 0 or dmg <= _idealDmg)
 		and _checkBattleFlag(battle)
 		then
 		found = true

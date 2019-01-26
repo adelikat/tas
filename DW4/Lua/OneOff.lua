@@ -1,42 +1,62 @@
+walking = 15
+direction = 'Up'
+cap = 50
+best = 999999999
+
 local c = require("DW4-ManipCore")
-
 c.InitSession()
-c.reportFrequency = 1000
-c.maxDelay = 0
+c.reportFrequency = 100
 
-function _nextInputFrame()
-	c.Save(600)
-
-	while emu.islagged() == true do
-		c.Save(600)
-		c.WaitFor(1)
-	end
-
-	c.Load(600)
+function _isEncounter()
+	return c.Read(c.Addr.EGroup1Type) ~= 0xFF
 end
-
-best = 999999
 
 while not c.done do
 	c.Load(0)
+	c.RndWalkingFor('Up', 157)
+	c.PushA()
+	c.WaitFor(21)
 
-	c.RandomFor(1)
-	c.UntilNextMenu()
-	c.RndAorB()
-	c.WaitFor(23)
-	c.RndAtLeastOne()
-	c.WaitFor(50)
-	_nextInputFrame()
-	
-	count = emu.framecount()
-	if count < best then
-		c.Debug('New best: ' .. count, true)
-		c.Save(9)
-		best = count
+	c.PushDown()
+	c.WaitFor(1)
+	c.PushDown()
+	c.WaitFor(1)
+	c.PushDown()
+	c.PushA()
+	c.PushFor('Up', 139)
+
+	encounter = false
+	for i = 0, walking, 1 do
+		if _isEncounter() then
+			encounter = true
+			break
+		else
+			c.RndWalking(direction)
+		end
 	end
 
+	if encounter then
+		c.Debug('Encounter')
+	else
+		c.WaitFor(10)
+		lag = true
+		while lag do
+			lag = emu.islagged()
+			c.WaitFor(1)
+		end
+
+		frames = emu.framecount()
+		if (frames < best) then
+			best = frames
+			c.Log("best so far: " .. frames .. " attempt " .. c.attempts)
+			c.Save(9)
+		end
+	end
+
+	c.Increment()
+	if (c.attempts > cap) then
+		c.Abort()
+	end
 end
 
 c.Finish()
-
-
