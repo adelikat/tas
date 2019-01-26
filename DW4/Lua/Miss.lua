@@ -4,10 +4,10 @@ c.reportFrequency = 100
 c.maxDelay = _odds
 
 _wait3 = 0
-_wait2 = 46
-_wait1 = 24 
+_wait2 = 0
+_wait1 = 23 
 
-_odds = 64
+_odds = 0
 _hpAddr = c.Addr.AlenaHP
 _attack = 76
 _miss = 98

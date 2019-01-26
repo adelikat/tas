@@ -360,6 +360,12 @@ function PushFor(directionButton, frames)
 	end
 end
 
+function PushButtonsFor(buttons, frames)
+	for i = 0, frames, 1 do
+		_doFrame(buttons);
+	end
+end
+
 function PushA()	
 	_doFrame(_push('P1 A'));
 end
@@ -486,6 +492,8 @@ M.UntilNextInputFrame = function ()
 	Load("CoreTemp")
 end
 
+M.PushButtonsFor = PushButtonsFor
+M.GenerateRndButtons = _rndButtons
 M.GenerateRndDirection = GenerateRndDirection
 M.PokeRng = PokeRng;
 M.Abort = Abort;
