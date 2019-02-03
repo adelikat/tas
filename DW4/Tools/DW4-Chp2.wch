@@ -1,6 +1,5 @@
 SystemID NES
 0012	b	u	0	RAM	RNG 1
-0013	b	u	0	RAM	RNG 2
 00727E	b	u	0	System Bus	E1 HP
 0518	b	u	0	RAM	Day Night
 007361	b	u	0	System Bus	Dmg
@@ -22,4 +21,5 @@ SystemID NES
 0059	b	u	0	RAM	Menu
 006E45	b	h	0	System Bus	E1 Type
 01BE	b	u	0	RAM	
+0199	b	u	0	RAM	
 
