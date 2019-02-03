@@ -1,5 +1,5 @@
-walking = 110
-direction = 'Down'
+walking = 73
+direction = 'Up'
 cap = 30
 best = 999999999
 
@@ -8,7 +8,8 @@ c.InitSession()
 c.reportFrequency = 100
 
 function _isEncounter()
-	return c.Read(c.Addr.EGroup1Type) ~= 0xFF
+	return false
+	--return c.Read(c.Addr.EGroup1Type) ~= 0xFF
 end
 
 while not c.done do
