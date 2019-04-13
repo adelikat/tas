@@ -1,5 +1,5 @@
-walking = 73
-direction = 'Up'
+walking = 41
+direction = 'Right'
 cap = 30
 best = 999999999
 

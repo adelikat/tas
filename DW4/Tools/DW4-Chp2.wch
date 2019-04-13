@@ -1,7 +1,6 @@
 SystemID NES
 0012	b	u	0	RAM	RNG 1
 00727E	b	u	0	System Bus	E1 HP
-0518	b	u	0	RAM	Day Night
 007361	b	u	0	System Bus	Dmg
 0000FD	b	u	0	System Bus	Next Stat
 0096	b	u	0	RAM	Turn
@@ -20,6 +19,4 @@ SystemID NES
 03CF	b	u	0	RAM	Menu Y
 0059	b	u	0	RAM	Menu
 006E45	b	h	0	System Bus	E1 Type
-01BE	b	u	0	RAM	
-0199	b	u	0	RAM	
 
