@@ -13,3 +13,5 @@ defctrl.json
 
 *.nes
 
+**/Compare/**
+**/Firmware/**
