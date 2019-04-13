@@ -1,5 +1,5 @@
 start EmuHawk.exe
-start SuperTempo-FC.ods
+start SuperTempo-FC.xlsx
 cd .\Compare
 start EmuHawk.exe
 cd ..
