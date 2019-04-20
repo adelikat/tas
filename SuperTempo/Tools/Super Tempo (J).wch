@@ -7,5 +7,5 @@ SystemID SAT
 04DB3A	b	u	1	Work Ram High	Lv4 Crab HitCount
 04DB2C	w	u	0	Work Ram High	Final boss hp
 04DB2C	b	h	1	Work Ram High	final boss hp hex
-04FDAC	b	h	1	Work Ram High	Lv 5 Bird Health
+04F50C	b	h	1	Work Ram High	Lv 5 Bird Health
 
