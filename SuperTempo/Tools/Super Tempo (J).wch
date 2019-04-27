@@ -10,4 +10,5 @@ SystemID SAT
 04F50C	b	h	1	Work Ram High	Lv 5 Bird Health
 0E7216	w	u	0	Work Ram High	Score
 04DB52	b	u	1	Work Ram High	
+04DB2C	b	h	1	Work Ram High	Chicken 2 Health
 
