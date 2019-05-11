@@ -4,4 +4,8 @@ SystemID SAT
 04DA04	w	u	0	Work Ram High	X position
 04E034	b	h	1	Work Ram High	Boss1 Health
 04E244	b	u	1	Work Ram High	Boss1 Invuln Timer
+04E314	b	h	1	Work Ram High	Boss 2 A HP
+04E01C	b	u	1	Work Ram High	Boss 2 A Timer
+04E3CC	b	h	1	Work Ram High	Boss 2 B HP
+04E524	b	u	1	Work Ram High	Boss 2 B Timer
 
