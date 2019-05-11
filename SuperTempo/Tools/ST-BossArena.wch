@@ -1,0 +1,7 @@
+SystemID SAT
+04DA18	w	s	1	Work Ram High	Speed
+04DA1A	w	s	1	Work Ram High	Subspeed
+04DA04	w	u	0	Work Ram High	X position
+04E034	b	h	1	Work Ram High	Boss1 Health
+04E244	b	u	1	Work Ram High	Boss1 Invuln Timer
+
