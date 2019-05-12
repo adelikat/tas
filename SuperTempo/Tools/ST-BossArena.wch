@@ -18,4 +18,5 @@ SystemID SAT
 04E3B4	b	u	1	Work Ram High	Boss 4 Timer
 04E314	b	h	1	Work Ram High	Boss 5 HP
 04E46C	b	u	1	Work Ram High	Boss 5 Timer
+04DB2C	w	h	0	Work Ram High	Final Boss HP
 
