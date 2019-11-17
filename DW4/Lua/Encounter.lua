@@ -3,9 +3,9 @@
 -----------------
 reportFrequency = 1 -- How many attempts before it logs a result
 
-prewalkingframes = 210
+prewalkingframes = 0
  prewalkingdir = 'P1 Right'
-frames = 0
+frames = 140
 -------------------------
 local c = require("DW4-ManipCore")
 c.InitSession()
@@ -33,7 +33,7 @@ while not c.done do
 	for i = 0, frames, 1 do
 		battleFlag = memory.readbyte(0x008B)
 		if battleFlag ~= origBattleFlag then
-			console.log("battle found")
+			c.Debug("battle found")
 			break
 		end
 		c.RndWalking(direction)
@@ -51,11 +51,15 @@ while not c.done do
 	e1HP = memory.readbyte(0x727E)
 
 	if eg1Type ~= 0xFF and eg2Type == 0xFF
-		and (eg1Type == 0x0C)
-	    --and eg1Count >= 3
+		and (eg1Type == 0x00)
+	    and eg1Count == 1
 	    --and eg1Type == 0x16
 		then
-		c.done = true
+		--hp = c.Read(0xC27E)
+		--console.log('slime found hp: ' .. hp)
+		--if (hp == 4) then
+			c.done = true
+		--end
 	end
 
 	if eg1Type ~= 0xFF then

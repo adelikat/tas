@@ -903,6 +903,7 @@ M.Addr["EGroup1Type"] = 0x6E45
 M.Addr["EGroup2Type"] = 0x6E46
 M.Addr["E1Count"] = 0x6E49
 M.Addr["Dmg"] = 0x7361
+M.Addr["TaloonHp"] = 0x6098
 
 M.ReadRng1 = function()
 	return M.Read(M.Addr.Rng1)

@@ -1,5 +1,5 @@
-walking = 41
-direction = 'Right'
+walking = 31
+direction = 'Left'
 cap = 30
 best = 999999999
 
@@ -12,8 +12,9 @@ function _isEncounter()
 	--return c.Read(c.Addr.EGroup1Type) ~= 0xFF
 end
 
+
 while not c.done do
-	c.Load(0)
+	c.Load(0) 
 	encounter = false
 	for i = 0, walking, 1 do
 		if _isEncounter() then
