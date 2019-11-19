@@ -4,8 +4,8 @@
 reportFrequency = 1 -- How many attempts before it logs a result
 
 prewalkingframes = 0
- prewalkingdir = 'P1 Right'
-frames = 140
+ direction = 'P1 Up'
+frames = 150
 -------------------------
 local c = require("DW4-ManipCore")
 c.InitSession()
@@ -14,21 +14,21 @@ while not c.done do
 	savestate.loadslot(0)
 
 	--Pre-walking
-	delay = 0
-	c.Push(prewalkingdir)
-	for i = 0, prewalkingframes, 1 do
-		c.RndWalking(prewalkingdir)
-	end
+	--delay = 0
+	--c.Push(prewalkingdir)
+	--for i = 0, prewalkingframes, 1 do
+	--	c.RndWalking(prewalkingdir)
+	--end
 
 	--Wait
 	c.WaitFor(0)
 
-	direction =  c.RndDirectionButton()
+	--direction =  c.RndDirectionButton()
 
-	for i = 0, 1, 1 do
-		c.Push(direction)
-	end
-	direction = 'P1 Right'
+	--for i = 0, 1, 1 do
+	--	c.Push(direction)
+	--end
+	--direction = 'P1 Right'
 
 	for i = 0, frames, 1 do
 		battleFlag = memory.readbyte(0x008B)
@@ -51,7 +51,7 @@ while not c.done do
 	e1HP = memory.readbyte(0x727E)
 
 	if eg1Type ~= 0xFF and eg2Type == 0xFF
-		and (eg1Type == 0x00)
+		and (eg1Type == 0x5C)
 	    and eg1Count == 1
 	    --and eg1Type == 0x16
 		then
