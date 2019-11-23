@@ -1,37 +1,35 @@
------------------
--- Settings
------------------
-reportFrequency = 1; -- How many attempts before it logs a result
--------------------------
 local c = require("DW4-ManipCore");
 c.InitSession();
+c.reportFrequency = 1;
 
-frame = 0;
+_hpAddr = 0x6098
+_frame = 0;
+_delay = 0;
 while not c.done do
-	savestate.loadslot(0);
-	delay = 0;
+	c.Load(0);
+	origHp = c.Read(_hpAddr)
+	
 
 	-- Loop
-	--------------------------------------
-	c.WaitFor(frame);
-
+	c.WaitFor(_delay);
 	c.PushA();
-	c.WaitFor(23);
+	c.WaitFor(30);
 	
-	frame = frame + 1;
-	c.attempts = c.attempts + 1;	
-	-- Eval
-	--------------------------------------
-	
-	hp = memory.readbyte(0x6098);
-	if hp == 38 then c.done = true; end
-	c.LogProgress(c.done, c.attempts, frame, 'hp: ' .. hp);
+	--Miss
+	hp = c.Read(_hpAddr)
+	if hp == origHp then
+		c.Save(9)
+		c.Done()
+	end
 
+	--Crit
 	--dmg = memory.readbyte(0x7361);
 	--if dmg >= 110 then c.done = true; end
-	--c.LogProgress(c.done, c.attempts, frame, 'dmg: ' .. dmg);
 
 	--------------------------------------
+
+	c.Increment('delay: ' .. _delay .. ' orig hp: ' .. origHp .. ' hp: ' .. hp)
+	_delay = _delay + 1;
 end
 
 c.Finish();

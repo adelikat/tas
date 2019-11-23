@@ -1,0 +1,41 @@
+1AA1 = Decimal of odometer
+ 
+6FDC = Distance traveled? 4 bytes
+  target = 0x09E340 = 648000 (1800 per mile, maybe supposed to approximate 1760 yards per mile)
+ 
+6FEA = Speed integer
+6FEB = Speed fraction
+  Acceleration: Fraction += 0x10
+  Deceleration: Fraction -= 0x0C
+   
+6FFA = Direction integer (keep in approximate range 0x30 < x < 0xB0)
+6FFB = Direction fraction
+  Drift: Integer += 0x01 every 11 frames
+ 
+70E5 = Clock hour
+70E6 = Clock minute * 10
+70E7 = Clock minute
+ 
+7137 = Score
+7139 = Timer until score increases
+RAW Paste Data
+1AA1 = Decimal of odometer
+
+6FDC = Distance traveled? 4 bytes
+  target = 0x09E340 = 648000 (1800 per mile, maybe supposed to approximate 1760 yards per mile)
+
+6FEA = Speed integer
+6FEB = Speed fraction
+  Acceleration: Fraction += 0x10
+  Deceleration: Fraction -= 0x0C
+	
+6FFA = Direction integer (keep in approximate range 0x30 < x < 0xB0)
+6FFB = Direction fraction
+  Drift: Integer += 0x01 every 11 frames
+
+70E5 = Clock hour
+70E6 = Clock minute * 10
+70E7 = Clock minute
+
+7137 = Score
+7139 = Timer until score increases

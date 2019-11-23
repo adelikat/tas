@@ -877,6 +877,7 @@ M.Addr["CaveY"] = 0x0045
 M.Addr["BattleFlag"] = 0x008B
 M.Addr["Turn"] = 0x0096
 M.Addr["Drop"] = 0x00C4
+M.Addr["NextStat"] = 0x00FD
 M.Addr["MenuPosX"] = 0x03CE
 M.Addr["MenuPosY"] = 0x03CF
 M.Addr["CristoHP"] = 0x6020

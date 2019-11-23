@@ -15,7 +15,7 @@ SystemID NES
 0072E7	b	u	0	System Bus	Crit stuff
 0000	b	u	0	RAM	
 00FD	b	u	0	RAM	Stats
-00008B	b	u	0	System Bus	In Battle
+00008B	b	u	0	System Bus	Battle Flag
 007328	b	u	0	System Bus	isOnGuard
 006E45	b	h	0	System Bus	EG1 Type
 006E46	b	h	0	System Bus	EG2 Type
