@@ -11,6 +11,7 @@ SystemID NES
 006E46	b	u	0	System Bus	eg2Type
 008B	b	u	0	RAM	Battleflag
 007328	b	u	0	System Bus	Cur Action
+0	S	_	1		
 0096	b	u	0	RAM	Turn
 03CF	b	u	0	RAM	Menu pos
 1288	b	u	0	WRAM	Eyeball halving

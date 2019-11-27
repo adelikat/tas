@@ -1,7 +1,7 @@
 local c = require("DW4-ManipCore")
 c.InitSession()
-c.reportFrequency = 10
-c.maxDelay = 9
+c.reportFrequency = 100
+c.maxDelay = 50
 
 local delay = 0
 function _searchAg()
@@ -33,31 +33,21 @@ end
 while not c.done do
 	c.Load(0)
 	delay = 0
-
-	--treasure chest!
+--193
+	--Vitality goes up x points!
 	delay = delay + c.DelayUpTo(c.maxDelay - delay)
 	c.RndAtLeastOne()
-	c.UntilNextMenu()
-
-	--Taloon opens the treasure chest!
-	delay = delay + c.DelayUpTo(c.maxDelay - delay)
-	c.RndAtLeastOne()
-	c.RandomFor(1)
-	c.UntilNextMenu()
-
-	--Finds the half plate armor
-	delay = delay + c.DelayUpTo(c.maxDelay - delay)
-	c.RndAtLeastOne()
-	c.RandomFor(250)
+	c.RandomFor(215)
 	c.UntilNextInputFrame()
 	
 	c.RandomFor(2)
 	c.UntilNextInputFrame()
 
 	str = c.Read(c.Addr.NextStat)
+	c.Debug('Str: ' .. str)
 	if (str >= 3) then
 		c.Debug('Str 3 found')
-		c.Save('Chp3Lv2Str3')
+		c.Save('Chp3Lv3Str3')
 		result = _searchAg()
 		if result == 0 and delay == 0 then
 			c.Save(9)
