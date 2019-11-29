@@ -37,6 +37,6 @@ SystemID NES
 00609F	b	u	0	System Bus	Taloon Vit
 0060A0	b	u	0	System Bus	Taloon Int
 0060A1	b	u	0	System Bus	Taloon Luck
-00609C	b	u	0	System Bus	Taloon Lv
 0060A3	b	u	0	System Bus	Taloon Max HP
+00609C	b	u	0	System Bus	Taloon LV
 

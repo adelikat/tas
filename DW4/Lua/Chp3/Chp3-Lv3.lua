@@ -1,7 +1,7 @@
 local c = require("DW4-ManipCore")
 c.InitSession()
 c.reportFrequency = 100
-c.maxDelay = 50
+c.maxDelay = 16
 
 local delay = 0
 function _searchAg()
@@ -44,17 +44,15 @@ while not c.done do
 	c.UntilNextInputFrame()
 
 	str = c.Read(c.Addr.NextStat)
-	c.Debug('Str: ' .. str)
-	if (str >= 3) then
-		c.Debug('Str 3 found')
-		c.Save('Chp3Lv3Str3')
-		result = _searchAg()
-		if result == 0 and delay == 0 then
-			c.Save(9)
-			c.Done()
-		end
+	lv = c.Read(0x609C)
+	c.Debug('Str: ' .. str .. ' delay: ' .. delay .. ' max delay: ' .. c.maxDelay)
+	if (str >= 5) then
+		c.Save(5)
+		c.LogProgress('Str 3 found, delay: ' .. str, true)
+		c.Save('Chp3Lv' .. lv .. 'Str3_' .. delay)
+		c.maxDelay = delay - 1
 	else
-		c.Increment('str: ' .. str)
+		c.Increment('str: ' .. str .. ' delay: ' .. delay)
 	end
 end
 
