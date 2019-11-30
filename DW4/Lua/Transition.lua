@@ -1,14 +1,18 @@
-walking = 150
+walking = 14
 direction = 'Up'
-cap = 150
+cap = 30
 best = 999999999
 
 local c = require("DW4-ManipCore")
 c.InitSession()
 c.reportFrequency = 100
 
+local origBattleFlag = c.ReadBattle()
+
 function _isEncounter()
-	return c.Read(c.Addr.EGroup1Type) ~= 0xFF
+	local battle = c.ReadBattle()
+	return battle ~= battle
+	
 end
 
 
