@@ -2,6 +2,8 @@ EmuHawk.exe
 EmuHawk.exe.config
 config.ini
 defctrl.json
+Input Log.txt
+default.tasproj
 
 **/gamedb/**
 **/dll/**
