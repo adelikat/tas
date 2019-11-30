@@ -1,6 +1,6 @@
-walking = 30
-direction = 'Down'
-cap = 50
+walking = 150
+direction = 'Up'
+cap = 150
 best = 999999999
 
 local c = require("DW4-ManipCore")
@@ -8,8 +8,7 @@ c.InitSession()
 c.reportFrequency = 100
 
 function _isEncounter()
-	return false
-	--return c.Read(c.Addr.EGroup1Type) ~= 0xFF
+	return c.Read(c.Addr.EGroup1Type) ~= 0xFF
 end
 
 

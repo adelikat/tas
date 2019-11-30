@@ -1,27 +1,17 @@
------------------
--- Settings
------------------
-reportFrequency = 1 -- How many attempts before it logs a result
-
-prewalkingframes = 0
- direction = 'P1 Up'
-frames = 150
--------------------------
 local c = require("DW4-ManipCore")
 c.InitSession()
-origBattleFlag = memory.readbyte(0x008B)
+c.reportFrequency = 1 -- How many attempts before it logs a result
+c.maxDelay = 10
+
+frames = 150
+-------------------------
+
+origBattleFlag = c.Read.BattleFlag
 while not c.done do
-	savestate.loadslot(0)
+	c.Save(0)
 
-	--Pre-walking
-	--delay = 0
-	--c.Push(prewalkingdir)
-	--for i = 0, prewalkingframes, 1 do
-	--	c.RndWalking(prewalkingdir)
-	--end
-
-	--Wait
-	c.WaitFor(0)
+	delay = delay + c.DelayUpTo(c.maxDelay - delay)
+	c.WaitFor(delay)
 
 	--direction =  c.RndDirectionButton()
 

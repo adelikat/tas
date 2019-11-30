@@ -1,0 +1,59 @@
+local c = require("DW4-ManipCore")
+c.InitSession()
+c.reportFrequency = 100
+c.maxDelay = 10
+
+_holdFrames = 27
+_enemy1Target = nil;
+_enemy1Count = nil;
+_enemy2Target = 0xFF;
+-------------------------
+
+origBattleFlag = c.ReadBattle()
+while not c.done do
+	c.Load(0)
+
+	delay = c.DelayUpTo(c.maxDelay)
+	c.WaitFor(delay)
+	c.RndAtLeastOne()
+
+	direction =  c.RndDirectionButton()
+
+	for i = 0, _holdFrames, 1 do
+		c.Push(direction)
+	end
+
+	for i = 0, 13, 1 do
+		c.RndWalking(direction)
+	end
+
+	c.WaitFor(45)
+	c.Increment()
+
+	battleFound = false
+	battleFlag = c.ReadBattle()
+	if battleFlag ~= origBattleFlag then
+		c.LogProgress("battle found", true)
+		battleFound = true
+		break
+	end
+	
+    eg1Type = c.ReadEGroup1Type()
+    eg2Type = c.ReadEGroup2Type()
+	eg1Count = c.ReadE1Count()
+
+	if battlefound
+		and (_enemy1Target == nil or eg1Type == _enemy1Target)
+		and (_enemy1Count == nil or eg1Count == _enemy1Count)
+		and (_enemy2Target == nil or eg2Type == _enemy2Target)
+		then
+			c.Save(9)
+			c.Done()
+	elseif battleFound then
+		c.LogProgress('Batt')
+	end
+end
+
+c.Finish()
+
+
