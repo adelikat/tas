@@ -39,6 +39,6 @@ SystemID NES
 0060A3	b	u	0	System Bus	Taloon Max HP
 00609C	b	u	0	System Bus	Taloon LV
 0059	b	u	0	RAM	Menu
-00006F	w	h	0	System Bus	
-0000FD	w	h	0	System Bus	
+0071F2	b	u	0	System Bus	NPC Y
+00006F	w	h	0	System Bus	Offer
 
