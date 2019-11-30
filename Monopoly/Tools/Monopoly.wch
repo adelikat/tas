@@ -1,0 +1,8 @@
+SystemID NES
+0037	b	u	0	RAM	RNG?
+0302	b	u	0	RAM	RNG?
+0	S	_	1		
+05F2	b	u	0	RAM	RNG?
+0038	b	u	0	RAM	RNG?
+0039	b	u	0	RAM	RNG?
+
