@@ -4,7 +4,7 @@ c.reportFrequency = 100
 c.maxDelay = 0
 
 _holdFrames = 27
-_enemy1Target = nil;
+_enemy1Target = 0x5C;
 _enemy1Count = 1;
 _enemy2Target = 0xFF;
 
@@ -37,14 +37,14 @@ end
 
 function _getStatue()
 	c.PushA()
-	c.WaitFor(17)
+	c.WaitFor(18)
 	c.PushDown()
 	c.PushRight()
 	c.PushDown()
 	c.WaitFor(1)
 	c.PushDown()
 	c.PushA()
-	c.WaitFor(42)
+	c.WaitFor(43)
 	c.PushA()
 	c.WaitFor(42)
 	c.PushA()

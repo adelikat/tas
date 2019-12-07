@@ -5,8 +5,6 @@ SystemID NES
 0000C4	b	h	0	System Bus	Treasure Drop
 00727E	b	u	0	System Bus	E1 HP
 128C	b	u	0	WRAM	E2 HP
-00729A	b	u	0	System Bus	E3 HP
-006F	w	u	0	RAM	Armor Shop Offer
 007361	b	u	0	System Bus	Dmg
 0000FD	b	u	0	System Bus	Next Stat
 0096	b	u	0	RAM	Turn?
@@ -29,7 +27,6 @@ SystemID NES
 00B0	b	h	0	WRAM	Inv Slot 7
 00B1	b	h	0	WRAM	Inv Slot 8
 0157	w	u	0	WRAM	Gold
-0000E3	b	u	0	System Bus	
 00609D	b	u	0	System Bus	Taloon Str
 02ED	b	u	0	WRAM	Step Counter
 00609E	b	u	0	System Bus	Taloon Ag

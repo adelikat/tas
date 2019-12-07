@@ -1,6 +1,6 @@
-walking = 14
+walking = 15
 direction = 'Up'
-cap = 30
+cap = 50
 best = 999999999
 
 local c = require("DW4-ManipCore")
@@ -11,8 +11,7 @@ local origBattleFlag = c.ReadBattle()
 
 function _isEncounter()
 	local battle = c.ReadBattle()
-	return battle ~= battle
-	
+	return battle ~= origBattleFlag
 end
 
 
