@@ -48,6 +48,9 @@ SystemID NES
 0669	b	u	0	RAM	E2 Block Y
 0662	b	u	0	RAM	E3 Block X
 066A	b	u	0	RAM	E3 Block Y
+0671	b	s	0	E1 Timer
+0672	b	s	0	E2 Timer
+0673	b	s	0	E3 Timer
 0	S	_	1		
 06E0	b	u	0	RAM	Dig Counter 1
 06E1	b	u	0	RAM	Dig Counter 2

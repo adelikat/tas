@@ -1,0 +1,7 @@
+1st action 				    -4
+378 1st Roll 1st Frame		-1
+622 2nd Roll 1st Frame		-8
+860 3rd Roll 1st Frame		-6
+
+1771 - Fastest possible
+-30 total luck manipulation frames
