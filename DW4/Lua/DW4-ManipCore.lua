@@ -469,6 +469,9 @@ function PokeRng()
 	memory.writebyte(0x0013, math.random(0, 255))
 end
 
+function PokeRngVal(val)
+	mainmemory.write_u16_be(0x0012, val)
+end
 
 function UntilNextInputFrame()
 	c.Save("CoreTemp")
@@ -495,7 +498,8 @@ end
 M.PushButtonsFor = PushButtonsFor
 M.GenerateRndButtons = _rndButtons
 M.GenerateRndDirection = GenerateRndDirection
-M.PokeRng = PokeRng;
+M.PokeRng = PokeRng
+M.PokeRngVal = PokeRngVal
 M.Abort = Abort;
 M.Log = Log;
 M.DebugAddr = DebugAddr;
