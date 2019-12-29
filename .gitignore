@@ -3,8 +3,7 @@ EmuHawk.exe.config
 config.ini
 defctrl.json
 Input Log.txt
-default.tasproj
-
+*.tasproj
 **/gamedb/**
 **/dll/**
 **/Movies/backup/**
@@ -17,3 +16,5 @@ default.tasproj
 
 **/Compare/**
 **/Firmware/**
+
+**/~$*.xlsx
