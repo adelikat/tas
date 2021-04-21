@@ -4,4 +4,5 @@ SystemID NES
 0672	b	s	0	RAM	E2 Timer
 0673	b	s	0	RAM	E3 Timer
 0004	b	u	0	RAM	Camera X
+00E5	b	u	0	RAM	Game Speed
 
