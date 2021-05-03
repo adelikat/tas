@@ -4,9 +4,13 @@ SystemID NES
 0672	b	s	0	RAM	E2 Timer
 0673	b	s	0	RAM	E3 Timer
 0004	b	u	0	RAM	Camera X
-00E5	b	u	0	RAM	Game Speed
-0661	b	u	0	RAM	E? Lv X
+0661	b	u	0	RAM	E1 Lv X
+0669	b	u	0	RAM	E1 Lv Y
 0662	b	u	0	RAM	E2 Lv X
+066A	b	u	0	RAM	E2 Lv Y
 0663	b	u	0	RAM	E3 Lv X
+066B	b	u	0	RAM	E3 Lv Y
 00C5	b	u	0	RAM	Kill Count
+00E5	b	u	0	RAM	Game Speed
+009E	b	u	0	RAM	
 
