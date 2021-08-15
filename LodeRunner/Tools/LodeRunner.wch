@@ -13,4 +13,5 @@ SystemID NES
 00C5	b	u	0	RAM	Kill Count
 00E5	b	u	0	RAM	Game Speed
 009E	b	u	0	RAM	
+0053	b	u	0	RAM	E Drop Loc
 
