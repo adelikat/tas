@@ -1,3 +1,7 @@
 SystemID GEN
-00B07A	w	u	1	68K RAM	
+00A80E	w	u	1	68K RAM	Camera Y
+000080	w	u	1	68K RAM	Screen Y
+00B066	w	u	1	68K RAM	Level Y
+00B06F	b	u	1	68K RAM	Z Position
+00B05E	w	s	1	68K RAM	UL Pixel Speed
 
