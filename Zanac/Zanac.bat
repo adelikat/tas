@@ -1,0 +1,2 @@
+start EmuHawk.exe
+explorer .
