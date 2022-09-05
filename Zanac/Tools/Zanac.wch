@@ -3,9 +3,12 @@ SystemID NES
 07EF	b	u	0	RAM	
 0032	b	u	0	RAM	Lives
 0051	b	u	0	RAM	Fire power speed
+0764	b	s	0	RAM	E HP
 076A	b	s	0	RAM	E HP
+076C	b	s	0	RAM	E HP
 076D	b	s	0	RAM	E HP
 076E	b	s	0	RAM	E HP
+076F	b	s	0	RAM	E HP
 0770	b	s	0	RAM	E HP
 0771	b	u	0	RAM	E HP
 0772	b	s	0	RAM	E HP
@@ -15,7 +18,9 @@ SystemID NES
 0776	b	u	0	RAM	E HP
 0777	b	s	0	RAM	E HP
 0778	b	s	0	RAM	E HP
+0779	b	s	0	RAM	E HP
 077A	b	s	0	RAM	E HP
+077B	b	s	0	RAM	E HP
 077C	b	s	0	RAM	E HP
 077D	b	u	0	RAM	E HP
 
