@@ -4,7 +4,9 @@ SystemID NES
 0032	b	u	0	RAM	Lives
 0051	b	u	0	RAM	Fire power speed
 0764	b	s	0	RAM	E HP
+0769	b	s	0	RAM	E HP
 076A	b	s	0	RAM	E HP
+076B	b	s	0	RAM	E HP
 076C	b	s	0	RAM	E HP
 076D	b	s	0	RAM	E HP
 076E	b	s	0	RAM	E HP
