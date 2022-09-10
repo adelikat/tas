@@ -25,4 +25,5 @@ SystemID NES
 077B	b	s	0	RAM	E HP
 077C	b	s	0	RAM	E HP
 077D	b	u	0	RAM	E HP
+0531	b	u	0	RAM	THE ADDR
 
