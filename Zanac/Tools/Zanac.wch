@@ -26,4 +26,8 @@ SystemID NES
 077C	b	s	0	RAM	E HP
 077D	b	u	0	RAM	E HP
 0531	b	u	0	RAM	THE ADDR
+0	S	_	1		
+0559	b	h	0	RAM	Ground Icon Y Pos
+055A	b	h	0	RAM	Ground Icon Y Pos
+055B	b	h	0	RAM	Ground Icon Y Pos
 
