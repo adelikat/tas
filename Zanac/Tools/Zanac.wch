@@ -3,31 +3,39 @@ SystemID NES
 07EF	b	u	0	RAM	
 0032	b	u	0	RAM	Lives
 0051	b	u	0	RAM	Fire power speed
-0764	b	s	0	RAM	E HP
-0769	b	s	0	RAM	E HP
-076A	b	s	0	RAM	E HP
-076B	b	s	0	RAM	E HP
-076C	b	s	0	RAM	E HP
-076D	b	s	0	RAM	E HP
-076E	b	s	0	RAM	E HP
-076F	b	s	0	RAM	E HP
-0770	b	s	0	RAM	E HP
+0764	b	u	0	RAM	E HP
+0769	b	u	0	RAM	E HP
+076A	b	u	0	RAM	E HP
+076B	b	u	0	RAM	E HP
+076C	b	u	0	RAM	E HP
+076D	b	u	0	RAM	E HP
+076E	b	u	0	RAM	E HP
+076F	b	u	0	RAM	E HP
+0770	b	u	0	RAM	E HP
 0771	b	u	0	RAM	E HP
-0772	b	s	0	RAM	E HP
-0773	b	s	0	RAM	E HP
+0772	b	u	0	RAM	E HP
+0773	b	u	0	RAM	E HP
 0774	b	u	0	RAM	E HP
-0775	b	s	0	RAM	E HP
+0775	b	u	0	RAM	E HP
 0776	b	u	0	RAM	E HP
-0777	b	s	0	RAM	E HP
-0778	b	s	0	RAM	E HP
-0779	b	s	0	RAM	E HP
-077A	b	s	0	RAM	E HP
-077B	b	s	0	RAM	E HP
-077C	b	s	0	RAM	E HP
+0777	b	u	0	RAM	E HP
+0778	b	u	0	RAM	E HP
+0779	b	u	0	RAM	E HP
+077A	b	u	0	RAM	E HP
+077B	b	u	0	RAM	E HP
+077C	b	u	0	RAM	E HP
 077D	b	u	0	RAM	E HP
 0531	b	u	0	RAM	THE ADDR
 0	S	_	1		
-0559	b	h	0	RAM	Ground Icon Y Pos
-055A	b	h	0	RAM	Ground Icon Y Pos
-055B	b	h	0	RAM	Ground Icon Y Pos
+055B	b	u	0	RAM	Ground Icon Y Pos
+055A	b	u	0	RAM	Ground Icon Y Pos
+0559	b	u	0	RAM	Ground Icon Y Pos
+0558	b	u	0	RAM	Ground Icon Y Pos
+0557	b	u	0	RAM	Ground Icon Y Pos
+0556	b	u	0	RAM	Ground Icon Y Pos
+0555	b	u	0	RAM	Ground Icon Y Pos
+0554	b	u	0	RAM	Ground Icon Y Pos
+0	S	_	1		
+055C	b	u	0	RAM	Ship X Pos
+0045	b	u	0	RAM	Kill until Boxes
 
