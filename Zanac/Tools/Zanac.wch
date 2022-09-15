@@ -38,4 +38,5 @@ SystemID NES
 0	S	_	1		
 055C	b	u	0	RAM	Ship X Pos
 0045	b	u	0	RAM	Kill until Boxes
+0092	b	u	0	RAM	Current Area
 
