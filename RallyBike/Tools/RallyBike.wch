@@ -1,6 +1,7 @@
 SystemID NES
 0339	b	u	0	RAM	Speed
 0338	b	u	0	RAM	Place
+00BF	b	u	0	RAM	Heli Drop
 000D	b	h	0	RAM	position low byte?
 0016	b	h	0	RAM	
 0358	b	h	0	RAM	Gas, somehow
