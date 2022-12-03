@@ -3,7 +3,8 @@ SystemID NES
 0338	b	u	0	RAM	Place
 00BF	b	u	0	RAM	Heli Drop
 000D	b	h	0	RAM	position low byte?
-0016	b	h	0	RAM	
 0358	b	h	0	RAM	Gas, somehow
-0316	b	s	0	RAM	
+0306	b	u	0	RAM	Screen X
+0373	b	u	0	RAM	RNG 1?
+0374	b	u	0	RAM	RNG 2?
 
