@@ -1,3 +1,4 @@
 SystemID NES
 03A7	b	u	0	RAM	Screen X
+0092	b	u	0	RAM	Cafe - Counter Position
 
