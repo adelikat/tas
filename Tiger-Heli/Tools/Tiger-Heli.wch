@@ -2,4 +2,6 @@ SystemID NES
 0480	b	u	0	RAM	Screen X
 0082	b	u	0	RAM	Camera Y
 0083	b	u	0	RAM	Camera Y 2nd Byte
+0617	b	u	0	RAM	Tank Health
+0615	b	u	0	RAM	Tank Health
 
