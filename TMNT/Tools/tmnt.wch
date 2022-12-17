@@ -1,0 +1,29 @@
+SystemID NES
+00F0	b	u	0	RAM	Cam X 2nd
+00FD	b	u	0	RAM	Cam X
+0490	b	u	0	RAM	X Subs
+0480	b	u	0	RAM	Screen X
+04C0	b	u	0	RAM	X Pix Speed
+04F0	b	u	0	RAM	X subPix Speed
+0460	b	u	0	RAM	Y Position
+0470	b	u	0	RAM	Y subs
+0	S	_	1		
+0077	b	u	0	RAM	Leo Health
+0079	b	u	0	RAM	Mike Health
+0078	b	u	0	RAM	Raph Health
+007A	b	u	0	RAM	Don Health
+007D	b	u	0	RAM	Bombs Defused
+0055	b	u	0	RAM	Techdrome Location
+03D8	b	u	0	RAM	Drop counter
+0604	b	u	0	RAM	Enemy Set
+0565	b	u	0	RAM	E1 HP
+0505	b	u	0	RAM	E1 invuln timer
+0566	b	u	0	RAM	E2 HP
+0506	b	u	0	RAM	E2 invuln timer
+0567	b	u	0	RAM	E3 HP
+0507	b	u	0	RAM	E3 invuln timer
+0568	b	u	0	RAM	E4 HP
+0508	b	u	0	RAM	E4 invuln timer
+0569	b	u	0	RAM	E5 HP
+0509	b	u	0	RAM	E5 invuln timer
+

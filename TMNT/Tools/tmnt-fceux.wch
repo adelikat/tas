@@ -1,0 +1,33 @@
+
+27
+00000	00F0	b	u	0	Cam X 2nd
+00001	00FD	b	u	0	Cam X
+00002	0490	b	u	0	X Subs
+00003	0480	b	u	0	Screen X
+00004	04C0	b	s	0	X Pix Speed
+00005	04F0	b	s	0	X subPix Speed
+00006	0460	b	u	0	Y position
+00007	0470	b	u	0	Y subs
+00008	0000	S	S	0	----------------------------
+00009	0077	b	u	0	Leo Health
+0000A	0079	b	u	0	Mike Health
+0000B	0078	b	u	0	Raph Health
+0000C	007A	b	u	0	Don Health
+0000D	007D	b	s	0	Bombs Defused
+0000E	0055	b	u	0	Technodrom location
+0000F	03D8	b	u	0	Drop counter
+00010	0604	b	u	0	Enemy Set
+00011	0565	b	u	0	E1 HP
+00012	0505	b	u	0	E1 invuln timer
+00013	0566	b	u	0	E2 HP
+00014	0506	b	u	0	E2 invuln timer
+00015	0567	b	s	0	E3 HP
+00016	0507	b	s	0	E3 invuln timer
+00017	0568	b	s	0	E4 HP
+00018	0508	b	s	0	E4 invuln timer
+00019	0569	b	s	0	E5 HP
+0001A	0509	b	u	0	E5 invuln timer
+n timer
+0001A	0569	b	s	0	E5 HP
+0001B	0509	b	u	0	E5 invuln timer
+mer
