@@ -7,6 +7,9 @@ SystemID NES
 04F0	b	u	0	RAM	X subPix Speed
 0460	b	u	0	RAM	Y Position
 0470	b	u	0	RAM	Y subs
+0461	b	u	0	RAM	Weapon Y
+0481	b	u	0	RAM	Weapon X
+007E	b	u	0	RAM	Water Current Exists
 0	S	_	1		
 0077	b	u	0	RAM	Leo Health
 0079	b	u	0	RAM	Mike Health
@@ -15,6 +18,7 @@ SystemID NES
 007D	b	u	0	RAM	Bombs Defused
 0055	b	u	0	RAM	Techdrome Location
 03D8	b	u	0	RAM	Drop counter
+0	S	_	1		
 0604	b	u	0	RAM	Enemy Set
 0565	b	u	0	RAM	E1 HP
 0505	b	u	0	RAM	E1 invuln timer

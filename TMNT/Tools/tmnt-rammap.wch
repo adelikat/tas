@@ -1,0 +1,65 @@
+SystemID NES
+0046	b	u	0	RAM	Continues
+0046	b	u	0	RAM	World Number
+0055	b	u	0	RAM	Techdrome Location
+005B	b	u	0	RAM	Is Special Weapon Sel.
+0073	b	u	0	RAM	Leo Special Weapon (0:Nothing, 1:Stars, 2:Triple Stars, 3:Boomerangs, 4:Scrolls)
+0074	b	u	0	RAM	Raph Special Weapon
+0075	b	u	0	RAM	Mike Special Weapon
+0076	b	u	0	RAM	Don Special Weapon
+0077	b	u	0	RAM	Leo HP
+0078	b	u	0	RAM	Raph HP
+0079	b	u	0	RAM	Mike HP
+007A	b	u	0	RAM	Don HP
+007D	b	u	0	RAM	Bombs Defused
+007E	b	u	0	RAM	Water Current Exists
+00A7	b	u	0	RAM	Ropes
+00A8	b	u	0	RAM	Leo Special Weap Qty
+00A9	b	u	0	RAM	Raph Special Weap Qty
+00AA	b	u	0	RAM	Mike Special Weap Qty
+00AB	b	u	0	RAM	Don Special Weap Qty
+00BB	b	u	0	RAM	Dam Timer
+00BF	b	u	0	RAM	Turtle Van Missiles
+00C0	b	u	0	RAM	Score 1
+00C1	b	u	0	RAM	Score 2
+00C2	b	u	0	RAM	Score 3
+00C3	b	u	0	RAM	Unknwn Score
+00C4	b	u	0	RAM	Unknwn Score
+00C5	b	u	0	RAM	Unknwn Score
+00C6	b	u	0	RAM	High Score
+00C7	b	u	0	RAM	High Score
+00C8	b	u	0	RAM	High Score
+00F0	b	u	0	RAM	Cam X 2nd
+00FD	b	u	0	RAM	Cam X
+0	S	_	1		
+03D8	b	u	0	RAM	Drop counter
+0	S	_	1		
+0460	b	u	0	RAM	Screen Y
+0461	b	u	0	RAM	Weapon Y
+0470	b	u	0	RAM	Y subPix
+0471	b	u	0	RAM	Weapon Y subPix
+0480	b	u	0	RAM	Screen X
+0481	b	u	0	RAM	Weapon X
+0490	b	u	0	RAM	X subPix
+0491	b	u	0	RAM	Weapon X subPix
+04B0	b	s	0	RAM	Y Pix Speed
+04C0	b	u	0	RAM	X Pix Speed
+04E0	b	s	0	RAM	X Speed
+04F0	b	u	0	RAM	X subPix Speed
+0	S	_	1		
+0500	b	u	0	RAM	Turtle invuln timer
+0505	b	u	0	RAM	E1 invuln timer
+0506	b	u	0	RAM	E2 invuln timer
+0507	b	u	0	RAM	E3 invuln timer
+0508	b	u	0	RAM	E4 invuln timer
+0509	b	u	0	RAM	E5 invuln timer
+0565	b	u	0	RAM	E1 HP
+0566	b	u	0	RAM	E2 HP
+0567	b	u	0	RAM	E3 HP
+0568	b	u	0	RAM	E4 HP
+0569	b	u	0	RAM	E5 HP
+0	S	_	1		
+0604	b	u	0	RAM	Enemy Set
+0630	b	u	0	RAM	Invincibility Timer
+0631	b	u	0	RAM	Drop Timer
+
