@@ -1,6 +1,6 @@
 local c = require("DW4-ManipCore")
 c.InitSession()
-c.reportFrequency = 500
+c.reportFrequency = 100
 
 _blinkerAddr = 0x0059
 _demonStump = 0x0C
@@ -12,10 +12,10 @@ while not c.done do
 	savestate.loadslot(0)
 	delay = 0
 	--------------------------------------	
-	c.RndWalkingFor('Left', 100)
+	c.RndWalkingFor('Left', 115)
 	c.WaitFor(70)
 	direction = c.RndDirectionButton()
-	c.PushFor(direction, 14)
+	c.PushFor(direction, 6)
 
 	if (memory.readbyte(_blinkerAddr) == 19) then
 		c.RndWalkingFor(direction, 9)
@@ -25,15 +25,17 @@ while not c.done do
 		eg1Type = memory.readbyte(0x6E45);
 	 	eg2Type = memory.readbyte(0x6E46);
 		if (battleFlag ~= 0) then
-			--console.log('encounter: ' .. c.Etypes[eg1Type] .. ' ' .. c.Etypes[eg2Type])
+			console.log('encounter: ' .. c.Etypes[eg1Type] .. ' ' .. c.Etypes[eg2Type])
+			savestate.saveslot(6)
 			if (eg1Type == _demonStump and eg2Type == _none) then
 				c.WaitFor(39)
 				c.WaitFor(45)
-				if (emu.islagged() == false) then
+				--if (emu.islagged() == false) then
 					c.done = true
-				else
-					console.log('found but lag frame attempt: ' .. c.attempts)
-				end
+				--else
+				--	console.log('found but lag frame attempt: ' .. c.attempts)
+					--savestate.saveslot(7)
+				--end
 			end
 		end
 	end

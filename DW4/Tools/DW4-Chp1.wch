@@ -24,4 +24,5 @@ SystemID NES
 02ED	b	u	0	WRAM	Step counter
 0044	b	u	0	RAM	Cave X
 0045	b	u	0	RAM	Cave Y
+0059	b	u	0	RAM	Blinker Addr
 
