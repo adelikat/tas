@@ -25,4 +25,5 @@ SystemID NES
 0044	b	u	0	RAM	Cave X
 0045	b	u	0	RAM	Cave Y
 0059	b	u	0	RAM	Blinker Addr
+03CF	b	u	0	RAM	MenuPosY
 
