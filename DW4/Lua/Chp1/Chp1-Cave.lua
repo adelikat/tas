@@ -25,13 +25,17 @@ function _readEg2()
 	return c.Read(c.Addr.EGroup2Type)
 end
 
+function _readEg1Count()
+	return c.Read(c.Addr.ReadE1Count)
+end
+
 function _enterCave()
 	c.Save(10)
 	enterCave = false
 	while enterCave == false do
 		c.Load(10)
 		oBattle = c.Read(c.Addr.BattleFlag)
-		for i = 0, 115, 1 do
+		for i = 0, 118, 1 do
 			battle =  c.Read(c.Addr.BattleFlag)
 			if battle ~= oBattle then
 				c.Debug('Encounter')
@@ -227,10 +231,12 @@ function _floor2_2()
 	if (cur < cap) then
 		local eg1 = _readEg1()
 		local eg2 = _readEg2()
-		console.log('EGroup1: ' .. c.Etypes[eg1] .. ' EGroup2: ' .. c.Etypes[eg2])
+		local eg1Count = _readEg1Count()
+		console.log('EGroup1: ' .. c.Etypes[eg1] .. '(' .. eg1Count .. ') EGroup2: ' .. c.Etypes[eg2])
 
 		local success = eg1 == _demonStump
 			and eg2 == _none
+			and eg1Count == 1
 
 		Debug('Floor 2_2 Result: ' .. tostring(success))
 		return success
