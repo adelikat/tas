@@ -1,3 +1,5 @@
+--Starts on the lethal gopher fight in the cave, on the "magic frame"
+
 -----------------
 -- Settings
 -----------------
@@ -106,7 +108,7 @@ function _getCritical()
 		c.Increment('dmg: ' .. dmg)
 		if dmg >= _minDmg then
 			found = true
-			c.Log('Critical! Attempt: ' .. c.attempts .. ' delay: ' .. delay .. ' dmg: ' .. dmg)
+			c.Log('Critical! Attempt: ' .. c.attempts .. ' delay: ' .. 0 .. ' dmg: ' .. dmg)
 			savestate.saveslot(9)
 		elseif dmg >= 17 then
 			c.Log('Critical ' .. dmg)

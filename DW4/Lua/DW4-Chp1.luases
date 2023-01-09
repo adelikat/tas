@@ -5,3 +5,6 @@
 0 .\Encounter.lua
 0 .\Chp1\Chp1-FirstEncounter.lua
 0 .\Chp1\Chp1-Post1stDeathWarp.lua
+1 .\Chp1\Chp1-2ndDeathWarp.lua
+0 .\Chp1\Chp1-GetEncounterFor2ndDeathWarp.lua
+0 .\Chp1\Chp1-Cave.lua
