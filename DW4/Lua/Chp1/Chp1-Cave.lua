@@ -4,7 +4,7 @@ c.reportFrequency = 1
 
 _none = 0xFF
 _demonStump = 0x0C
-
+_lethalGopher = 0x13
 function _readY()
 	return c.Read(c.Addr.CaveY)
 end
@@ -26,7 +26,7 @@ function _readEg2()
 end
 
 function _readEg1Count()
-	return c.Read(c.Addr.ReadE1Count)
+	return c.Read(0x6E49)
 end
 
 function _enterCave()
@@ -234,7 +234,7 @@ function _floor2_2()
 		local eg1Count = _readEg1Count()
 		console.log('EGroup1: ' .. c.Etypes[eg1] .. '(' .. eg1Count .. ') EGroup2: ' .. c.Etypes[eg2])
 
-		local success = eg1 == _demonStump
+		local success = (eg1 == _demonStump or eg1 == _lethalGopher)
 			and eg2 == _none
 			and eg1Count == 1
 
