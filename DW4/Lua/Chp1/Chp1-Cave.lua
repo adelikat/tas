@@ -68,7 +68,7 @@ function _enterWell()
 	local cur = 0
 	while downWell == false and cur < cap do
 		c.Load(11)
-		c.RndWalkingFor('Up', 113) -- frame 12600
+		c.RndWalkingFor('Up', 111) -- frame 12600
 		c.PushFor('Up', 15)
 		c.WaitFor(40)
 		c.PushA()
@@ -146,12 +146,13 @@ function _floor1_2()
 		c.DebugAddr(c.Addr.CaveY)
 		condition = _readY() == 41
 
-		if (condition == true) then
-			Debug('Jackpot, 1 frame sooner')
-		else
-			c.PushDown()
-			condition = _readY() == 41
-		end
+		--We are getting the jackpot pretty often here
+		--if (condition == true) then
+			--Debug('Jackpot, 1 frame sooner')
+		--else
+			--c.PushDown()
+			--condition = _readY() == 41
+		--end
 
 		cur = cur + 1
 	end
@@ -234,7 +235,7 @@ function _floor2_2()
 		local eg1Count = _readEg1Count()
 		console.log('EGroup1: ' .. c.Etypes[eg1] .. '(' .. eg1Count .. ') EGroup2: ' .. c.Etypes[eg2])
 
-		local success = (eg1 == _demonStump or eg1 == _lethalGopher)
+		local success = (eg1 == _demonStump or eg1 == _lethalGopher )
 			and eg2 == _none
 			and eg1Count == 1
 
