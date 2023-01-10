@@ -226,7 +226,7 @@ function InitSession()
 	M.done = false
 	M.maxDelay = 0
 	math.randomseed(os.time())
-	--client.displaymessages(false);
+	client.displaymessages(false);
 	memory.usememorydomain('System Bus')
 	--client.unpause();
 end

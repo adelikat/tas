@@ -1,4 +1,3 @@
-walking = 97
 direction = 'Up'
 cap = 120
 best = 999999999
@@ -14,43 +13,63 @@ function _isEncounter()
 	return battle ~= origBattleFlag
 end
 
+function _isLag()
+	return emu.islagged()
+end
+
+function _saveBest(frameCount)
+	c.Save(9)
+	c.Save('Transition' .. frameCount)
+end
+
+function _walkToTransition()
+	c.Save(11)
+	arrived = false
+
+	-- we do not want to mistake a random lag frame for a transition, so we define it as 2 in a row
+	lastFrameWasLagged = false
+
+	while not arrived do
+		c.RndWalking(direction)
+
+		if _isEncounter() then
+			c.Load(11)
+		end
+
+		if emu.islagged() then
+			if lastFrameWasLagged then
+				c.Debug('Arrived at transition on frame ' .. emu.framecount())
+				return -- Success! We are at the transition
+			end
+
+			lastFrameWasLagged = true
+		else
+			lastFrameWasLagged = false
+		end
+
+	end	
+end
 
 while not c.done do
+	client.displaymessages(false)
 	c.Load(0) 
-	encounter = false
-	for i = 0, walking, 1 do
-		if _isEncounter() then
-			encounter = true
-			break
-		else
-			c.RndWalking(direction)
-		end
-	end
+	_walkToTransition()	
+	c.WaitFor(30) -- An optimization, we know a screen transition is never this fast
+	c.UntilNextInputFrame()
 
-	if encounter then
-		c.Debug('Encounter')
-	else
-		c.WaitFor(10)
-		lag = true
-		while lag do
-			lag = emu.islagged()
-			c.WaitFor(1)
-		end
-
-		frames = emu.framecount()
+	frames = emu.framecount()
 		if (frames < best) then
 			best = frames
 			c.Log("best so far: " .. frames .. " attempt " .. c.attempts)
-			c.Save(9)
+			_saveBest(frames)
 		end
-	end
 
 	c.Increment()
 	if (c.attempts > cap) then
 		c.Abort()
 	end
 end
-
+client.displaymessages(false)
 c.Finish()
 
 
