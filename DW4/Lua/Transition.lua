@@ -1,6 +1,6 @@
-walking = 174
-direction = 'Down'
-cap = 100
+walking = 97
+direction = 'Up'
+cap = 120
 best = 999999999
 
 local c = require("DW4-ManipCore")

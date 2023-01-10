@@ -21,7 +21,7 @@ while not c.done do
 	--direction = 'P1 Right'
 
 	for i = 0, frames, 1 do
-		battleFlag = memory.readbyte(0x008B)
+		battleFlag = memory.readbyte(0x008B )
 		if battleFlag ~= origBattleFlag then
 			c.Debug("battle found")
 			break
