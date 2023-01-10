@@ -1,5 +1,5 @@
 direction = 'Up'
-cap = 120
+cap = 50
 best = 999999999
 
 local c = require("DW4-ManipCore")
