@@ -1,5 +1,5 @@
 direction = 'Up'
-cap = 50
+cap = 1000
 best = 999999999
 
 local c = require("DW4-ManipCore")
@@ -33,6 +33,7 @@ function _walkToTransition()
 		c.RndWalking(direction)
 
 		if _isEncounter() then
+			c.Debug('Encounter')
 			c.Load(11)
 		end
 
@@ -50,8 +51,8 @@ function _walkToTransition()
 	end	
 end
 
+client.displaymessages(false)
 while not c.done do
-	client.displaymessages(false)
 	c.Load(0) 
 	_walkToTransition()	
 	c.WaitFor(30) -- An optimization, we know a screen transition is never this fast
