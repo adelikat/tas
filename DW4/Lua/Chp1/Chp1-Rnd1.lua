@@ -3,7 +3,7 @@ c.InitSession()
 c.reportFrequency = 1000
 
 function _readMenu()
-	return c.Read(c.Addr.MenuPos)
+	return c.Read(c.Addr.MenuPosY)
 end
 
 function _readBattle()
