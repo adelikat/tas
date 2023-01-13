@@ -1,3 +1,5 @@
+--Manipulates the first round of the chatper 1 final boss
+--Starts from first visible move walking up, X = 22, Y = 21
 local c = require("DW4-ManipCore")
 c.InitSession()
 c.reportFrequency = 1000
@@ -24,7 +26,7 @@ while not c.done do
 	c.Load(0)
 	earlyBailOut = false
 
-	--From first move walking up, X = 22, Y = 21
+	
 	c.RndWalkingFor('Up', 50)
 	c.WaitFor(121)
 	c.PushA()
