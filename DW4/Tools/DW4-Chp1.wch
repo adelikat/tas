@@ -27,4 +27,5 @@ SystemID NES
 0059	b	u	0	RAM	Blinker Addr
 03CF	b	u	0	RAM	MenuPosY
 0270	b	u	0	RAM	
+00B6	b	u	0	WRAM	Ragnar Current HP
 
