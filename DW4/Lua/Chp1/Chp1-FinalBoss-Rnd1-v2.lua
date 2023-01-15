@@ -102,7 +102,7 @@ function _startBattle()
 	frames = emu.framecount()
 
 	c.Save('Chp1FinalBoss' .. frames)
-	if frames > 23500 then
+	if frames > 23504 then --TODO: 23500!!!
 		return _bail('Magic frame too slow got: ' .. frames .. ' target: 23500')
 	elseif frames < 23500 then
 		c.Log('Jackpot!! Magic frame at: ' .. frames)
@@ -201,7 +201,7 @@ function _isSaroAttack()
 	if turn == 0 then
 		c.Log('Jackpot!!! Ragnar can go first, not known to be possible')
 		c.Save('Chp1FinalBoss-RagnarGoesFirst' .. emu.framecount())
-		c.done = true
+		c.Done()
 		c.Finish()
 		return false
 	end
@@ -221,6 +221,11 @@ function _isSaroAttack()
 		return _bail('Eyeball cheapo parry')
 	end
 
+	--bo1 = c.Read(0x7348) always 132 or 133
+	--bo2 = c.Read(0x7349) always 1 or 2
+	--bo3 = c.Read(0x734A)
+	--bo4 = c.Read(0x734B)
+
 	battleFlag = _readBattle()
 	return battleFlag == attackAction
 end
@@ -229,35 +234,12 @@ function _isMiss()
 	return _ragnarCurrentHp() == 27
 end
 
-_searchDelay = 0
-_searchCap = 500
-function _missSearch()
-	_searchDelay = 0
-	c.Save(12)
-
-	found = false
-	while not found do
-		c.Load(12)
-		c.Debug('Searching miss, delay: ' .. _searchDelay)
-		c.WaitFor(_searchDelay)
-		c.PushA()
-		c.RandomFor(1)
-		c.WaitFor(5)
-		if _isMiss() then
-			found = true
-		else
-			_searchDelay = _searchDelay + 1
-			if _searchDelay >= _searchCap then
-				return false
-			end
-		end
-	end
-	
-	return true	
-end
-
 function _manipMiss()
-	missSearchResult = _missSearch()
+	c.PushA()
+	c.RandomFor(1)
+	c.WaitFor(5)
+
+	missSearchResult = _isMiss()
 	c.UntilNextInputFrame()
 	c.WaitFor(2)
 	return missSearchResult
@@ -277,41 +259,18 @@ function _manipRagnarTurn()
 end
 
 c.Load(0)
-c.Save(10)
-while not c.done do	
-	result = false
-	while not result do
-		c.Load(10)
-		result = _startBattle()		
-	end
-
-	result = false
-	c.Save(11)
-	c.Save(3)
-	while not result do
-		c.Load(11)		
-		result = _manipSarosTurn()
+c.Save(100)
+while not c.done do
+	c.Load(100)
+	if c.Cap(_startBattle, 100) then
+		if c.Cap(_manipSarosTurn, 100) then
+			if c.Cap(_manipMiss, 1) then
+				c.Done()
+			end
+		end	
 	end
 	
-
-	c.Save(12)
-	c.Save(4)
-	missResult = _manipMiss()
-	if missResult then
-		eyeBallAttackResult = false
-		while not eyeBallAttackResult do
-			_manipEyeballAttack()
-		end
-		
-		missResult = _manipMiss()
-		if missResult then
-			c.done = true
-			client.displaymessages(true);
-		end		
-	end
-
 	c.Increment()
-	
 end
 
 c.Finish()

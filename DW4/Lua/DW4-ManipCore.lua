@@ -495,6 +495,53 @@ M.UntilNextInputFrame = function ()
 	Load("CoreTemp")
 end
 
+--[[
+runs a parameterless boolean function until it
+returns true or the cap is reached in which it will
+return false
+]]
+M.Cap = function (func, limit)
+	tempFile = 'Cap-'.. emu.framecount()
+	Save(tempFile)
+	for i = 0, limit do
+		Increment()
+		Debug('Cap Attempt: ' .. i)
+		result = func()
+		if result then
+			return true
+		else
+			Load(tempFile)
+		end
+	end
+	
+	LogProgress('Cap limit reached')
+	return false
+end
+
+--[[
+runs a parameterless boolean function and delays by
+1 frame until it returns true or the limit is reach
+in which it will return false
+]]
+M.FrameSearch = function (func, limit)
+	tempFile = 'Search-' .. emu.framecount()
+	Save(tempFile)
+	for i = 0, limit do
+		WaitFor(i)
+		Increment()
+		Debug('Frame Search Attempt: ' .. i)
+		result = func()
+		if result then
+			return true
+		else
+			Load(tempFile)
+		end
+	end
+
+	LogProgress('Search limit reached')
+	return false
+end
+
 M.PushButtonsFor = PushButtonsFor
 M.GenerateRndButtons = _rndButtons
 M.GenerateRndDirection = GenerateRndDirection
