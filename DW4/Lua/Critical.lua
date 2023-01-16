@@ -1,6 +1,6 @@
-_odds = 48 --1 in x
-_minDmg = 4
-_idealDmg = 0 --Max critical
+_odds = 64 --1 in x
+_minDmg = 58
+_idealDmg = 60 --Max critical
 _idealDelay = 0
 
 _wait3 = 0
@@ -55,7 +55,7 @@ function _checkBattleFlag(battle)
 end
 
 while not c.done do
-	c.Load(0)
+	c.Load(10)
 	delay = 0
 
 	_step(_wait3, true)

@@ -12,7 +12,6 @@ SystemID NES
 00B6	b	u	0	WRAM	Ragnar Current HP
 0	S	_	1		
 0096	b	u	0	RAM	Turn
-03CF	b	u	0	RAM	Menu pos
 1288	b	u	0	WRAM	Eyeball halving
 0059	b	u	0	RAM	MenuPos
 0059	b	u	0	RAM	Blinker Addr

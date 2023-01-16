@@ -199,7 +199,7 @@ function _save(slot)
 	end
 
 	slotNum = tonumber(slot)
-	if slotNum ~= nill and slotNum >= 0 and slotNum <= 9 then
+	if slotNum ~= nill and slotNum > 0 and slotNum <= 10 then
 		savestate.saveslot(slot)
 	else
 		savestate.save(slot .. '.State')
@@ -213,7 +213,7 @@ function _load(slot)
 
 	slotNum = tonumber(slot)
 
-	if slotNum ~= nil and slotNum >= 0 and slotNum <= 9 then
+	if slotNum ~= nil and slotNum > 0 and slotNum <= 10 then
 		savestate.loadslot(tonumber(slot))
 	else
 		savestate.load(slot .. '.State')
@@ -500,9 +500,10 @@ runs a parameterless boolean function until it
 returns true or the cap is reached in which it will
 return false
 ]]
-M.Cap = function (func, limit)
-	tempFile = 'Cap-'.. emu.framecount()
+function Cap (func, limit)
+	local tempFile = 'Cap-'.. emu.framecount()
 	Save(tempFile)
+	local i
 	for i = 0, limit do
 		Increment()
 		Debug('Cap Attempt: ' .. i)
@@ -517,6 +518,7 @@ M.Cap = function (func, limit)
 	LogProgress('Cap limit reached')
 	return false
 end
+M.Cap = Cap
 
 --[[
 runs a parameterless boolean function and delays by
@@ -526,20 +528,45 @@ in which it will return false
 M.FrameSearch = function (func, limit)
 	tempFile = 'Search-' .. emu.framecount()
 	Save(tempFile)
-	for i = 0, limit do
-		WaitFor(i)
-		Increment()
-		Debug('Frame Search Attempt: ' .. i)
+	local fsi
+	for fsi = 0, limit do
+		WaitFor(fsi)
 		result = func()
 		if result then
 			return true
 		else
+			Increment()
 			Load(tempFile)
 		end
 	end
 
 	LogProgress('Search limit reached')
 	return false
+end
+
+--[[
+Performs a boolean function until it returns true or the cap is reached.
+Once the cap is reached, delay frames are progressively added and it is tried
+again until cap.  Frames are added until maxFrames is reached
+]]
+M.ProgressiveSearch = function (func, cap, maxFrames)
+    local tempFile = 'Pg-' .. emu.framecount()
+    Save(tempFile)
+	local psi
+    for psi = 0, maxFrames do
+        LogProgress('Progressive Search with delay ' .. psi)
+        WaitFor(psi)
+        result = Cap(func, cap)
+        if result then
+            return true
+        else
+			Increment()
+            Load(tempFile)
+        end
+    end
+
+    LogProgress('Progress Search limit reached')
+    return false
 end
 
 M.PushButtonsFor = PushButtonsFor
@@ -954,8 +981,18 @@ M.Addr["StepCounter"] = 0x62ED
 M.Addr["EGroup1Type"] = 0x6E45
 M.Addr["EGroup2Type"] = 0x6E46
 M.Addr["E1Count"] = 0x6E49
+M.Addr["E1Hp"] = 0x727E
+M.Addr["E2Hp"] = 0x728C
 M.Addr["Dmg"] = 0x7361
 M.Addr["TaloonHp"] = 0x6098
+
+M.ReadE1Hp = function()
+	return M.Read(M.Addr.E1Hp)
+end
+
+M.ReadE2Hp = function()
+	return M.Read(M.Addr.E2Hp)
+end
 
 M.ReadRng1 = function()
 	return M.Read(M.Addr.Rng1)
