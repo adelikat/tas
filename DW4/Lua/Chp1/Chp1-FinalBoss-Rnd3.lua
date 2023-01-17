@@ -1,5 +1,6 @@
---Manipulates all of round 2 including a max damage critical hit
+--Manipulates all of round X including a max damage critical hit
 --Starts at the frame you see "Terrific blow" from round 2
+local round = 4
 local c = require("DW4-ManipCore")
 c.InitSession()
 c.reportFrequency = 500
@@ -124,7 +125,7 @@ function _saveMiss()
     frames = emu.framecount()
     rng1 = c.ReadRng1()
     rng2 = c.ReadRng2()
-    filename = 'Rnd3Miss-' .. frames .. '-rng-' .. rng1 .. '-' .. rng2
+    filename = 'Rnd' .. round .. 'Miss-' .. frames .. '-rng-' .. rng1 .. '-' .. rng2
     c.Log(filename)
     c.Save(filename)
 end
@@ -136,7 +137,7 @@ while not c.done do
     result = c.Cap(_manipSaroAttackWithMiss, 10000)
     if result then
         _saveMiss()
-        result = c.Cap(_manipCritical, 64)
+        result = c.Cap(_manipCritical, 200)
         if result then
             c.Done()
         end
