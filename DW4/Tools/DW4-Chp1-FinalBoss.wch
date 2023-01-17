@@ -22,4 +22,5 @@ SystemID NES
 00734A	b	u	0	System Bus	Bo3
 00734B	b	u	0	System Bus	Bo4
 00734C	b	u	0	System Bus	Bo5
+001D	b	u	0	RAM	
 

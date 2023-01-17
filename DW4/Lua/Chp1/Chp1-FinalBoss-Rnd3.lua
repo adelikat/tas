@@ -1,5 +1,5 @@
 --Manipulates all of round 2 including a max damage critical hit
---Starts at the frame you see "Terrific blow" from round 1
+--Starts at the frame you see "Terrific blow" from round 2
 local c = require("DW4-ManipCore")
 c.InitSession()
 c.reportFrequency = 500
@@ -31,30 +31,21 @@ function _ragnarCurrentHp()
 end
 
 function _manipSaroAttackWithMiss()
+    local origSaroHp = c.ReadE1Hp()
     c.WaitFor(1)
     c.RndAtLeastOne()
     c.RandomFor(1)
-    if c.ReadE2Hp() ~= 0 then
-        c.Save(4)
+    local newSaroHp = c.ReadE1Hp()
+    if origSaroHp == newSaroHp then
+        c.Save(5)
         return _bail('Lag at attack')
     end
 
-    c.WaitFor(40)
+    c.WaitFor(39)
     c.UntilNextInputFrame()
     c.WaitFor(2)
 
-    c.RndAtLeastOne() -- x Dmg points to Giant Eyeball
-    c.RandomFor(1)
-    c.WaitFor(2)
-
-    if _battleFlag() ~= 8 then
-        return _bail('Lag after damage to eyeball')
-    end
-
-    c.UntilNextInputFrame()
-    c.WaitFor(2)
-
-    c.RndAtLeastOne() -- Giant Eyeball want defeated
+    c.RndAtLeastOne() -- x Dmg Points to Saro's Shadow
 
     -- Transition to next round
     c.RandomFor(17) -- Lots of Rng frames
@@ -66,7 +57,6 @@ function _manipSaroAttackWithMiss()
     c.WaitFor(3)
 
     if _menuY() ~= 16 then
-        c.Save(4)
         return _bail('Lag at ARPI menu')
     end
 
@@ -134,7 +124,7 @@ function _saveMiss()
     frames = emu.framecount()
     rng1 = c.ReadRng1()
     rng2 = c.ReadRng2()
-    filename = 'Rnd2Miss-' .. frames .. '-rng-' .. rng1 .. '-' .. rng2
+    filename = 'Rnd3Miss-' .. frames .. '-rng-' .. rng1 .. '-' .. rng2
     c.Log(filename)
     c.Save(filename)
 end
