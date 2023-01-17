@@ -1,6 +1,6 @@
 --Manipulates all of round X including a max damage critical hit
 --Starts at the frame you see "Terrific blow" from round 2
-local round = 4
+local round = 5
 local c = require("DW4-ManipCore")
 c.InitSession()
 c.reportFrequency = 500
