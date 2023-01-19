@@ -6,6 +6,7 @@ c.reportFrequency = 100
 c.maxDelay = 30
 
 _ragHPAddr = 0x60B6
+_ragStrAddr = 0x60BB
 _ragAgAddr = 0x60BC
 _ragLuckAddr = 0x60BF
 _ragVitAddr = 0x60BD

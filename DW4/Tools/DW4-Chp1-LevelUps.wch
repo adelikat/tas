@@ -1,0 +1,16 @@
+SystemID NES
+0012	b	u	0	RAM	RNG 1
+0013	b	u	0	RAM	RNG 2
+00727E	b	u	0	System Bus	E1 HP
+128C	b	u	0	WRAM	E2 HP
+0059	b	u	0	RAM	MenuPos
+0059	b	u	0	RAM	Blinker Addr
+0	S	_	1		
+0060BA	b	u	0	System Bus	Ragnar Level
+0060BB	b	u	0	System Bus	Ragnar Str
+0060BC	b	u	0	System Bus	Ragnar Agility
+0060BD	b	u	0	System Bus	Ragnar Vitality
+0060BE	b	u	0	System Bus	Ragnar Int
+0060BF	b	u	0	System Bus	Ragnar Luck
+0060C1	b	u	0	System Bus	Ragnar Max HP
+

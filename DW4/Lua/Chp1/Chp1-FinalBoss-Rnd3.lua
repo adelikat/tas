@@ -1,6 +1,6 @@
 --Manipulates all of round X including a max damage critical hit
 --Starts at the frame you see "Terrific blow" from round 2
-local round = 5
+local round = 6
 local c = require("DW4-ManipCore")
 c.InitSession()
 c.reportFrequency = 500
@@ -117,7 +117,7 @@ function _manipCritical()
     local dmg = c.ReadDmg()
     c.Debug('Ragnar attack dmg: ' .. dmg)
     c.DelayUpTo(3)
-    return c.ReadDmg() == 60
+    return c.ReadDmg() == 61 --For last round, doing this just to collect misses with different RNGs for the level up manip
 end
 
 function _saveMiss()
