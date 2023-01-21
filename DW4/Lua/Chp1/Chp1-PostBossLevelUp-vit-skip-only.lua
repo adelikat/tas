@@ -4,13 +4,17 @@
 local c = require("DW4-ManipCore")
 c.InitSession()
 c.maxDelay = 40
-c.reportFrequency = 100
+c.reportFrequency = 1000
 local delay = 0
 
 local function _bail(msg)
 	c.Debug(msg)
 	c.Increment()
 	return false
+end
+
+local function _delay()
+    delay = delay + c.DelayUpTo(c.maxDelay - delay)
 end
 
 local function _ragnarLevel()
@@ -30,14 +34,14 @@ local function _getStats()
 end
 
 local function _defeatSro()
-    delay = delay + c.DelayUpTo(c.maxDelay - delay)
+   _delay()
 	c.RndAtLeastOne()
 	c.RandomFor(10)
 	c.RandomFor(5)
 	c.UntilNextInputFrame()
 	c.WaitFor(2)
 
-	delay = delay + c.DelayUpTo(c.maxDelay - delay)
+	_delay()
 	c.RndAtLeastOne() -- Ragnar Attacks
 	c.RandomFor(2)
 	c.WaitFor(5)
@@ -50,7 +54,7 @@ local function _defeatSro()
 	c.UntilNextInputFrame()
 	c.WaitFor(2)
 
-	delay = delay + c.DelayUpTo(c.maxDelay - delay)
+	_delay()
 	c.RndAtLeastOne() -- x Dmg to Saro's Shadow
 	c.RandomFor(1)
 	c.WaitFor(18)
@@ -73,7 +77,7 @@ local function _manipLevel(level, origStats)
 
     if not strSkip then
         c.UntilNextInputFrame()
-	    delay = delay + c.DelayUpTo(c.maxDelay - delay)
+	    _delay()
 	    c.RndAorB() -- Ragnar's Level goes up
     end
 	
@@ -100,8 +104,10 @@ local function _manipLevel(level, origStats)
         c.Save(string.format('Lv%sStatSkip-Delay-%s', level, delay))
         c.Done()
     else
+        local rng1 = c.ReadRng1()
+        local rng2 = c.ReadRng2()
         c.Log(string.format('Lv %s manipulated, delay: %s', level, delay))
-        c.Save(string.format('Chp%sLv2-Delay-%s', level, delay))
+        c.Save(string.format('Chp1Lv%s-Rng1-%s-Rng2-%s-Delay-%s', level rng1, rng2, delay))
     end
 
     return true
@@ -112,7 +118,7 @@ local function _manipLv2()
 
 	_defeatSro()
 
-	delay = delay + c.DelayUpTo(c.maxDelay - delay)
+	_delay()
 	c.RndAtLeastOne() -- Saro's Shadow was defeated
 	c.RandomFor(21)
 	c.WaitFor(280)
@@ -139,15 +145,23 @@ while not c.done do
 	delay = 0
 	local result = _manipLv2()
 	if result then
-        c.maxDelay = delay - 1
+        local cap = 100 + ((c.maxDelay - delay) * 1000)
+        
         c.Log('Successfully manipulated lv 2, delay: ' .. delay)
-		
-		if delay < 0 then
-			c.Done()
-			c.Save(9)
-        end
+        c.Log('Attempting Lv 3 ' .. cap .. ' times')
+		result = c.Cap(_manipLv3, cap)
+        if result then
+            c.Log('Successfully manipulated lv 3!! delay: ' .. delay)
+            c.maxDelay = delay - 1
+            if delay < 0 then
+                c.Done()
+                c.Save(9)
+            end
+        else
+            c.Log('Failed to manipulate lv 3')
+        end		
 	end
-    c.WaitFor(10)
+
 	c.Increment()
 end
 
