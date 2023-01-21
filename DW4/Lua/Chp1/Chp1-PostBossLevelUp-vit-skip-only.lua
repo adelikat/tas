@@ -3,7 +3,7 @@
 
 local c = require("DW4-ManipCore")
 c.InitSession()
-c.maxDelay = 40
+c.maxDelay = 60
 c.reportFrequency = 1000
 local delay = 0
 
@@ -83,8 +83,7 @@ local function _manipLevel(level, origStats)
 	
 	c.WaitFor(47)
     newStats = _getStats()
-    c.Debug('Saving to slot 5')
-    c.Save(5)
+
     if newStats.Agility > origStats.Agility then
 		return _bail(string.format('Lv %s - Got agility increase, bailing', level))
 	end
@@ -107,7 +106,7 @@ local function _manipLevel(level, origStats)
         local rng1 = c.ReadRng1()
         local rng2 = c.ReadRng2()
         c.Log(string.format('Lv %s manipulated, delay: %s', level, delay))
-        c.Save(string.format('Chp1Lv%s-Rng1-%s-Rng2-%s-Delay-%s', level rng1, rng2, delay))
+        c.Save(string.format('Chp1Lv%s-Rng1-%s-Rng2-%s-Delay-%s', level, rng1, rng2, delay))
     end
 
     return true
@@ -134,8 +133,8 @@ end
 
 local function _manipLv3()
     --Setup next magic frame
-    c.WaitFor(155)
-    c.UntilNextInputFrame()    
+    --c.WaitFor(155)
+    --c.UntilNextInputFrame()    
     return _manipLevel(3, _getStats())
 end
 
@@ -143,23 +142,14 @@ c.Save(100)
 while not c.done do
 	c.Load(100)
 	delay = 0
-	local result = _manipLv2()
-	if result then
-        local cap = 100 + ((c.maxDelay - delay) * 1000)
-        
-        c.Log('Successfully manipulated lv 2, delay: ' .. delay)
-        c.Log('Attempting Lv 3 ' .. cap .. ' times')
-		result = c.Cap(_manipLv3, cap)
-        if result then
-            c.Log('Successfully manipulated lv 3!! delay: ' .. delay)
-            c.maxDelay = delay - 1
-            if delay < 0 then
-                c.Done()
-                c.Save(9)
-            end
-        else
-            c.Log('Failed to manipulate lv 3')
-        end		
+	local result = _manipLv3()
+	if result then       
+        c.Log('Successfully manipulated lv 3, delay: ' .. delay)
+        c.maxDelay = delay - 1       
+        if delay < 0 then
+            c.Done()
+            c.Save(9)
+        end
 	end
 
 	c.Increment()
