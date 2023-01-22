@@ -3,7 +3,7 @@
 
 local c = require("DW4-ManipCore")
 c.InitSession()
-c.maxDelay = 60
+c.maxDelay = 0
 c.reportFrequency = 1000
 local delay = 0
 
@@ -81,7 +81,7 @@ local function _manipLevel(level, origStats)
 	    c.RndAorB() -- Ragnar's Level goes up
     end
 	
-	c.WaitFor(47)
+	c.WaitFor(49)
     newStats = _getStats()
 
     if newStats.Agility > origStats.Agility then
@@ -133,23 +133,27 @@ end
 
 local function _manipLv3()
     --Setup next magic frame
-    --c.WaitFor(155)
-    --c.UntilNextInputFrame()    
+    c.WaitFor(155)
+    c.UntilNextInputFrame()    
     return _manipLevel(3, _getStats())
 end
 
 c.Save(100)
 while not c.done do
+    _pokeRng()
 	c.Load(100)
 	delay = 0
-	local result = _manipLv3()
+
+	local result = _manipLv2()
 	if result then       
-        c.Log('Successfully manipulated lv 3, delay: ' .. delay)
-        c.maxDelay = delay - 1       
-        if delay < 0 then
-            c.Done()
-            c.Save(9)
-        end
+        c.Log(string.format('Successfully manipulated lv 2, delay: %s', level, delay))
+        local rng1 = c.Read(0x0012)
+        local rng2 = c.Read(0x0013)
+        c.Save(string.format('Chp1Lv2-Delay-%s-Rng1-%s-Rng-2%s', delay, rng1, rng2))
+        --if delay < 0 then
+         --   c.Done()
+          --  c.Save(9)
+        --end
 	end
 
 	c.Increment()
