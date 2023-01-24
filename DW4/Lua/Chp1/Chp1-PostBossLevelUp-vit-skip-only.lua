@@ -3,18 +3,28 @@
 
 local c = require("DW4-ManipCore")
 c.InitSession()
-c.maxDelay = 0
+c.maxDelay = 60
 c.reportFrequency = 1000
-local delay = 0
-
+local level = 4
 local function _bail(msg)
 	c.Debug(msg)
 	c.Increment()
 	return false
 end
 
-local function _delay()
-    delay = delay + c.DelayUpTo(c.maxDelay - delay)
+local randomDelay = {}
+function GetRandomSet(maxSize, count)
+    local payload = {}
+    for i = 0, count - 1 do
+       payload[i] = math.floor(math.random(0, maxSize) / count)
+    end
+  
+    return payload
+end
+  
+local function _delay(key)
+    local delayAmt = randomDelay[key]
+    c.WaitFor(delayAmt)
 end
 
 local function _ragnarLevel()
@@ -34,14 +44,14 @@ local function _getStats()
 end
 
 local function _defeatSro()
-   _delay()
+   _delay(0)
 	c.RndAtLeastOne()
 	c.RandomFor(10)
-	c.RandomFor(5)
+	c.WaitFor(10)
 	c.UntilNextInputFrame()
 	c.WaitFor(2)
 
-	_delay()
+	_delay(1)
 	c.RndAtLeastOne() -- Ragnar Attacks
 	c.RandomFor(2)
 	c.WaitFor(5)
@@ -54,7 +64,7 @@ local function _defeatSro()
 	c.UntilNextInputFrame()
 	c.WaitFor(2)
 
-	_delay()
+	_delay(2)
 	c.RndAtLeastOne() -- x Dmg to Saro's Shadow
 	c.RandomFor(1)
 	c.WaitFor(18)
@@ -77,7 +87,9 @@ local function _manipLevel(level, origStats)
 
     if not strSkip then
         c.UntilNextInputFrame()
-	    _delay()
+	   -- _delay(1)
+	   x = c.DelayUpTo(c.maxDelay)
+	   c.Debug('delaying: ' .. x)
 	    c.RndAorB() -- Ragnar's Level goes up
     end
 	
@@ -93,20 +105,20 @@ local function _manipLevel(level, origStats)
 	end
 	
 	if newStats.Luck > origStats.Luck or newStats.Int > origStats.Int then
-		c.Log(string.format('Lv %s Vitality skip delay: %s', level, delay))
-		c.Save(string.format('Chp1Lv2-Vit-Skip-ButOtherStats-Delay-%s', delay))
+		c.Log(string.format('Lv %s Vitality skip framecount: %s', level, emu.framecount()))
+		c.Save(string.format('Chp1Lv%s-Vit-Skip-ButOtherStats-FrameCount-%s', level, emu.framecount()))
 		return false
 	end
 
     if strSkip then
         c.Log('Jackpot!!! No stats in level ')
-        c.Save(string.format('Lv%sStatSkip-Delay-%s', level, delay))
+        c.Save(string.format('Lv%sStatSkip-FrameCount-%s', level, emu.framecount()))
         c.Done()
     else
         local rng1 = c.ReadRng1()
         local rng2 = c.ReadRng2()
-        c.Log(string.format('Lv %s manipulated, delay: %s', level, delay))
-        c.Save(string.format('Chp1Lv%s-Rng1-%s-Rng2-%s-Delay-%s', level, rng1, rng2, delay))
+        c.Log(string.format('Lv %s manipulated, FrameCount: %s', level, emu.framecount()))
+        c.Save(string.format('Chp1Lv%s-Rng1-%s-Rng2-%s-FrameCount-%s', level, rng1, rng2, emu.framecount()))
     end
 
     return true
@@ -117,7 +129,7 @@ local function _manipLv2()
 
 	_defeatSro()
 
-	_delay()
+	_delay(3)
 	c.RndAtLeastOne() -- Saro's Shadow was defeated
 	c.RandomFor(21)
 	c.WaitFor(280)
@@ -130,31 +142,31 @@ local function _manipLv2()
 
 	return _manipLevel(2, origStats)
 end
-
+--[[
 local function _manipLv3()
     --Setup next magic frame
     c.WaitFor(155)
     c.UntilNextInputFrame()    
     return _manipLevel(3, _getStats())
 end
-
+]]
 c.Save(100)
 while not c.done do
-    _pokeRng()
 	c.Load(100)
-	delay = 0
-
-	local result = _manipLv2()
-	if result then       
-        c.Log(string.format('Successfully manipulated lv 2, delay: %s', level, delay))
-        local rng1 = c.Read(0x0012)
-        local rng2 = c.Read(0x0013)
-        c.Save(string.format('Chp1Lv2-Delay-%s-Rng1-%s-Rng-2%s', delay, rng1, rng2))
+    randomDelay = GetRandomSet(c.maxDelay, 5)
+	--local result = _manipLv2()
+	local result = _manipLevel(level, _getStats())
+	--if result then
+        --delay = c.maxDelay - 1 
+        --c.Log(string.format('Successfully manipulated lv %s, framecount: %s', level, emu.framecount()))
+        --local rng1 = c.Read(0x0012)
+       -- local rng2 = c.Read(0x0013)
+       -- c.Save(string.format('Chp1Lv2-Delay-%s-Rng1-%s-Rng2-%s', delay, rng1, rng2))
         --if delay < 0 then
          --   c.Done()
           --  c.Save(9)
         --end
-	end
+	--end
 
 	c.Increment()
 end
