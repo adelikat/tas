@@ -13,7 +13,7 @@ SystemID NES
 007328	b	u	0	System Bus	Cur Action
 0	S	_	1		
 0096	b	u	0	RAM	Turn
-03CF	b	u	0	RAM	Menu pos
+03CF	b	u	0	RAM	Menu pos Y
 1288	b	u	0	WRAM	Eyeball halving
 00BC	b	u	0	WRAM	Ragnar Agility
 00BF	b	u	0	WRAM	Ragnar Luck

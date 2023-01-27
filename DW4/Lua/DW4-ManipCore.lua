@@ -500,7 +500,7 @@ runs a parameterless boolean function until it
 returns true or the cap is reached in which it will
 return false
 ]]
-function Cap (func, limit)
+function Cap(func, limit)
 	local tempFile = 'Cap-'.. emu.framecount()
 	Save(tempFile)
 	local i
@@ -519,6 +519,48 @@ function Cap (func, limit)
 	return false
 end
 M.Cap = Cap
+
+
+--[[
+runs a parameterless bool function and runs it
+for the number of tries specified. At the end it will load a
+savestate of the best result and return the frame count, only 
+successful attempts (where the function returns true) will be 
+considered, if 0 is returned it indicated that no successful 
+attempt occurred
+]]
+function Best(func, tries)
+	local noResult = 9999999
+	local best = noResult
+	local tempFile = 'Best-Start-'.. emu.framecount()
+	Save(tempFile)
+	local i
+	for i = 0, tries do
+		Load(tempFile)
+		Increment()
+		Debug('Best Search Attempt: ' .. i)
+		result = func()
+
+		if result then
+			current = emu.framecount()
+			if current < best then
+				best = current			
+				Debug('New best found: ' .. best)
+				Save('Best-End-' .. best)
+			end			
+		end
+	end
+
+	if best == noResult then
+		LogProgress('Failed to complete a single attempt')
+		return 0		
+	else
+		LogProgress('Loading best version: ' .. best)
+		Load('Best-End-' .. best)
+		return best
+	end	
+end
+M.Best = Best
 
 --[[
 runs a parameterless boolean function and delays by
