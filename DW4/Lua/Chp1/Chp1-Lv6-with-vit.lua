@@ -87,7 +87,7 @@ while not c.done do
 	c.Log('Got good vitality')
 	c.Save(5)
 
-	result = c.ProgressiveSearch(_level6_postvit, 250, 20)
+	result = c.ProgressiveSearch(_level6_postvit, 250, 10)
 	if result then
 		c.Save(6)
 		c.Done()
