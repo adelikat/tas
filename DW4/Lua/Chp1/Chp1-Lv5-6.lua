@@ -62,9 +62,10 @@ function _jackPot2()
 	return false
 end
 
+c.Save(100)
 while not c.done do
 	local found = false
-	c.Load(0)
+	c.Load(100)
 	--------------------------------------
 	c.RndWalkingFor('Up', 198)
 	c.WaitFor(3)
