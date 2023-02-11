@@ -5,7 +5,7 @@ local c = require("DW4-ManipCore")
 c.InitSession()
 c.maxDelay = 70
 c.reportFrequency = 1000
-local level = 6
+local level = 8
 local function _bail(msg)
 	c.Debug(msg)
 	c.Increment()
