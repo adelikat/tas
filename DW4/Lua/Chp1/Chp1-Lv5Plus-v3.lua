@@ -45,6 +45,7 @@ end
 
 -- Starts from the magic frame before the level
 local function _manipLevel(level, origStats)
+    local delay = 0
     c.RandomFor(1)
     c.WaitFor(6)
     local strSkip = false
@@ -55,11 +56,10 @@ local function _manipLevel(level, origStats)
 	end
 
     if not strSkip then
-        c.UntilNextInputFrame()
-	   -- _delay(1)
-	   x = c.DelayUpTo(c.maxDelay)
+       c.UntilNextInputFrame()
+	   delay = c.DelayUpTo(c.maxDelay)
 	   c.Debug('delaying: ' .. x)
-	    c.RndAorB() -- Ragnar's Level goes up
+	   c.RndAorB() -- Ragnar's Level goes up
     end
 	
 	c.WaitFor(49)
@@ -90,6 +90,7 @@ local function _manipLevel(level, origStats)
         c.Save(string.format('aaChp1Lv%s-FrameCount-%s-Rng2-%s-Rng1-%s', level, emu.framecount(), rng2, rng1))
     end
 
+    c.Log('Found with delay: ' .. delay)
     return true
 end
 

@@ -1,4 +1,4 @@
-direction = 'Up'
+direction = 'Down'
 cap = 25
 best = 999999999
 

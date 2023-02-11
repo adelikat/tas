@@ -3,12 +3,12 @@
 
 local c = require("DW4-ManipCore")
 c.InitSession()
-c.maxDelay = 2
+c.maxDelay = 0
 c.reportFrequency = 1000
 local delay = 0
 local level = 7
 local maxVitGain = 3
-local maxHpGain = 4
+local maxHpGain = 6
 local origStats
 local function _bail(msg)
 	c.Debug(msg)
@@ -82,10 +82,9 @@ local function _manipLevel()
 
     if currStats.Int > origStats.Int then
         c.Log('Got Int delay: ' .. delay)
-        c.Save(4)
         return _bail('Got Int')
     end
-    c.Save(5)
+
     c.Log('Got to HP!')
     targetHp = origStats.MaxHp + maxHpGain
     if currStats.MaxHp > targetHp then
@@ -100,7 +99,7 @@ c.Save(100)
 while not c.done do
 	c.Load(100)
     origStats = _getStats()
-    local result = c.ProgressiveSearch(_manipLevel, 30, 300)
+    local result = c.ProgressiveSearch(_manipLevel, 500, 5)
     if result then
         c.Log(string.format('Success! Delay: %s', delay))
         c.Save(9)
