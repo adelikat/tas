@@ -1,12 +1,12 @@
-local M = {}
+local M = {
+	buttonmap = { [1]='P1 Up',[2]='P1 Down',[4]='P1 Left',[8]='P1 Right',[16]='P1 A',[32]='P1 B',[64]='P1 Start',[128]='P1 Select' },
+	attempts = 0,
+	done = false,
+	maxDelay = 0,
+	reportFrequency = 1,
+	debug = true
+}
 
-M.buttonmap = { [1]='P1 Up',[2]='P1 Down',[4]='P1 Left',[8]='P1 Right',[16]='P1 A',[32]='P1 B',[64]='P1 Start',[128]='P1 Select' } 
-M.attempts = 0;
-M.done = 0;
-M.fail = false; -- if true, and done is true it will not savestate
-M.maxDelay = 0;
-M.reportFrequency = 1;
-M.debug = true;
 -------------------------------------
 -- Private
 -------------------------------------
