@@ -220,8 +220,7 @@ local function _load(slot)
 	end
 end
 
--------------------------------------
-local function InitSession()
+local function _initSession()
 	M.attempts = 0
 	M.done = false
 	M.maxDelay = 0
@@ -231,7 +230,7 @@ local function InitSession()
 	--client.unpause();
 end
 
-local function Finish()
+local function _finish()
 	console.log('---------------')
 	client.displaymessages(true);
 	client.pause();
@@ -246,17 +245,13 @@ local function Finish()
 	end
 end
 
-local function Log(msg)
-	console.log(msg)
-end
-
-local function Debug(msg)
+local function _debug(msg)
 	if _isDebug() then
 		console.log(msg)
 	end
 end
 
-local function LogProgress(extraInfo, force)
+local function _logProgress(extraInfo, force)
 	if (M.attempts % M.reportFrequency == 0 or M.done or force == true) then
 		ei = '';
 		if (extraInfo ~= nil) then
@@ -266,14 +261,7 @@ local function LogProgress(extraInfo, force)
 	end
 end
 
-local function Push(name)
-	if (not bizstring.startswith(name, 'P1')) then
-		name = 'P1 ' .. name;
-	end
-	_doFrame(_push(name));
-end
-
-local function WaitFor(frames)
+local function _waitFor(frames)
 	if (frames > 0) then
 		for i = 0, frames - 1, 1 do
 			emu.frameadvance();
@@ -299,10 +287,6 @@ local function RandomFor(frames) -- exclusive
 			emu.frameadvance();
 		end
 	end
-end
-
-local function GenerateRndBool()
-	return _rndBool();
 end
 
 local function GenerateRndDirection()
@@ -360,7 +344,7 @@ local function PushFor(directionButton, frames)
 	end
 end
 
-local function PushButtonsFor(buttons, frames)
+local function _pushButtonsFor(buttons, frames)
 	for i = 0, frames, 1 do
 		_doFrame(buttons);
 	end
@@ -404,7 +388,7 @@ end
 
 local function Increment(logInfo)
 	M.attempts = M.attempts + 1;
-	LogProgress(logInfo);
+	_logProgress(logInfo);
 end
 
 local function UntilNextMenu()
@@ -454,12 +438,12 @@ local function Load(slot)
 	_load(slot)
 end
 
-local function Done()
+local function _done()
 	M.done = true
 	M.fail = false
 end
 
-local function Abort()
+local function _abort()
 	M.done = true
 	M.fail = true
 end
@@ -489,7 +473,7 @@ M.UntilNextInputFrame = function ()
 
 	while emu.islagged() == true do
 		Save("CoreTemp")
-		WaitFor(1)
+		_waitFor(1)
 	end
 
 	Load("CoreTemp")
@@ -500,13 +484,13 @@ runs a parameterless boolean function until it
 returns true or the cap is reached in which it will
 return false
 ]]
-local function Cap(func, limit)
+local function _cap(func, limit)
 	local tempFile = 'Cap-'.. emu.framecount()
 	Save(tempFile)
 	local i
 	for i = 0, limit do
 		Increment()
-		Debug('Cap Attempt: ' .. i)
+		_debug('Cap Attempt: ' .. i)
 		result = func()
 		if result then
 			return true
@@ -515,10 +499,10 @@ local function Cap(func, limit)
 		end
 	end
 	
-	LogProgress('Cap limit reached')
+	_logProgress('Cap limit reached')
 	return false
 end
-M.Cap = Cap
+M.Cap = _cap
 
 
 --[[
@@ -529,7 +513,7 @@ successful attempts (where the function returns true) will be
 considered, if 0 is returned it indicated that no successful 
 attempt occurred
 ]]
-local function Best(func, tries)
+local function _best(func, tries)
 	local noResult = 9999999
 	local best = noResult
 	local tempFile = 'Best-Start-'.. emu.framecount()
@@ -538,29 +522,29 @@ local function Best(func, tries)
 	for i = 0, tries do
 		Load(tempFile)
 		Increment()
-		Debug('Best Search Attempt: ' .. i)
+		_debug('Best Search Attempt: ' .. i)
 		result = func()
 
 		if result then
 			current = emu.framecount()
 			if current < best then
 				best = current			
-				Debug('New best found: ' .. best)
+				_debug('New best found: ' .. best)
 				Save('Best-End-' .. best)
 			end			
 		end
 	end
 
 	if best == noResult then
-		LogProgress('Failed to complete a single attempt')
+		_logProgress('Failed to complete a single attempt')
 		return 0		
 	else
-		LogProgress('Loading best version: ' .. best)
+		_logProgress('Loading best version: ' .. best)
 		Load('Best-End-' .. best)
 		return best
 	end	
 end
-M.Best = Best
+M.Best = _best
 
 --[[
 runs a parameterless boolean function and delays by
@@ -572,7 +556,7 @@ M.FrameSearch = function (func, limit)
 	Save(tempFile)
 	local fsi
 	for fsi = 0, limit do
-		WaitFor(fsi)
+		_waitFor(fsi)
 		result = func()
 		if result then
 			return true
@@ -582,7 +566,7 @@ M.FrameSearch = function (func, limit)
 		end
 	end
 
-	LogProgress('Search limit reached')
+	_logProgress('Search limit reached')
 	return false
 end
 
@@ -596,8 +580,8 @@ M.ProgressiveSearch = function (func, cap, maxFrames)
     Save(tempFile)
 	local psi
     for psi = 0, maxFrames do
-        LogProgress('Progressive Search with delay ' .. psi)
-        WaitFor(psi)
+        _logProgress('Progressive Search with delay ' .. psi)
+       _waitFor(psi)
         result = Cap(func, cap)
         if result then
             return true
@@ -607,32 +591,40 @@ M.ProgressiveSearch = function (func, cap, maxFrames)
         end
     end
 
-    LogProgress('Progress Search limit reached')
+    _logProgress('Progress Search limit reached')
     return false
 end
 
-M.PushButtonsFor = PushButtonsFor
+M.PushButtonsFor = _pushButtonsFor
 M.GenerateRndButtons = _rndButtons
 M.GenerateRndDirection = GenerateRndDirection
 M.PokeRng = PokeRng
 M.PokeRngVal = PokeRngVal
-M.Abort = Abort;
-M.Log = Log;
+M.Abort = _abort;
+M.Log = function()
+	console.log(msg)
+end;
+
 M.DebugAddr = DebugAddr;
-M.Done = Done;
+M.Done = _done;
 M.Read = Read;
 M.Save = Save;
 M.Load = Load;
-M.Debug = Debug
+M.Debug = _debug
 M.RndDirectionButton = RndDirectionButton;
 M.Increment = Increment;
-M.InitSession = InitSession;
-M.Finish = Finish;
-M.LogProgress = LogProgress;
-M.Push = Push;
-M.WaitFor = WaitFor;
+M.InitSession = _initSession;
+M.Finish = _finish;
+M.LogProgress = _logProgress;
+M.Push = function()
+	if (not bizstring.startswith(name, 'P1')) then
+		name = 'P1 ' .. name;
+	end
+	_doFrame(_push(name));	
+end;
+M.WaitFor = _waitFor;
 M.DelayUpTo = DelayUpTo;
-M.GenerateRndBool = GenerateRndBool;
+M.GenerateRndBool = _rndBool;
 M.RandomFor = RandomFor;
 M.RndButtons = RndButtons;
 M.RndAtLeastOne = RndAtLeastOne;
