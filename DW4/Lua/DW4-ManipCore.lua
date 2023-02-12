@@ -54,6 +54,15 @@ local function _rndAtLeastOne()
 	return result;		
 end
 
+local function _rndBool()
+	x = math.random(0, 1);
+	if (x == 1) then
+		return true;
+	end
+
+	return false;
+end
+
 local function _rndDirection()
 	key1 = {};
 	key1['P1 Up'] = _rndBool();
@@ -99,15 +108,6 @@ local function _rndDirectionAtLeastOne()
 	end
 
 	return result;		
-end
-
-local function _rndBool()
-	x = math.random(0, 1);
-	if (x == 1) then
-		return true;
-	end
-
-	return false;
 end
 
 local function _push(name)
@@ -451,7 +451,7 @@ M.DebugAddr = function(addr)
 		console.log('Read ' .. _toHex(addr) .. ' got ' .. val)
 	end
 end;
-M.Read = function()
+M.Read = function(addr)
 	return memory.readbyte(addr)
 end;
 M.Save = _save;

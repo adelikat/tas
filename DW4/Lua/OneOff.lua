@@ -11,8 +11,10 @@ local function _pokeRng()
     c.Debug('RNG 2: ' .. c.ReadRng2())
 end
 
+c.Load(0)
 c.Save(100)
 while not c.done do
+	--[[
 	c.Load(100)
 	_pokeRng()
 	c.PushA()
@@ -24,6 +26,14 @@ while not c.done do
 	else
 		c.Increment()
 	end
+	]]
+	c.PushA()
+	c.WaitFor(67)
+	c.UntilNextInputFrame()
+	c.PushA()
+	
+	c.Done()
+	c.Debug('done: ' .. tostring(c.done))
 end
 
 c.Finish()

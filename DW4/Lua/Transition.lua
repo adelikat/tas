@@ -1,6 +1,6 @@
-direction = 'Down'
-cap = 25
-best = 999999999
+local direction = 'Up'
+local cap = 25
+local best = 999999999
 
 local c = require("DW4-ManipCore")
 c.InitSession()
