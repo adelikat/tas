@@ -199,6 +199,10 @@ local function _save(slot)
 	end
 
 	slotNum = tonumber(slot)
+	if slotNum == 0 then
+		slotNum = 10
+	end
+
 	if slotNum ~= nill and slotNum > 0 and slotNum <= 10 then
 		savestate.saveslot(slot)
 	else
@@ -212,6 +216,10 @@ local function _load(slot)
 	end
 
 	slotNum = tonumber(slot)
+
+	if slotNum == 0 then
+		slotNum = 10
+	end
 
 	if slotNum ~= nil and slotNum > 0 and slotNum <= 10 then
 		savestate.loadslot(tonumber(slot))
