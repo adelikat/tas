@@ -261,181 +261,15 @@ local function _logProgress(extraInfo, force)
 	end
 end
 
-local function _waitFor(frames)
-	if (frames > 0) then
-		for i = 0, frames - 1, 1 do
-			emu.frameadvance();
-		end
-	end
-end
-
-local function DelayUpTo(frames)
-	if (frames <= 0) then return 0 end;
-	delay = math.random(0, frames);
-	if (delay > 0) then
-		for i = 0, delay - 1, 1 do
-			emu.frameadvance();
-		end
-	end
-	return delay;
-end
-
-local function RandomFor(frames) -- exclusive
-	if (frames > 0) then
-		for i = 0, frames - 1, 1 do
-			joypad.set(_rndButtons());
-			emu.frameadvance();
-		end
-	end
-end
-
-local function GenerateRndDirection()
-	x = math.random(0, 3);
-	if x == 0 then return 'P1 Left' end
-	if x == 1 then return 'P1 Right' end
-	if x == 2 then return 'P1 Up' end
-	return 'P1 Down'
-end
-
-local function RndButtons()
-	_doFrame(_rndButtons());
-end
-
-local function RndAtLeastOne()
-	_doFrame(_rndAtLeastOne());
-end
-
-local function RndDirection()
-	_doFrame(_rndDirection());
-end
-
-local function RndLeftOrRight()
-	_doFrame(_rndLeftOrRight());
-end
-
-local function RndWalking(directionButton)
-	if (not bizstring.startswith(directionButton, 'P1')) then
-		directionButton = 'P1 ' .. directionButton;
-	end
-	_doFrame(_rndWalking(directionButton));
-end
-
-local function RndWalkingFor(directionButton, frames)
-	if (not bizstring.startswith(directionButton, 'P1')) then
-		directionButton = 'P1 ' .. directionButton;
-	end
-	for i = 0, frames, 1 do
-		_doFrame(_rndWalking(directionButton));
-	end
-end
-
-local function RandomDirectionAtLeastOne()
-	_doFrame(_rndDirectionAtLeastOne());
-	
-	return result;		
-end
-
-local function PushFor(directionButton, frames)
-	if (not bizstring.startswith(directionButton, 'P1')) then
-		directionButton = 'P1 ' .. directionButton;
-	end
-	for i = 0, frames, 1 do
-		_doFrame(_push(directionButton));
-	end
-end
-
 local function _pushButtonsFor(buttons, frames)
 	for i = 0, frames, 1 do
 		_doFrame(buttons);
 	end
 end
 
-local function PushA()	
-	_doFrame(_push('P1 A'));
-end
-
-local function PushB()
-	_doFrame(_push('P1 B'));
-end
-
-local function PushAorB()
-	_doFrame(_pushAorB());
-end
-
-local function RndAorB()
-	_doFrame(_rndAorB());
-end
-
-local function PushLorR()
-	_doFrame(_pushLorR());
-end
-
-local function PushUp()
-	_doFrame(_push('P1 Up'));
-end
-
-local function PushDown()
-	_doFrame(_push('P1 Down'));
-end
-
-local function PushRight()
-	_doFrame(_push('P1 Right'));
-end
-
-local function PushLeft()
-	_doFrame(_push('P1 Left'));
-end
-
-local function Increment(logInfo)
+local function _increment(logInfo)
 	M.attempts = M.attempts + 1;
 	_logProgress(logInfo);
-end
-
-local function UntilNextMenu()
-	length = 0;
-	advance = memory.readbyte(0x0059) ~= 248
-	while advance do
-		M.WaitFor(1);
-		length = length + 1;
-		advance = memory.readbyte(0x0059) ~= 248
-	end
-	return length;
-end
-
-local function RndDirectionButton()
-	local x = math.random(0, 3);
-	if (x == 1) then
-		return 'P1 Left';
-	end
-
-	if (x == 2) then
-		return 'P1 Right';
-	end
-	
-	if (x == 3) then
-		return 'P1 Down';
-	end
-
-	return 'P1 Up';
-end
-
-local function Read(addr)
-	return memory.readbyte(addr)
-end
-
-local function DebugAddr(addr)
-	if (_isDebug()) then
-		local val = memory.readbyte(addr)
-		console.log('Read ' .. _toHex(addr) .. ' got ' .. val)
-	end
-end
-
-local function Save(slot)
-	_save(slot)
-end
-
-local function Load(slot)
-	_load(slot)
 end
 
 local function _done()
@@ -448,35 +282,23 @@ local function _abort()
 	M.fail = true
 end
 
-local function PokeRng()
-	memory.writebyte(0x0012, math.random(0, 255))
-	memory.writebyte(0x0013, math.random(0, 255))
-end
-
-local function PokeRngVal(val)
-	mainmemory.write_u16_be(0x0012, val)
-end
-
-local function UntilNextInputFrame()
-	c.Save("CoreTemp")
-
-	while emu.islagged() == true do
-		c.Save("CoreTemp")
-		c.WaitFor(1)
+function _waitFor(frames)
+	if (frames > 0) then
+		for i = 0, frames - 1, 1 do
+			emu.frameadvance();
+		end
 	end
-
-	c.Load("CoreTemp")
 end
 
 M.UntilNextInputFrame = function ()
-	Save("CoreTemp")
+	_save("CoreTemp")
 
 	while emu.islagged() == true do
-		Save("CoreTemp")
+		_save("CoreTemp")
 		_waitFor(1)
 	end
 
-	Load("CoreTemp")
+	_load("CoreTemp")
 end
 
 --[[
@@ -484,26 +306,24 @@ runs a parameterless boolean function until it
 returns true or the cap is reached in which it will
 return false
 ]]
-local function _cap(func, limit)
+M.Cap = function(func, limit)
 	local tempFile = 'Cap-'.. emu.framecount()
-	Save(tempFile)
+	_save(tempFile)
 	local i
 	for i = 0, limit do
-		Increment()
+		_increment()
 		_debug('Cap Attempt: ' .. i)
 		result = func()
 		if result then
 			return true
 		else
-			Load(tempFile)
+			_load(tempFile)
 		end
 	end
 	
 	_logProgress('Cap limit reached')
 	return false
 end
-M.Cap = _cap
-
 
 --[[
 runs a parameterless bool function and runs it
@@ -513,15 +333,15 @@ successful attempts (where the function returns true) will be
 considered, if 0 is returned it indicated that no successful 
 attempt occurred
 ]]
-local function _best(func, tries)
+M.Best = function(func, tries)
 	local noResult = 9999999
 	local best = noResult
 	local tempFile = 'Best-Start-'.. emu.framecount()
-	Save(tempFile)
+	_save(tempFile)
 	local i
 	for i = 0, tries do
-		Load(tempFile)
-		Increment()
+		_load(tempFile)
+		_increment()
 		_debug('Best Search Attempt: ' .. i)
 		result = func()
 
@@ -530,7 +350,7 @@ local function _best(func, tries)
 			if current < best then
 				best = current			
 				_debug('New best found: ' .. best)
-				Save('Best-End-' .. best)
+				_save('Best-End-' .. best)
 			end			
 		end
 	end
@@ -540,11 +360,10 @@ local function _best(func, tries)
 		return 0		
 	else
 		_logProgress('Loading best version: ' .. best)
-		Load('Best-End-' .. best)
+		_load('Best-End-' .. best)
 		return best
 	end	
 end
-M.Best = _best
 
 --[[
 runs a parameterless boolean function and delays by
@@ -553,7 +372,7 @@ in which it will return false
 ]]
 M.FrameSearch = function (func, limit)
 	tempFile = 'Search-' .. emu.framecount()
-	Save(tempFile)
+	_save(tempFile)
 	local fsi
 	for fsi = 0, limit do
 		_waitFor(fsi)
@@ -561,8 +380,8 @@ M.FrameSearch = function (func, limit)
 		if result then
 			return true
 		else
-			Increment()
-			Load(tempFile)
+			_increment()
+			_load(tempFile)
 		end
 	end
 
@@ -577,7 +396,7 @@ again until cap.  Frames are added until maxFrames is reached
 ]]
 M.ProgressiveSearch = function (func, cap, maxFrames)
     local tempFile = 'Pg-' .. emu.framecount()
-    Save(tempFile)
+    _save(tempFile)
 	local psi
     for psi = 0, maxFrames do
         _logProgress('Progressive Search with delay ' .. psi)
@@ -586,8 +405,8 @@ M.ProgressiveSearch = function (func, cap, maxFrames)
         if result then
             return true
         else
-			Increment()
-            Load(tempFile)
+			_increment()
+            _load(tempFile)
         end
     end
 
@@ -597,22 +416,43 @@ end
 
 M.PushButtonsFor = _pushButtonsFor
 M.GenerateRndButtons = _rndButtons
-M.GenerateRndDirection = GenerateRndDirection
-M.PokeRng = PokeRng
-M.PokeRngVal = PokeRngVal
+M.GenerateRndDirection = function()	
+	x = math.random(0, 3);
+	if x == 0 then return 'P1 Left' end
+	if x == 1 then return 'P1 Right' end
+	if x == 2 then return 'P1 Up' end
+	return 'P1 Down'
+end
+
+M.PokeRng = function()
+	memory.writebyte(0x0012, math.random(0, 255))
+	memory.writebyte(0x0013, math.random(0, 255))
+end
+
+M.PokeRngVal = function(val)
+	mainmemory.write_u16_be(0x0012, val)
+end
 M.Abort = _abort;
 M.Log = function()
 	console.log(msg)
 end;
 
-M.DebugAddr = DebugAddr;
-M.Done = _done;
-M.Read = Read;
-M.Save = Save;
-M.Load = Load;
+M.DebugAddr = function(addr)
+	if (_isDebug()) then
+		local val = memory.readbyte(addr)
+		console.log('Read ' .. _toHex(addr) .. ' got ' .. val)
+	end
+end;
+M.Read = function()
+	return memory.readbyte(addr)
+end;
+M.Save = _save;
+M.Load = _load;
 M.Debug = _debug
-M.RndDirectionButton = RndDirectionButton;
-M.Increment = Increment;
+M.RndDirectionButton = function()
+	_doFrame(_rndDirection());
+end;
+M.Increment = _increment;
 M.InitSession = _initSession;
 M.Finish = _finish;
 M.LogProgress = _logProgress;
@@ -622,28 +462,104 @@ M.Push = function()
 	end
 	_doFrame(_push(name));	
 end;
+
 M.WaitFor = _waitFor;
-M.DelayUpTo = DelayUpTo;
+M.DelayUpTo = function()
+	if (frames <= 0) then return 0 end;
+	delay = math.random(0, frames);
+	if (delay > 0) then
+		for i = 0, delay - 1, 1 do
+			emu.frameadvance();
+		end
+	end
+	return delay;
+end;
 M.GenerateRndBool = _rndBool;
-M.RandomFor = RandomFor;
-M.RndButtons = RndButtons;
-M.RndAtLeastOne = RndAtLeastOne;
+M.RandomFor = function()	
+	if (frames > 0) then
+		for i = 0, frames - 1, 1 do
+			joypad.set(_rndButtons());
+			emu.frameadvance();
+		end
+	end
+end;
+M.RndButtons = function()
+	_doFrame(_rndButtons());
+end;
+M.RndAtLeastOne = function()
+	_doFrame(_rndAtLeastOne());
+end;
 M.RndDirection = RndDirection;
-M.RndLeftOrRight = RndLeftOrRight;
-M.RndWalking = RndWalking;
-M.RndWalkingFor = RndWalkingFor;
-M.RandomDirectionAtLeastOne = RandomDirectionAtLeastOne;
-M.PushFor = PushFor;
-M.PushA = PushA;
-M.PushB = PushB;
-M.PushAorB = PushAorB;
-M.RndAorB = RndAorB;
-M.PushLorR = PushLorR;
-M.PushUp = PushUp;
-M.PushDown = PushDown;
-M.PushLeft = PushLeft;
-M.PushRight = PushRight;
-M.UntilNextMenu = UntilNextMenu;
+M.RndLeftOrRight = function()
+	_doFrame(_rndLeftOrRight());
+end;
+
+M.RndWalking = function(directionButton)
+	if (not bizstring.startswith(directionButton, 'P1')) then
+		directionButton = 'P1 ' .. directionButton;
+	end
+	_doFrame(_rndWalking(directionButton));
+end;
+
+M.RndWalkingFor = function(directionButton, frames)
+	if (not bizstring.startswith(directionButton, 'P1')) then
+		directionButton = 'P1 ' .. directionButton;
+	end
+	for i = 0, frames, 1 do
+		_doFrame(_rndWalking(directionButton));
+	end
+end;
+
+M.RandomDirectionAtLeastOne = function()
+	_doFrame(_rndDirectionAtLeastOne());
+end;
+
+M.PushFor = function(directionButton, frames)
+	if (not bizstring.startswith(directionButton, 'P1')) then
+		directionButton = 'P1 ' .. directionButton;
+	end
+	for i = 0, frames, 1 do
+		_doFrame(_push(directionButton));
+	end
+end;
+M.PushA = function()
+	_doFrame(_push('P1 A'));
+end;
+M.PushB = function()
+	_doFrame(_push('P1 B'));
+end;
+M.PushAorB = function()
+	_doFrame(_pushAorB());
+end;
+M.RndAorB = function()
+	_doFrame(_rndAorB());
+end;
+M.PushLorR = function()
+	_doFrame(_pushLorR());
+end;
+M.PushUp = function()
+	_doFrame(_push('P1 Up'));
+end;
+M.PushDown = function()
+	_doFrame(_push('P1 Down'));
+end;
+M.PushLeft = function()
+	_doFrame(_push('P1 Left'));
+end;
+M.PushRight = function()
+	_doFrame(_push('P1 Right'));
+end;
+
+M.UntilNextMenu = function()
+	length = 0;
+	advance = memory.readbyte(0x0059) ~= 248
+	while advance do
+		M.WaitFor(1);
+		length = length + 1;
+		advance = memory.readbyte(0x0059) ~= 248
+	end
+	return length;
+end;
 
 M.Etypes = {};
 M.Etypes[0x00] = 'Slime';
@@ -849,7 +765,6 @@ M.Etypes[0xFD] = 'Linquar-Esturk Broken';
 M.Etypes[0xFE] = 'Non Equipped';
 M.Etypes[0xFF] = 'None';
 
-
 M.Items = {};
 M.Items[0x00] = 'Cypress Stick';
 M.Items[0x01] = 'Club';
@@ -980,7 +895,6 @@ M.Items[0x7E] = 'Padequia Seed'
 M.Items[0x7F] = 'Empty'
 M.Items[0xFF] = 'Empty';
 
-
 M.Addr = {};
 M.Addr["Rng1"] = 0x0012
 M.Addr["Rng2"] = 0x0013
@@ -1067,5 +981,7 @@ end
 M.ReadDmg = function()
 	return M.Read(M.Addr.Dmg)
 end
+
+M.Done = _done
 
 return M
