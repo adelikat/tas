@@ -92,12 +92,14 @@ function _getCritical()
 	end
 end
 
-
+c.Load(0)
+c.Save(100)
 while not c.done do
-	c.Load(0)
-	c.RndWalkingFor('Up', 500)
+	c.Load(100)
+	c.RndWalkingFor('Up', 499)
 	c.WaitFor(672)
 	c.RandomFor(1)
+
 	local bail = false
 		if emu.islagged() then
 			c.Debug('Lagged on magic frame, aborting')

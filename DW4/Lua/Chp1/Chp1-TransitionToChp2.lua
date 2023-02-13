@@ -85,7 +85,7 @@ end
 c.Save(100)
 while not c.done do
 	c.Load(100)
-    c.Best(_toChp2, 100)
+    c.Best(_toChp2, 20)
     c.Done()
 end
 

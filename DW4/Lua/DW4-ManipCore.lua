@@ -23,6 +23,15 @@ local function _doFrame(keys)
 	emu.frameadvance();
 end
 
+local function _rndBool()
+	x = math.random(0, 1);
+	if (x == 1) then
+		return true;
+	end
+
+	return false;
+end
+
 local function _rndButtons()
 	key1 = {};
 	key1['P1 Up'] = _rndBool();
@@ -52,15 +61,6 @@ local function _rndAtLeastOne()
 	end
 
 	return result;		
-end
-
-local function _rndBool()
-	x = math.random(0, 1);
-	if (x == 1) then
-		return true;
-	end
-
-	return false;
 end
 
 local function _rndDirection()
@@ -441,7 +441,7 @@ M.PokeRngVal = function(val)
 	mainmemory.write_u16_be(0x0012, val)
 end
 M.Abort = _abort;
-M.Log = function()
+M.Log = function(msg)
 	console.log(msg)
 end;
 
@@ -472,7 +472,7 @@ M.Push = function()
 end;
 
 M.WaitFor = _waitFor;
-M.DelayUpTo = function()
+M.DelayUpTo = function(frames)
 	if (frames <= 0) then return 0 end;
 	delay = math.random(0, frames);
 	if (delay > 0) then
@@ -483,7 +483,7 @@ M.DelayUpTo = function()
 	return delay;
 end;
 M.GenerateRndBool = _rndBool;
-M.RandomFor = function()	
+M.RandomFor = function(frames)	
 	if (frames > 0) then
 		for i = 0, frames - 1, 1 do
 			joypad.set(_rndButtons());

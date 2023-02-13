@@ -28,4 +28,6 @@ SystemID NES
 03CF	b	u	0	RAM	MenuPosY
 0270	b	u	0	RAM	
 00B6	b	u	0	WRAM	Ragnar Current HP
+0044	b	u	0	RAM	Char X
+0045	b	u	0	RAM	Char Y
 
