@@ -2,7 +2,7 @@
 local c = require("DW4-ManipCore")
 c.InitSession()
 c.reportFrequency = 5000
-c.maxDelay = 6
+c.maxDelay = 5
 
 local delay = 0
 
@@ -53,6 +53,10 @@ function _getToARPI()
     c.UntilNextInputFrame()
 
     return true
+end
+
+local function _cristoHp()
+    return c.Read(0x6020)
 end
 
 -- Alena attack Rabidhound A
@@ -127,7 +131,7 @@ function _manipBattleOrder()
     c.RndAtLeastOne()
     c.WaitFor(3)
 
-    if c.ReadDmg() < 11 then
+    if _cristoHp() > 7 then
         return _bail('Did not do enough damage to Cristo')
     end
 
