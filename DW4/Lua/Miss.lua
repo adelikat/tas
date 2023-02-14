@@ -1,28 +1,28 @@
 local c = require("DW4-ManipCore")
 c.InitSession()
 c.reportFrequency = 100
-c.maxDelay = 64
+c.maxDelay = 12
 
-_wait3 = 0
-_wait2 = 47
-_wait1 = 24 
+local _wait3 = 50
+local _wait2 = 15
+local _wait1 = 40
 
-_hpAddr = c.Addr.TaloonHp
-_attack = 76
-_miss = 98
+local _hpAddr = c.Addr.CristoHP
+local _attack = 76
+local _miss = 98
 
 -------------------------
 local delay = 0
 
-function _readBattle()
+local function _readBattle()
 	return c.Read(c.Addr.BattleFlag)
 end
 
-function _readHp()
+local function _readHp()
 	return c.Read(_hpAddr)
 end
 
-function _step(wait)
+local function _step(wait)
 	if (wait > 0) then
 		delay = delay + c.DelayUpTo(c.maxDelay - delay)
 		c.RndAtLeastOne()
@@ -31,8 +31,10 @@ function _step(wait)
 	end
 end
 
+c.Load(0)
+c.Save(100)
 while not c.done do
-	c.Load(0)
+	c.Load(100)
 	delay = 0
 	oHp = _readHp()
 
