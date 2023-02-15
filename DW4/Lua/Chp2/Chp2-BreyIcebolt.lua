@@ -1,7 +1,7 @@
 local c = require("DW4-ManipCore")
 c.InitSession()
 c.reportFrequency = 100
-c.maxDelay = 0
+c.maxDelay = 2
 _minDmg = 16
 delay = 0
 
@@ -22,8 +22,10 @@ function _step(wait)
 	c.WaitFor(2)
 end
 
+c.Load(0)
+c.Save(100)
 while not c.done do
-	c.Load(0)
+	c.Load(100)
 	delay = 0
 
 	_step(_wait1)

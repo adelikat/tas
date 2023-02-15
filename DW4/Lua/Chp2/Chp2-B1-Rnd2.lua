@@ -1,3 +1,4 @@
+--Starts from the magic frame before the reound
 local c = require("DW4-ManipCore")
 
 c.InitSession()
