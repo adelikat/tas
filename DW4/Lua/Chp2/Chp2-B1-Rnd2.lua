@@ -3,7 +3,7 @@ local c = require("DW4-ManipCore")
 
 c.InitSession()
 c.reportFrequency = 1000
-c.maxDelay = 0
+c.maxDelay = 5
 
 chameleonTurn = 5
 attacks = 76
@@ -115,8 +115,10 @@ function _getCritical()
 	end
 end
 
+c.Load(0)
+c.Save(100)
 while not c.done do
-	c.Load(0)
+	c.Load(100)
 	local orderManipulated = false
 	c.RndAtLeastOne()
 	c.RandomFor(27)
@@ -221,7 +223,7 @@ while not c.done do
 	if orderManipulated then
 		c.LogProgress('Order manipulated, attempting Cristo critical', true)
 		--result = _getCritical()
-		result = fail
+		result = -1
 		if result == -1 then
 			c.Done()
 		else
