@@ -1,11 +1,11 @@
 _odds = 64 --1 in x
 _minDmg = 10
-_idealDmg = 0 --Max critical
+_idealDmg = 10 --Max critical
 _idealDelay = 0
 
 _wait3 = 0
-_wait2 = 51
-_wait1 = 32
+_wait2 = 21
+_wait1 = 39
 
 local c = require("DW4-ManipCore")
 c.InitSession()

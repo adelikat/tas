@@ -409,7 +409,7 @@ M.ProgressiveSearch = function (func, cap, maxFrames)
     for psi = 0, maxFrames do
         _logProgress('Progressive Search with delay ' .. psi)
        _waitFor(psi)
-        result = Cap(func, cap)
+        result = M.Cap(func, cap)
         if result then
             return true
         else
@@ -568,6 +568,12 @@ M.UntilNextMenu = function()
 	end
 	return length;
 end;
+
+M.Bail = function(msg)
+	M.Debug(msg)
+	M.Increment()
+	return false
+end
 
 M.Etypes = {};
 M.Etypes[0x00] = 'Slime';

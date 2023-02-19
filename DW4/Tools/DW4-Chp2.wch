@@ -1,22 +1,19 @@
 SystemID NES
 0012	b	u	0	RAM	RNG 1
+0013	b	u	0	RAM	RNG 2
 00727E	b	u	0	System Bus	E1 HP
+006E45	b	u	0	System Bus	E1 Type
+006E46	b	u	0	System Bus	E2 Type
 007361	b	u	0	System Bus	Dmg
-0000FD	b	u	0	System Bus	Next Stat
 0096	b	u	0	RAM	Turn
-0060D9	b	u	0	System Bus	Alena Str
-0060DA	b	u	0	System Bus	Alena Agility
-0060DB	b	u	0	System Bus	Alena Vit
-0060DC	b	u	0	System Bus	Alena Int
-0060DD	b	u	0	System Bus	Alena Luck
-0060DE	w	u	1	System Bus	Alena HP
 0060E7	b	h	0	System Bus	 Alena Inv Slot 2
 0060E9	b	h	0	System Bus	 Alena Inv Slot 4
 00C4	b	h	0	RAM	treasure drop
 00D8	b	u	0	WRAM	Alena LV
 008B	b	u	0	RAM	Battleflag
-02ED	b	u	0	WRAM	Step counter
 03CF	b	u	0	RAM	Menu Y
 0059	b	u	0	RAM	Menu
 006E45	b	h	0	System Bus	E1 Type
+01D6	b	u	0	RAM	actual drop
+02ED	b	u	0	WRAM	Step counter
 

@@ -1,5 +1,5 @@
-local direction = 'Up'
-local cap = 100
+local direction = 'Right'
+local cap = 65
 local best = 999999999
 
 local c = require("DW4-ManipCore")
@@ -73,6 +73,7 @@ while not c.done do
 	end
 end
 client.displaymessages(false)
+c.Load(9)
 c.Finish()
 
 

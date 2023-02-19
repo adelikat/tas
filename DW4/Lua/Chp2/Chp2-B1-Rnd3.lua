@@ -4,9 +4,9 @@ c.InitSession()
 c.reportFrequency = 1000
 c.maxDelay = 40
 
-rabBTurn = 6
-breyTargeted = 2
-delay = 0
+local rabBTurn = 6
+local breyTargeted = 2
+local delay = 0
 
 function _readMenuX()
 	return c.Read(c.Addr.MenuPosX)

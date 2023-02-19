@@ -1,0 +1,12 @@
+SystemID NES
+0012	b	u	0	RAM	Rng 1
+0013	b	u	0	RAM	Rng 2
+0060D8	b	u	0	System Bus	Alena Lv
+0060D9	b	u	0	System Bus	Alena Str
+0060DA	b	u	0	System Bus	Alena Ag
+0060DB	b	u	0	System Bus	Alena Vit
+0060DC	b	u	0	System Bus	Alena Int
+0060DD	b	u	0	System Bus	Alena Luck
+0060DE	b	u	0	System Bus	Alena Max HP
+00FD	b	u	0	RAM	Next Stat
+
