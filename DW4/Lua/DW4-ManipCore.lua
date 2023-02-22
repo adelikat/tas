@@ -571,7 +571,6 @@ end;
 
 M.Bail = function(msg)
 	M.Debug(msg)
-	M.Increment()
 	return false
 end
 

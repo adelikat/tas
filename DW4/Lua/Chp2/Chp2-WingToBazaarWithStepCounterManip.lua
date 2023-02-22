@@ -160,32 +160,47 @@ local function _untilDayBreak()
     return c.ReadStepCounter() == 30
 end
 
+local function _doThings()
+    local result = _untilDayBreak()
+    if result then
+        result = _wing()
+        if result then
+            return true
+        end
+    end
+
+    return false
+end
+
 c.Load(0)
 c.Save(100)
 c.RngCacheClear()
 while not c.done do
 	c.Load(100)
-    local result = c.Cap(_untilDayBreak, 2)
-    if result then
-        local bestResult = c.Best(_wing, 9)
-        if bestResult > 0 then
-            if c.AddToRngCache() then
-                c.Log('New Rng Set')
-                result = c.Cap(_takeFirstStep, 320)
-                if result then
-                    c.Done()
-                else
-                    c.Log('Failed to manip step counter')
-                end
-            else
-                c.Log('Rng already attempted, skipping')
-            end        
-        else
-            c.Log('Unable to wing to bazaar')
-        end
-    else
-        c.Log('Unable to navigate town')
-    end
+    c.Best(_doThings, 25)
+    c.Done()
+    -- local result = c.Cap(_untilDayBreak, 2)
+    -- if result then
+    --     local bestResult = c.Best(_wing, 9)
+    --     if bestResult > 0 then
+    --         c.Done()
+    --         if c.AddToRngCache() then
+    --             c.Log('New Rng Set')
+    --             result = c.Cap(_takeFirstStep, 320)
+    --             if result then
+    --                 c.Done()
+    --             else
+    --                 c.Log('Failed to manip step counter')
+    --             end
+    --         else
+    --             c.Log('Rng already attempted, skipping')
+    --         end        
+    --     else
+    --         c.Log('Unable to wing to bazaar')
+    --     end
+    -- else
+    --     c.Log('Unable to navigate town')
+    -- end
     
 	
 end
