@@ -998,4 +998,35 @@ end
 
 M.Done = _done
 
+function _generateRngCacheKey(r)
+	return string.format('%s-%s-%s', r.Rng1, r.Rng2, r.FrameCount)
+end
+
+function _generateRngeState()
+	return {
+        Rng1 = M.ReadRng1(),
+        Rng2 = M.ReadRng2(),
+        FrameCount= emu.framecount()
+    }
+end
+
+M.RngCache = {}
+--Adds Current Framecount and Rng to cache if it does not already exists
+--If already exist, this returns false, else true
+M.AddToRngCache = function()
+	local r = _generateRngeState()
+	local key = _generateRngCacheKey(r)
+	if M.RngCache[key] == nil then
+		M.RngCache[key] = r
+		return true
+	end
+
+	return false
+end
+
+M.RngCacheClear = function()
+	RngCache = {}
+end
+
+
 return M

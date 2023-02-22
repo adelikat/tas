@@ -1,0 +1,6 @@
+ideal step counter chapter 2: 70 (67 but a little bit more to better control it in chp 3, would just need to manip a few)
+
+51 steps to castle, must be daylight, 119 is max daylight
+1 step to go into town
+1 step back into castle
+
