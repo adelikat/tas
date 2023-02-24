@@ -9,7 +9,7 @@ c.InitSession()
 c.reportFrequency = 2000
 
 local direction = 'Left'
-local desiredSteps = 3
+local desiredSteps = 6
 
 ---
 

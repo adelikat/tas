@@ -9,8 +9,24 @@ c.InitSession()
 c.reportFrequency = 20000
 
 local direction = 'Left'
-local direction2 = 'Down'
+
 ---
+
+
+function tablelength(T)
+    local count = 0
+    for _ in pairs(T) do count = count + 1 end
+    return count
+  end
+
+local rngStack = {}
+local function _addRng()
+    local rng1 = c.ReadRng1()
+    local rng2 = c.ReadRng2()
+    local key = string.format('rng1-%s-rng2-%s', rng1, rng2)
+    rngStack[key] = key
+    c.Log(string.format('New key added, total: %s', tablelength(rngStack)))
+end
 
 local origBattleFlag = c.ReadBattle()
 
@@ -28,7 +44,7 @@ local function _walkOneSquare()
     if _isEncounter() then
         return c.Bail('Got encounter')
     end
-
+    _addRng()
     return true
 end
 
@@ -64,7 +80,8 @@ c.Load(0)
 c.Save(100)
 while not c.done do
 	c.Load(100)
-    local square1 = c.Cap(_tryOneSquare, 500)
+    
+    --local square1 = c.Cap(_tryOneSquare, 100)
     
     if square1 then
         c.Done()
@@ -73,7 +90,7 @@ while not c.done do
         c.Cap(_walkOneSquare, 100)
         c.Save(5)
 
-        local square2 = c.Cap(_tryOneSquare, 500)
+        local square2 = c.Cap(_tryOneSquare, 100)
         if square2 then
             c.Done()
         end
