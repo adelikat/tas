@@ -1,4 +1,4 @@
-local direction = 'Left'
+local direction = 'Up'
 local cap = 25
 local best = 999999999
 

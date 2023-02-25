@@ -407,7 +407,7 @@ M.ProgressiveSearch = function (func, cap, maxFrames)
     _save(tempFile)
 	local psi
     for psi = 0, maxFrames do
-        _logProgress('Progressive Search with delay ' .. psi)
+        M.Log('Progressive Search with delay ' .. psi)
        _waitFor(psi)
         result = M.Cap(func, cap)
         if result then
@@ -1010,8 +1010,8 @@ function _generateRngeState()
 end
 
 M.RngCache = {}
---Adds Current Framecount and Rng to cache if it does not already exists
---If already exist, this returns false, else true
+-- Adds Current Framecount and Rng to cache if it does not already exists
+-- If already exist, this returns false, else true
 M.AddToRngCache = function()
 	local r = _generateRngeState()
 	local key = _generateRngCacheKey(r)
@@ -1025,6 +1025,28 @@ end
 
 M.RngCacheClear = function()
 	RngCache = {}
+end
+
+-- Not safe for recording!
+-- Takes a function that returns a boolean value and
+-- Pokes the RNG incrementally by 1 until the function returns true
+-- returns true if an RNG seed is found, else false
+M.RngSearch = function(func)
+	local tempFile = 'RngSearch-' .. emu.framecount()
+    _save(tempFile)
+	local result = false
+	for i = 0, 65535, 1 do
+		memory.write_u16_be(0x0012, i)
+		_load(tempFile)
+		M.Debug('Attempting rng seed: ' .. i)
+		result = func()
+		if result then
+			return true
+		end
+	end
+
+	M.Log('Unable to find an RNG seed')
+	return false
 end
 
 
