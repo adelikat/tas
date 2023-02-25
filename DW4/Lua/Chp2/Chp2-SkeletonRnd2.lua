@@ -1,9 +1,12 @@
+-- Starts at first frame to end the 21 damage points to Skeleton dialog
 local c = require("DW4-ManipCore")
 c.InitSession()
 c.reportFrequency = 1000
 
+c.Load(0)
+c.Save(100)
 while not c.done do
-	c.Load(0)
+	c.Load(100)
 	c.RndAtLeastOne()
 	c.RandomFor(48)
 	bail = false

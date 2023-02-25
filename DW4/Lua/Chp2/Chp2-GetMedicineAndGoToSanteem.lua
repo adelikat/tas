@@ -78,7 +78,7 @@ local function _pickUpItemAndWing()
     c.WaitFor(9)
     c.UntilNextInputFrame()
 
-    c.PushA()
+    c.PushA() -- Bring up menu
 
     c.WaitFor(25)
     c.UntilNextInputFrame()
