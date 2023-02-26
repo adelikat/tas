@@ -228,16 +228,6 @@ local function _load(slot)
 	end
 end
 
-local function _initSession()
-	M.attempts = 0
-	M.done = false
-	M.maxDelay = 0
-	math.randomseed(os.time())
-	client.displaymessages(false);
-	memory.usememorydomain('System Bus')
-	--client.unpause();
-end
-
 local function _finish()
 	console.log('---------------')
 	client.displaymessages(true);
@@ -467,7 +457,15 @@ M.RndDirectionButton = function()
 	_doFrame(_rndDirection());
 end;
 M.Increment = _increment;
-M.InitSession = _initSession;
+M.InitSession = function()
+	M.attempts = 0
+	M.done = false
+	M.maxDelay = 0
+	math.randomseed(os.time())
+	client.displaymessages(false);
+	memory.usememorydomain('System Bus')
+	--client.unpause();
+end
 M.Finish = _finish;
 M.LogProgress = _logProgress;
 M.Push = function()
