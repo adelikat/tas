@@ -1,90 +1,83 @@
+-- Starts at the magic frame before the Roric fight
 local c = require("DW4-ManipCore")
 c.InitSession()
 c.reportFrequency = 100
-c.maxDelay = 0
 
-function _roricFirst()
-	c.Save(20)
-	delay = 0
-	local found = false
-	while not found do
-		c.Load(20)
-		--Magic frame
-		c.RndAtLeastOne()
-		c.WaitFor(14)
+local function _miss()
+	c.RandomFor(1)
+	c.WaitFor(11)
+	c.UntilNextInputFrame()
+	c.WaitFor(2)
+	c.RndAtLeastOne()
+	c.RandomFor(19)
+	c.UntilNextInputFrame()
+	c.WaitFor(2) -- Input frame
+	c.UntilNextInputFrame()
+	c.PushA() -- Attack
+	c.WaitFor(3)
+	c.UntilNextInputFrame()
+	c.PushA() -- Pick Roric
+	c.RandomFor(30)
+	c.UntilNextInputFrame()
+	if c.ReadTurn() ~= 4 then
+		return c.Bail('Roric did not go first')
+	end
+	if c.ReadBattle() ~= 76 then
+		return c.Bail('Roric did not attack')
+	end
 
-		delay = delay + c.DelayUpTo(c.maxDelay - delay)
-		c.RndAtLeastOne()
-		c.RandomFor(23)
+	c.WaitFor(2)
+
+	local origHp = c.Read(c.Addr.AlenaHP)
+	c.RndAtLeastOne()
+	c.WaitFor(5)
+	local currHp = c.Read(c.Addr.AlenaHP)
+
+	c.Debug(string.format('Roric did %s dmg', (origHp - currHp)))
+	if currHp == origHp then
+		c.UntilNextInputFrame()
 		c.WaitFor(2)
-
-		c.PushA()
-		c.WaitFor(4)
-
-		delay = delay + c.DelayUpTo(c.maxDelay - delay)
-		c.PushA()
-		c.RandomFor(1)
-		bail = false
-				if c.ReadMenuPosY() ~= 31 then
-					bail = true
-					c.Debug('Lagged at Roric pick')
-				end
-		if not bail then
-			c.RandomFor(31)
-			c.WaitFor(2)
-
-			bail = false
-			if c.ReadTurn() == 4 and c.ReadBattle() == 76 then
-				found = true
-				c.LogProgress('Roric Initiative', true)
-				c.Save(300)
-				c.Save(3)
-			end
-		end
-		
-		Increment()
+		return true
 	end
+
+	return false
 end
 
-bestDelay = 300
-function _miss()
-	c.Save(21)
-	local missDelay = 0
-	local missFound = false
-	while not missFound and missDelay < bestDelay do
-		c.Load(21)
-		c.WaitFor(missDelay)
-		c.PushA()
-		c.WaitFor(50)
-		isMiss = c.ReadBattle()
-		c.Debug('Frame: ' .. missDelay .. ' isMiss: ' .. isMiss)
-		if isMiss == 98 then
-			c.LogProgress('-----', true)
-			c.LogProgress('Miss found! delay: ' .. missDelay, true)
-			bestDelay = missDelay
-			missFound = true
-			c.Save(9)
-			c.Save(99)
-		else
-			missDelay = missDelay + 1
-		end
-	end
-
-	if not missFound then
-		return -1
-	end
-
-	return bestDelay
+local function _critical()
+	c.RndAtLeastOne()
+	c.RandomFor(19)
+	c.UntilNextInputFrame()
+	c.WaitFor(2)
+	c.RndAtLeastOne()
+	c.WaitFor(5)
+	local dmg = c.ReadDmg()
+	c.Save(6)
+	c.Debug('Alena dmg: ' .. dmg)
+	return dmg > 40
 end
 
+c.Load(0)
+c.Save(100)
+c.RngCacheClear()
 while not c.done do
-	c.Load(0)
-	_roricFirst()
-	result = _miss()
-	if result == 0 then
-		c.Done()
+	c.Load(100)
+	local result = c.Cap(_miss, 1000)	
+	if result then
+		local cacheResult = c.AddToRngCache()
+		if cacheResult then
+			c.Save(6)
+			result = c.Cap(_critical, 256)
+			if result then
+				c.Done()
+			else
+				c.Log('Failed to find critical')
+			end
+			
+		else
+			c.Log('Rng found, skipping')
+		end		
 	else
-		c.LogProgress('Best miss: ' .. result .. ', restarting', true)
+		c.Log('Unable to manip miss')
 	end
 end
 

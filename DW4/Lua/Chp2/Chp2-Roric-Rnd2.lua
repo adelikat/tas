@@ -1,84 +1,71 @@
+-- Starts at the first frame to end the "terrific blow" dialog from the previous ound
+
 local c = require("DW4-ManipCore")
 c.InitSession()
-c.reportFrequency = 100
+c.reportFrequency = 1000
 c.maxDelay = 0
 
-function _alenaFirst()
-	c.Save(20)
-	delay = 0
-	local found = false
-	while not found do
-		c.Load(20)
-		--Magic frame
-		c.RndAtLeastOne()
-		c.RandomFor(20)
-		c.WaitFor(2)
+function _alenaFirstAndCrit()
+	c.RndAtLeastOne()
+	c.WaitFor(43)
+	c.UntilNextInputFrame()
+	c.WaitFor(2)
 
-		c.PushA()
-		c.WaitFor(4)
-		c.PushA()
+	c.RndAtLeastOne() -- x Damage points to Roric
+	c.RandomFor(16)
+	c.UntilNextInputFrame()
+	c.WaitFor(2) -- Input frame
+	c.UntilNextInputFrame()
 
-		c.RandomFor(1)
-		bail = false
-				if c.ReadMenuPosY() ~= 31 then
-					bail = true
-					c.Debug('Lagged at Roric pick')
-				end
-		if not bail then
-			c.RandomFor(30)
-			c.WaitFor(2)
-			bail = false
-			if c.ReadTurn() == 0 then
-				found = true
-				c.LogProgress('Alena Initiative', true)
-				c.Save(500)
-				c.Save(5)
-			end
-		end
-		
-		Increment()
+	c.PushA() -- Attack
+	c.WaitFor(3)
+	c.UntilNextInputFrame()
+
+	c.PushA() -- Roric
+	c.RandomFor(20)
+	c.WaitFor(5)
+
+	
+	if c.ReadTurn() ~= 0 then
+		return c.Bail('Alena did not go first')
 	end
+	c.Save(4)
+	c.UntilNextInputFrame()
+	c.WaitFor(2)
+
+	return true
 end
 
-bestDelay = 55
-function _critial()
-	c.Save(21)
-	local critDelay = 0
-	local critFound = false
-	while not critFound and critDelay < bestDelay do
-		c.Load(21)
-		c.WaitFor(critDelay)
-		c.PushA()
-		c.WaitFor(50)
-		dmg = c.ReadDmg()
-		c.Debug('Frame: ' .. critDelay .. ' dmg: ' .. dmg)
-		if dmg >= 30 then
-			c.LogProgress('-----', true)
-			c.LogProgress('Crit found! delay: ' .. critDelay, true)
-			bestDelay = critDelay
-			critFound = true
-			c.Save(9)
-			c.Save(99)
-		else
-			critDelay = critDelay + 1
-		end
-	end
-
-	if not critFound then
-		return -1
-	end
-
-	return bestDelay
+local function _manipCrit()
+	c.Save(5)
+	c.DelayUpTo(10)
+	c.RndAtLeastOne()
+	c.WaitFor(4)
+	c.Save(6)
+	return c.ReadDmg() > 30
 end
 
+c.Load(0)
+c.Save(100)
+c.RngCacheClear()
 while not c.done do
-	c.Load(0)
-	_alenaFirst()
-	result = _critial()
-	if result == 0 then
-		c.Done()
+	c.Load(100)
+	local result = c.Cap(_alenaFirstAndCrit, 1000)
+	if result then
+		c.Log('Turn Manipulated')
+		local rngCache = c.AddToRngCache()
+		if rngCache then
+			result = c.Cap(_manipCrit, 200)
+			if result then
+				c.Done()
+			else
+				c.Log('Unable to Manip crit')
+			end
+		else
+			c.Log('RNG found, skipping')
+		end		
 	else
-		c.LogProgress('Best miss: ' .. result .. ', restarting', true)
+		c.Log('Unable to get Alena to go first')
 	end
 end
 
