@@ -222,7 +222,7 @@ local function _load(slot)
 	end
 
 	if slotNum ~= nil and slotNum > 0 and slotNum <= 10 then
-		savestate.loadslot(tonumber(slot))
+		savestate.loadslot(slotNum)
 	else
 		savestate.load(slot .. '.State')
 	end
