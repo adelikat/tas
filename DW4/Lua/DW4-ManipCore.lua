@@ -17,37 +17,37 @@ end
 
 local function _doFrame(keys)
 	if (keys ~= nil) then
-		joypad.set(keys);
+		joypad.set(keys)
 	end
 
-	emu.frameadvance();
+	emu.frameadvance()
 end
 
 local function _rndBool()
-	x = math.random(0, 1);
+	x = math.random(0, 1)
 	if (x == 1) then
-		return true;
+		return true
 	end
 
-	return false;
+	return false
 end
 
 local function _rndButtons()
-	key1 = {};
-	key1['P1 Up'] = _rndBool();
-	key1['P1 Down'] = _rndBool();
-	key1['P1 Left'] = _rndBool();
-	key1['P1 Right'] = _rndBool();
-	key1['P1 B'] = _rndBool();
-	key1['P1 A'] = _rndBool();
-	key1['P1 Select'] = false;
-	key1['P1 Start'] = _rndBool();
+	key1 = {}
+	key1['P1 Up'] = _rndBool()
+	key1['P1 Down'] = _rndBool()
+	key1['P1 Left'] = _rndBool()
+	key1['P1 Right'] = _rndBool()
+	key1['P1 B'] = _rndBool()
+	key1['P1 A'] = _rndBool()
+	key1['P1 Select'] = false
+	key1['P1 Start'] = _rndBool()
 
- 	return key1;
+ 	return key1
 end
 
 local function _rndAtLeastOne()
-	result = _rndButtons();
+	result = _rndButtons()
 	if (key1['P1 Up'] == false
 		and key1['P1 Down'] == false
 		and key1['P1 Left'] == false
@@ -57,136 +57,136 @@ local function _rndAtLeastOne()
 		and key1['P1 Select'] == false
 		and key1['P1 Start'] == false
 	) then
-		key1['P1 A'] = true;
+		key1['P1 A'] = true
 	end
 
-	return result;		
+	return result		
 end
 
 local function _rndDirection()
-	key1 = {};
-	key1['P1 Up'] = _rndBool();
-	key1['P1 Down'] = _rndBool();
-	key1['P1 Left'] = _rndBool();
-	key1['P1 Right'] = _rndBool();
-	key1['P1 B'] = false;
-	key1['P1 A'] = false;
-	key1['P1 Select'] = false;
-	key1['P1 Start'] = false;
+	key1 = {}
+	key1['P1 Up'] = _rndBool()
+	key1['P1 Down'] = _rndBool()
+	key1['P1 Left'] = _rndBool()
+	key1['P1 Right'] = _rndBool()
+	key1['P1 B'] = false
+	key1['P1 A'] = false
+	key1['P1 Select'] = false
+	key1['P1 Start'] = false
 
- 	return key1;
+ 	return key1
 end
 
 local function _rndLeftOrRight()
-	key1 = {};
-	key1['P1 Up'] = false;
-	key1['P1 Down'] = false;
-	key1['P1 Left'] = RndBool();
-	key1['P1 Right'] = RndBool();
-	key1['P1 B'] = false;
-	key1['P1 A'] = false;
-	key1['P1 Select'] = false;
-	key1['P1 Start'] = false;
+	key1 = {}
+	key1['P1 Up'] = false
+	key1['P1 Down'] = false
+	key1['P1 Left'] = RndBool()
+	key1['P1 Right'] = RndBool()
+	key1['P1 B'] = false
+	key1['P1 A'] = false
+	key1['P1 Select'] = false
+	key1['P1 Start'] = false
 
- 	return key1;
+ 	return key1
 end
 
 local function _rndWalking(directionButton)
-	key1 = _rndDirection();
-	key1[directionButton] = true;
-	return key1;
+	key1 = _rndDirection()
+	key1[directionButton] = true
+	return key1
 end
 
 local function _rndDirectionAtLeastOne()
-	result = _rndDirection();
+	result = _rndDirection()
 	if (key1['P1 Up'] == false
 		and key1['P1 Down'] == false
 		and key1['P1 Left'] == false
 		and key1['P1 Right'] == false
 	) then
-		key1['P1 A'] = true;
+		key1['P1 A'] = true
 	end
 
-	return result;		
+	return result		
 end
 
 local function _push(name)
-	key1 = {};	
-	key1['P1 Up'] = false;
-	key1['P1 Down'] = false;
-	key1['P1 Left'] = false;
-	key1['P1 Right'] = false;
-	key1['P1 B'] = false;
-	key1['P1 A'] = false;
-	key1['P1 Select'] = false;
-	key1['P1 Start'] = false;
-	key1[name] = true;
-  	return key1;
+	key1 = {}	
+	key1['P1 Up'] = false
+	key1['P1 Down'] = false
+	key1['P1 Left'] = false
+	key1['P1 Right'] = false
+	key1['P1 B'] = false
+	key1['P1 A'] = false
+	key1['P1 Select'] = false
+	key1['P1 Start'] = false
+	key1[name] = true
+  	return key1
 end
 
 local function _pushAorB()
-	key1 = {};	
-	key1['P1 Up'] = false;
-	key1['P1 Down'] = false;
-	key1['P1 Left'] = false;
-	key1['P1 Right'] = false;
-	key1['P1 B'] = false;
-	key1['P1 A'] = false;
-	key1['P1 Select'] = false;
-	key1['P1 Start'] = false;
+	key1 = {}	
+	key1['P1 Up'] = false
+	key1['P1 Down'] = false
+	key1['P1 Left'] = false
+	key1['P1 Right'] = false
+	key1['P1 B'] = false
+	key1['P1 A'] = false
+	key1['P1 Select'] = false
+	key1['P1 Start'] = false
 	
 	if (math.random(0, 1) == 0) then
-		key1['P1 A'] = true;
+		key1['P1 A'] = true
 	else
-		key1['P1 B'] = true;
+		key1['P1 B'] = true
 	end
 
-	return key1;
+	return key1
 end
 
 local function _rndAorB()
-	key1 = {};	
+	key1 = {}	
 	if (math.random(0, 2) == 0) then
-		key1['P1 A'] = true;
+		key1['P1 A'] = true
 	elseif (x == 1) then
-		key1['P1 B'] = true;
+		key1['P1 B'] = true
 	else
-		key1['P1 A'] = true;
-		key1['P1 B'] = true;
+		key1['P1 A'] = true
+		key1['P1 B'] = true
 	end
 
-	key1['P1 Up'] = _rndBool();
-	key1['P1 Down'] = _rndBool();
-	key1['P1 Left'] = _rndBool();
-	key1['P1 Right'] = _rndBool();
-	key1['P1 Select'] = _rndBool();
-	key1['P1 Start'] = _rndBool();
+	key1['P1 Up'] = _rndBool()
+	key1['P1 Down'] = _rndBool()
+	key1['P1 Left'] = _rndBool()
+	key1['P1 Right'] = _rndBool()
+	key1['P1 Select'] = _rndBool()
+	key1['P1 Start'] = _rndBool()
 
-	return key1;
+	return key1
 end
 
 local function _pushLorR()
-	key1 = {};	
-	key1['P1 Up'] = false;
-	key1['P1 Down'] = false;
-	key1['P1 Left'] = false;
-	key1['P1 Right'] = false;
-	key1['P1 B'] = false;
-	key1['P1 A'] = false;
-	key1['P1 Select'] = false;
-	key1['P1 Start'] = false;
+	key1 = {}	
+	key1['P1 Up'] = false
+	key1['P1 Down'] = false
+	key1['P1 Left'] = false
+	key1['P1 Right'] = false
+	key1['P1 B'] = false
+	key1['P1 A'] = false
+	key1['P1 Select'] = false
+	key1['P1 Start'] = false
 	
-	x = math.random(0, 1);
+	x = math.random(0, 1)
 	if (x == 1) then
-		key1['P1 Left'] = true;
+		key1['P1 Left'] = true
 	end
 
-	y = math.random(0, 1);
+	y = math.random(0, 1)
 	if (y == 1 ) then
-		key1['P1 Right'] = true;
+		key1['P1 Right'] = true
 	end
 
-	return key1;
+	return key1
 end
 
 local function _toHex(val)
@@ -228,21 +228,6 @@ local function _load(slot)
 	end
 end
 
-local function _finish()
-	console.log('---------------')
-	client.displaymessages(true);
-	client.pause();
-
-	if (M.fail == false) then
-		
-		console.log('Success!');
-		_save(99)
-		_save(9)
-	else
-		console.log('Aborted.');
-	end
-end
-
 local function _debug(msg)
 	if _isDebug() then
 		console.log(msg)
@@ -251,9 +236,9 @@ end
 
 local function _logProgress(extraInfo, force)
 	if (M.attempts % M.reportFrequency == 0 or M.done or force == true) then
-		ei = '';
+		ei = ''
 		if (extraInfo ~= nil) then
-			ei = extraInfo;
+			ei = extraInfo
 		end
 		console.log('attempt: ' .. M.attempts .. ' maxDelay: ' .. M.maxDelay .. ' ' .. ei)
 	end
@@ -261,31 +246,13 @@ end
 
 local function _pushButtonsFor(buttons, frames)
 	for i = 0, frames, 1 do
-		_doFrame(buttons);
+		_doFrame(buttons)
 	end
-end
-
-local function _increment(logInfo)
-	M.attempts = M.attempts + 1;
-	_logProgress(logInfo);
-end
-
-local function _done()
-	M.done = true
-	M.fail = false
 end
 
 local function _abort()
 	M.done = true
 	M.fail = true
-end
-
-function _waitFor(frames)
-	if (frames > 0) then
-		for i = 0, frames - 1, 1 do
-			emu.frameadvance();
-		end
-	end
 end
 
 M.UntilNextInputFrame = function ()
@@ -315,7 +282,7 @@ M.Cap = function(func, limit)
 	_save(tempFile)
 	local i
 	for i = 0, limit do
-		_increment()
+		M.Increment()
 		_debug('Cap Attempt: ' .. i)
 		result = func()
 		if result then
@@ -345,7 +312,7 @@ M.Best = function(func, tries)
 	local i
 	for i = 0, tries do
 		_load(tempFile)
-		_increment()
+		M.Increment()
 		_debug('Best Search Attempt: ' .. i)
 		result = func()
 
@@ -379,12 +346,12 @@ M.FrameSearch = function (func, limit)
 	_save(tempFile)
 	local fsi
 	for fsi = 0, limit do
-		_waitFor(fsi)
+		M.WaitFor(fsi)
 		result = func()
 		if result then
 			return true
 		else
-			_increment()
+			M.Increment()
 			_load(tempFile)
 		end
 	end
@@ -404,12 +371,12 @@ M.ProgressiveSearch = function (func, cap, maxFrames)
 	local psi
     for psi = 0, maxFrames do
         M.Log('Progressive Search with delay ' .. psi)
-       _waitFor(psi)
+		M.WaitFor(psi)
         result = M.Cap(func, cap)
         if result then
             return true
         else
-			_increment()
+			M.Increment()
             _load(tempFile)
         end
     end
@@ -421,7 +388,7 @@ end
 M.PushButtonsFor = _pushButtonsFor
 M.GenerateRndButtons = _rndButtons
 M.GenerateRndDirection = function()	
-	x = math.random(0, 3);
+	x = math.random(0, 3)
 	if x == 0 then return 'P1 Left' end
 	if x == 1 then return 'P1 Right' end
 	if x == 2 then return 'P1 Up' end
@@ -436,142 +403,169 @@ end
 M.PokeRngVal = function(val)
 	mainmemory.write_u16_be(0x0012, val)
 end
-M.Abort = _abort;
+M.Abort = _abort
 M.Log = function(msg)
 	console.log(msg)
-end;
+end
 
 M.DebugAddr = function(addr)
 	if (_isDebug()) then
 		local val = memory.readbyte(addr)
 		console.log('Read ' .. _toHex(addr) .. ' got ' .. val)
 	end
-end;
+end
 M.Read = function(addr)
 	return memory.readbyte(addr)
-end;
-M.Save = _save;
-M.Load = _load;
+end
+M.Save = _save
+M.Load = _load
 M.Debug = _debug
 M.RndDirectionButton = function()
-	_doFrame(_rndDirection());
-end;
-M.Increment = _increment;
+	_doFrame(_rndDirection())
+end
+
+M.Increment = function()
+	M.attempts = M.attempts + 1
+	_logProgress(logInfo)
+end
+
 M.InitSession = function()
 	M.attempts = 0
 	M.done = false
 	M.maxDelay = 0
 	math.randomseed(os.time())
-	client.displaymessages(false);
+	client.displaymessages(false)
 	memory.usememorydomain('System Bus')
-	--client.unpause();
+	--client.unpause()
 end
-M.Finish = _finish;
-M.LogProgress = _logProgress;
+
+M.Finish = function()
+	console.log('---------------')
+	client.displaymessages(true)
+	client.pause()
+
+	if (M.fail == false) then
+		
+		console.log('Success!')
+		_save(99)
+		_save(9)
+	else
+		console.log('Aborted.')
+	end
+end
+
+M.LogProgress = _logProgress
 M.Push = function()
 	if (not bizstring.startswith(name, 'P1')) then
-		name = 'P1 ' .. name;
+		name = 'P1 ' .. name
 	end
-	_doFrame(_push(name));	
-end;
+	_doFrame(_push(name))	
+end
 
-M.WaitFor = _waitFor;
-M.DelayUpTo = function(frames)
-	if (frames <= 0) then return 0 end;
-	delay = math.random(0, frames);
-	if (delay > 0) then
-		for i = 0, delay - 1, 1 do
-			emu.frameadvance();
+M.WaitFor = function(frames)
+	if (frames > 0) then
+		for i = 0, frames - 1, 1 do
+			emu.frameadvance()
 		end
 	end
-	return delay;
-end;
-M.GenerateRndBool = _rndBool;
+end
+
+M.DelayUpTo = function(frames)
+	if (frames <= 0) then return 0 end
+	delay = math.random(0, frames)
+	if (delay > 0) then
+		for i = 0, delay - 1, 1 do
+			emu.frameadvance()
+		end
+	end
+	return delay
+end
+M.GenerateRndBool = _rndBool
 M.RandomFor = function(frames)	
 	if (frames > 0) then
 		for i = 0, frames - 1, 1 do
-			joypad.set(_rndButtons());
-			emu.frameadvance();
+			joypad.set(_rndButtons())
+			emu.frameadvance()
 		end
 	end
-end;
+end
 M.RndButtons = function()
-	_doFrame(_rndButtons());
-end;
+	_doFrame(_rndButtons())
+end
 M.RndAtLeastOne = function()
-	_doFrame(_rndAtLeastOne());
-end;
-M.RndDirection = RndDirection;
+	_doFrame(_rndAtLeastOne())
+end
 M.RndLeftOrRight = function()
-	_doFrame(_rndLeftOrRight());
-end;
+	_doFrame(_rndLeftOrRight())
+end
 
 M.RndWalking = function(directionButton)
 	if (not bizstring.startswith(directionButton, 'P1')) then
-		directionButton = 'P1 ' .. directionButton;
+		directionButton = 'P1 ' .. directionButton
 	end
-	_doFrame(_rndWalking(directionButton));
-end;
+	_doFrame(_rndWalking(directionButton))
+end
 
 M.RndWalkingFor = function(directionButton, frames)
 	if (not bizstring.startswith(directionButton, 'P1')) then
-		directionButton = 'P1 ' .. directionButton;
+		directionButton = 'P1 ' .. directionButton
 	end
 	for i = 0, frames, 1 do
-		_doFrame(_rndWalking(directionButton));
+		_doFrame(_rndWalking(directionButton))
 	end
-end;
+end
 
 M.RandomDirectionAtLeastOne = function()
-	_doFrame(_rndDirectionAtLeastOne());
-end;
+	_doFrame(_rndDirectionAtLeastOne())
+end
 
 M.PushFor = function(directionButton, frames)
 	if (not bizstring.startswith(directionButton, 'P1')) then
-		directionButton = 'P1 ' .. directionButton;
+		directionButton = 'P1 ' .. directionButton
 	end
 	for i = 0, frames, 1 do
-		_doFrame(_push(directionButton));
+		_doFrame(_push(directionButton))
 	end
-end;
+end
+
 M.PushA = function()
-	_doFrame(_push('P1 A'));
-end;
+	_doFrame(_push('P1 A'))
+end
 M.PushB = function()
-	_doFrame(_push('P1 B'));
-end;
+	_doFrame(_push('P1 B'))
+end
 M.PushAorB = function()
-	_doFrame(_pushAorB());
-end;
+	_doFrame(_pushAorB())
+end
 M.RndAorB = function()
-	_doFrame(_rndAorB());
-end;
+	_doFrame(_rndAorB())
+end
 M.PushLorR = function()
-	_doFrame(_pushLorR());
-end;
+	_doFrame(_pushLorR())
+end
 M.PushUp = function()
-	_doFrame(_push('P1 Up'));
-end;
+	_doFrame(_push('P1 Up'))
+end
 M.PushDown = function()
-	_doFrame(_push('P1 Down'));
-end;
+	_doFrame(_push('P1 Down'))
+end
 M.PushLeft = function()
-	_doFrame(_push('P1 Left'));
-end;
+	_doFrame(_push('P1 Left'))
+end
 M.PushRight = function()
-	_doFrame(_push('P1 Right'));
-end;
+	_doFrame(_push('P1 Right'))
+end
 
 M.UntilNextMenu = function()
-	length = 0;
+	length = 0
 	advance = memory.readbyte(0x0059) ~= 248
 	while advance do
-		M.WaitFor(1);
-		length = length + 1;
+		M.WaitFor(1)
+		length = length + 1
 		advance = memory.readbyte(0x0059) ~= 248
 	end
-	return length;
-end;
+	return length
+end
 
 M.Bail = function(msg)
 	M.Debug(msg)
@@ -1002,7 +996,10 @@ M.ReadDmg = function()
 	return M.Read(M.Addr.Dmg)
 end
 
-M.Done = _done
+M.Done = function()
+	M.done = true
+	M.fail = false
+end
 
 function _generateRngCacheKey(r)
 	return string.format('%s-%s-%s', r.Rng1, r.Rng2, r.FrameCount)
