@@ -1,11 +1,11 @@
 _odds = 64 --1 in x
-_minDmg = 10
-_idealDmg = 10 --Max critical
+_minDmg = 30
+_idealDmg = 0 --Max critical
 _idealDelay = 0
 
 _wait3 = 0
-_wait2 = 21
-_wait1 = 39
+_wait2 = 0
+_wait1 = 23
 
 local c = require("DW4-ManipCore")
 c.InitSession()
@@ -93,7 +93,7 @@ while not c.done do
 
 	c.Increment('dmg: ' .. dmg)
 
-	if (found == true and delay <= _idealDelay and bestDmg == _idealDmg) then
+	if (found == true and delay <= _idealDelay and (bestDmg == _idealDmg or _idealDmg == 0)) then
 		c.done = true
 	end
 end

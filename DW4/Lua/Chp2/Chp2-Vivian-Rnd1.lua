@@ -4,87 +4,76 @@ c.reportFrequency = 100
 c.maxDelay = 0
 
 function _vivianFirst()
-	c.Save(20)
-	delay = 0
-	local found = false
-	while not found do
-		c.Load(20)
-		--Magic frame
-		c.RndAtLeastOne()
-		c.WaitFor(14)
+	c.RandomFor(1)
+	c.WaitFor(2)
+	c.UntilNextInputFrame()
+	c.WaitFor(2)
+	c.RndAtLeastOne() -- Vivian appears
+	c.RandomFor(19)
+	c.UntilNextInputFrame()
+	c.WaitFor(2) -- Input frame
+	c.UntilNextInputFrame()
+	c.PushA() -- Attack
+	c.WaitFor(3)
+	c.UntilNextInputFrame()
 
-		delay = delay + c.DelayUpTo(c.maxDelay - delay)
-		c.RndAtLeastOne()
-		c.RandomFor(23)
-		c.WaitFor(2)
-
-		c.PushA()
-		c.WaitFor(4)
-
-		delay = delay + c.DelayUpTo(c.maxDelay - delay)
-		c.PushA()
-		c.RandomFor(1)
-		bail = false
-				if c.ReadMenuPosY() ~= 31 then
-					bail = true
-					c.Debug('Lagged at Vivian pick')
-				end
-		if not bail then
-			c.RandomFor(31)
-			c.WaitFor(2)
-
-			bail = false
-			if c.ReadTurn() == 4 and c.ReadBattle() == 76 then
-				found = true
-				c.LogProgress('Vivian Initiative', true)
-				c.Save(300)
-				c.Save(3)
-			end
-		end
-		
-		Increment()
+	c.DelayUpTo(10)
+	
+	c.PushA() -- Pick Vivian
+	c.RandomFor(28)
+	c.UntilNextInputFrame()
+	
+	c.Save(3)
+	if c.ReadTurn() ~= 4 then
+		return c.Bail('Vivian did not go first')
 	end
+
+	if c.ReadBattle() == 94 then
+		return c.Bail('Vivian cast spell')
+	end
+
+	if c.ReadBattle() == 46 then
+		return c.Bail('Vivian is on guard')
+	end
+
+	c.WaitFor(2)
+
+	return true
 end
 
-bestDelay = 300
 function _miss()
-	c.Save(21)
-	local missDelay = 0
-	local missFound = false
-	while not missFound and missDelay < bestDelay do
-		c.Load(21)
-		c.WaitFor(missDelay)
-		c.PushA()
-		c.WaitFor(50)
-		isMiss = c.ReadBattle()
-		c.Debug('Frame: ' .. missDelay .. ' isMiss: ' .. isMiss)
-		if isMiss == 98 then
-			c.LogProgress('-----', true)
-			c.LogProgress('Miss found! delay: ' .. missDelay, true)
-			bestDelay = missDelay
-			missFound = true
-			c.Save(9)
-			c.Save(99)
-		else
-			missDelay = missDelay + 1
-		end
-	end
+	local origHp = c.Read(c.Addr.AlenaHP)
+	c.RndAtLeastOne()
+	c.WaitFor(5)
 
-	if not missFound then
-		return -1
-	end
-
-	return bestDelay
+	local currHp = c.Read(c.Addr.AlenaHP)
+	local dmg = origHp - currHp
+	c.Debug('dmg: ' .. dmg)
+	return dmg == 0
 end
 
+c.Load(0)
+c.Save(100)
+c.RngCacheClear()
 while not c.done do
-	c.Load(0)
-	_vivianFirst()
-	result = _miss()
-	if result == 0 then
+	c.Load(100)
+	local result = c.Cap(_vivianFirst, 1000)
+	if result then
+		c.Log('Turn manipulated')
+		local cacheResult = c.AddToRngCache()
+		if cacheResult then
+			local result = c.ProgressiveSearch(_miss, 10, 10)
+			if result then
+				c.Done()
+			else
+				c.Log('Could not get a miss')
+			end
+		else
+			c.Log('RNG already found')
+		end
 		c.Done()
 	else
-		c.LogProgress('Best so far: ' .. bestDelay .. ', restarting', true)
+		c.Log('Unable to manip turn')
 	end
 end
 
