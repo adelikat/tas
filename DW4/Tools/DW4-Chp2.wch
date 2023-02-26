@@ -16,4 +16,5 @@ SystemID NES
 006E45	b	h	0	System Bus	E1 Type
 01D6	b	u	0	RAM	actual drop
 02ED	b	u	0	WRAM	Step counter
+0060D4	b	u	0	System Bus	Alena HP
 

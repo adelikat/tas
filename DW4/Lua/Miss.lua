@@ -4,10 +4,10 @@ c.reportFrequency = 100
 c.maxDelay = 12
 
 local _wait3 = 50
-local _wait2 = 15
-local _wait1 = 40
+local _wait2 = 47
+local _wait1 = 24
 
-local _hpAddr = c.Addr.CristoHP
+local _hpAddr = c.Addr.AlenaHP
 local _attack = 76
 local _miss = 98
 
