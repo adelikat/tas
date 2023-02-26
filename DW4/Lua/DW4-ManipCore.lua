@@ -299,14 +299,20 @@ function _waitFor(frames)
 end
 
 M.UntilNextInputFrame = function ()
-	_save("CoreTemp")
+	M.Save("CoreTemp")
+	local startFrameCount = emu.framecount()
 
 	while emu.islagged() == true do
-		_save("CoreTemp")
-		_waitFor(1)
+		M.WaitFor(1)
 	end
 
-	_load("CoreTemp")
+	local endFrameCount = emu.framecount()
+	local targetFrames = endFrameCount - startFrameCount - 1
+
+	M.Load("CoreTemp")
+	if targetFrames > 0 then		
+		M.WaitFor(targetFrames)
+	end
 end
 
 --[[
