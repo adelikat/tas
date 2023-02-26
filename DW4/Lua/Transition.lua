@@ -1,11 +1,13 @@
-local direction = 'Up'
-local cap = 25
+local direction = 'Right'
+local cap = 10
 local best = 999999999
 
 local c = require("DW4-ManipCore")
 c.InitSession()
 c.reportFrequency = 100
 
+local start = 0
+local totalTransFrames = 0
 local origBattleFlag = c.ReadBattle()
 
 function _isEncounter()
@@ -36,10 +38,11 @@ function _walkToTransition()
 			c.Debug('Encounter')
 			c.Load(11)
 		end
-
+		
 		if emu.islagged() then
 			if lastFrameWasLagged then
-				c.Debug('Arrived at transition on frame ' .. emu.framecount())
+				start = emu.framecount()
+				c.Debug('Arrived at transition on frame ' .. start)
 				return -- Success! We are at the transition
 			end
 
@@ -61,11 +64,12 @@ while not c.done do
 	c.UntilNextInputFrame()
 
 	frames = emu.framecount()
-		if (frames < best) then
-			best = frames
-			c.Log("best so far: " .. frames .. " attempt " .. c.attempts)
-			_saveBest(frames)
-		end
+	totalTransFrames = frames - start
+	if (frames < best) then
+		best = frames
+		c.Log(string.format("best so far: %s attempt %s total transition frames: %s", frames, c.attempts, totalTransFrames))
+		_saveBest(frames)
+	end
 
 	c.Increment()
 	if (c.attempts > cap) then
@@ -74,6 +78,5 @@ while not c.done do
 end
 client.displaymessages(false)
 c.Load(9)
+c.Log(string.format('Best Transition frames: %s', totalTransFrames))
 c.Finish()
-
-
