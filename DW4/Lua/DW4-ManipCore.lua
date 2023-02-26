@@ -193,68 +193,6 @@ local function _toHex(val)
 	return "0x" .. string.format("%X", val)
 end
 
-local function _save(slot)
-	if slot == nil then
-		error("slot can not be nil")
-	end
-
-	slotNum = tonumber(slot)
-	if slotNum == 0 then
-		slotNum = 10
-	end
-
-	if slotNum ~= nill and slotNum > 0 and slotNum <= 10 then
-		savestate.saveslot(slot)
-	else
-		savestate.save(slot .. '.State')
-	end
-end
-
-local function _load(slot)
-	if slot == nil then
-		error("slot must be a number")
-	end
-
-	slotNum = tonumber(slot)
-
-	if slotNum == 0 then
-		slotNum = 10
-	end
-
-	if slotNum ~= nil and slotNum > 0 and slotNum <= 10 then
-		savestate.loadslot(slotNum)
-	else
-		savestate.load(slot .. '.State')
-	end
-end
-
-local function _debug(msg)
-	if _isDebug() then
-		console.log(msg)
-	end
-end
-
-local function _logProgress(extraInfo, force)
-	if (M.attempts % M.reportFrequency == 0 or M.done or force == true) then
-		ei = ''
-		if (extraInfo ~= nil) then
-			ei = extraInfo
-		end
-		console.log('attempt: ' .. M.attempts .. ' maxDelay: ' .. M.maxDelay .. ' ' .. ei)
-	end
-end
-
-local function _pushButtonsFor(buttons, frames)
-	for i = 0, frames, 1 do
-		_doFrame(buttons)
-	end
-end
-
-local function _abort()
-	M.done = true
-	M.fail = true
-end
-
 M.UntilNextInputFrame = function ()
 	M.Save("CoreTemp")
 	local startFrameCount = emu.framecount()
@@ -279,20 +217,20 @@ return false
 ]]
 M.Cap = function(func, limit)
 	local tempFile = 'Cap-'.. emu.framecount()
-	_save(tempFile)
+	M.Save(tempFile)
 	local i
 	for i = 0, limit do
 		M.Increment()
-		_debug('Cap Attempt: ' .. i)
+		M.Debug('Cap Attempt: ' .. i)
 		result = func()
 		if result then
 			return true
 		else
-			_load(tempFile)
+			M.Load(tempFile)
 		end
 	end
 	
-	_logProgress('Cap limit reached')
+	M.LogProgress('Cap limit reached')
 	return false
 end
 
@@ -308,30 +246,30 @@ M.Best = function(func, tries)
 	local noResult = 9999999
 	local best = noResult
 	local tempFile = 'Best-Start-'.. emu.framecount()
-	_save(tempFile)
+	M.Save(tempFile)
 	local i
 	for i = 0, tries do
-		_load(tempFile)
+		M.Load(tempFile)
 		M.Increment()
-		_debug('Best Search Attempt: ' .. i)
+		M.Debug('Best Search Attempt: ' .. i)
 		result = func()
 
 		if result then
 			current = emu.framecount()
 			if current < best then
 				best = current			
-				_debug('New best found: ' .. best)
-				_save('Best-End-' .. best)
+				M.Debug('New best found: ' .. best)
+				M.Save('Best-End-' .. best)
 			end			
 		end
 	end
 
 	if best == noResult then
-		_logProgress('Failed to complete a single attempt')
+		M.LogProgress('Failed to complete a single attempt')
 		return 0		
 	else
-		_logProgress('Loading best version: ' .. best)
-		_load('Best-End-' .. best)
+		M.LogProgress('Loading best version: ' .. best)
+		M.Load('Best-End-' .. best)
 		return best
 	end	
 end
@@ -343,7 +281,7 @@ in which it will return false
 ]]
 M.FrameSearch = function (func, limit)
 	tempFile = 'Search-' .. emu.framecount()
-	_save(tempFile)
+	M.Save(tempFile)
 	local fsi
 	for fsi = 0, limit do
 		M.WaitFor(fsi)
@@ -352,11 +290,11 @@ M.FrameSearch = function (func, limit)
 			return true
 		else
 			M.Increment()
-			_load(tempFile)
+			M.Load(tempFile)
 		end
 	end
 
-	_logProgress('Search limit reached')
+	M.LogProgress('Search limit reached')
 	return false
 end
 
@@ -367,7 +305,7 @@ again until cap.  Frames are added until maxFrames is reached
 ]]
 M.ProgressiveSearch = function (func, cap, maxFrames)
     local tempFile = 'Pg-' .. emu.framecount()
-    _save(tempFile)
+    M.Save(tempFile)
 	local psi
     for psi = 0, maxFrames do
         M.Log('Progressive Search with delay ' .. psi)
@@ -377,16 +315,20 @@ M.ProgressiveSearch = function (func, cap, maxFrames)
             return true
         else
 			M.Increment()
-            _load(tempFile)
+            M.Load(tempFile)
         end
     end
 
-    _logProgress('Progress Search limit reached')
+    M.LogProgress('Progress Search limit reached')
     return false
 end
 
-M.PushButtonsFor = _pushButtonsFor
-M.GenerateRndButtons = _rndButtons
+M.PushButtonsFor = function(buttons, frames)
+	for i = 0, frames, 1 do
+		_doFrame(buttons)
+	end
+end
+
 M.GenerateRndDirection = function()	
 	x = math.random(0, 3)
 	if x == 0 then return 'P1 Left' end
@@ -403,7 +345,12 @@ end
 M.PokeRngVal = function(val)
 	mainmemory.write_u16_be(0x0012, val)
 end
-M.Abort = _abort
+
+M.Abort = function()
+	M.done = true
+	M.fail = true
+end
+
 M.Log = function(msg)
 	console.log(msg)
 end
@@ -414,19 +361,59 @@ M.DebugAddr = function(addr)
 		console.log('Read ' .. _toHex(addr) .. ' got ' .. val)
 	end
 end
+
 M.Read = function(addr)
 	return memory.readbyte(addr)
 end
-M.Save = _save
-M.Load = _load
-M.Debug = _debug
+
+M.Save = function(slot)
+	if slot == nil then
+		error("slot can not be nil")
+	end
+
+	slotNum = tonumber(slot)
+	if slotNum == 0 then
+		slotNum = 10
+	end
+
+	if slotNum ~= nill and slotNum > 0 and slotNum <= 10 then
+		savestate.saveslot(slot)
+	else
+		savestate.save(slot .. '.State')
+	end
+end
+
+M.Load = function(slot)
+	if slot == nil then
+		error("slot must be a number")
+	end
+
+	slotNum = tonumber(slot)
+
+	if slotNum == 0 then
+		slotNum = 10
+	end
+
+	if slotNum ~= nil and slotNum > 0 and slotNum <= 10 then
+		savestate.loadslot(slotNum)
+	else
+		savestate.load(slot .. '.State')
+	end
+end
+
+M.Debug = function(msg)
+	if _isDebug() then
+		console.log(msg)
+	end
+end
+
 M.RndDirectionButton = function()
 	_doFrame(_rndDirection())
 end
 
 M.Increment = function()
 	M.attempts = M.attempts + 1
-	_logProgress(logInfo)
+	M.LogProgress(logInfo)
 end
 
 M.InitSession = function()
@@ -447,14 +434,23 @@ M.Finish = function()
 	if (M.fail == false) then
 		
 		console.log('Success!')
-		_save(99)
-		_save(9)
+		M.Save(99)
+		M.Save(9)
 	else
 		console.log('Aborted.')
 	end
 end
 
-M.LogProgress = _logProgress
+M.LogProgress = function(extraInfo, force)
+	if (M.attempts % M.reportFrequency == 0 or M.done or force == true) then
+		ei = ''
+		if (extraInfo ~= nil) then
+			ei = extraInfo
+		end
+		console.log('attempt: ' .. M.attempts .. ' maxDelay: ' .. M.maxDelay .. ' ' .. ei)
+	end
+end
+
 M.Push = function()
 	if (not bizstring.startswith(name, 'P1')) then
 		name = 'P1 ' .. name
@@ -1043,11 +1039,11 @@ end
 -- returns true if an RNG seed is found, else false
 M.RngSearch = function(func)
 	local tempFile = 'RngSearch-' .. emu.framecount()
-    _save(tempFile)
+    M.Save(tempFile)
 	local result = false
 	for i = 0, 65535, 1 do
 		memory.write_u16_be(0x0012, i)
-		_load(tempFile)
+		M.Load(tempFile)
 		M.Debug('Attempting rng seed: ' .. i)
 		result = func()
 		if result then
