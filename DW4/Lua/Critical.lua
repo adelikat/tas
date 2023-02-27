@@ -5,7 +5,7 @@ _idealDelay = 0
 
 _wait3 = 0
 _wait2 = 0
-_wait1 = 23
+_wait1 = 27
 
 local c = require("DW4-ManipCore")
 c.InitSession()

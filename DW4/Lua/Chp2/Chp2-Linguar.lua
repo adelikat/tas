@@ -1,3 +1,4 @@
+-- Starts at the magic frame before the fight
 local c = require("DW4-ManipCore")
 c.InitSession()
 c.reportFrequency = 100
