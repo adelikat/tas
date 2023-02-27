@@ -10,21 +10,21 @@ local start = 0
 local totalTransFrames = 0
 local origBattleFlag = c.ReadBattle()
 
-function _isEncounter()
+local function _isEncounter()
 	local battle = c.ReadBattle()
 	return battle ~= origBattleFlag
 end
 
-function _isLag()
+local function _isLag()
 	return emu.islagged()
 end
 
-function _saveBest(frameCount)
+local function _saveBest(frameCount)
 	c.Save(9)
 	c.Save('Transition' .. frameCount)
 end
 
-function _walkToTransition()
+local function _walkToTransition()
 	c.Save(11)
 	arrived = false
 
