@@ -1042,9 +1042,9 @@ M.RngSearch = function(func)
     M.Save(tempFile)
 	local result = false
 	for i = 0, 65535, 1 do
-		memory.write_u16_be(0x0012, i)
 		M.Load(tempFile)
 		M.Debug('Attempting rng seed: ' .. i)
+		memory.write_u16_be(0x0012, i)
 		result = func()
 		if result then
 			return true
