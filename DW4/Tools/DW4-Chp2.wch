@@ -18,4 +18,5 @@ SystemID NES
 02ED	b	u	0	WRAM	Step counter
 0060D4	b	u	0	System Bus	Alena HP
 0045	b	u	0	RAM	Y Square Pos
+0044	b	u	0	RAM	X Square Pos
 

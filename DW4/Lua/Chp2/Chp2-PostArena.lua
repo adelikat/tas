@@ -246,19 +246,23 @@ local function _endChapter()
     return true
 end
 
-c.Load(0)
-c.Save(100)
-c.RngCacheClear()
-while not c.done do
-	c.Load(100)
-	local result = c.Best(_leaveChambers, 14)
+local function _do()
+    local result = c.Best(_leaveChambers, 14)
     result = c.Best(_leaveCastle, 14)
-    result = c.Best(_leaveEndor, 14)
+    result = c.Best(_leaveEndor, 28)
     result = c.Best(_wingToSanteem, 14)
     result = c.Best(_walkIntoSanteem, 14)
     result = c.Best(_walkUpStairs, 14)
     result = c.Best(_leaveSanteem, 50) -- Do more of this one
     result = c.Best(_endChapter, 50)
+end
+
+c.Load(0)
+c.Save(100)
+c.RngCacheClear()
+while not c.done do
+	c.Load(100)
+	c.Best(_do, 10)
     c.Done()
 end
 

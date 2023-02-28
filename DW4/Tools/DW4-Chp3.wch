@@ -6,7 +6,6 @@ SystemID NES
 00727E	b	u	0	System Bus	E1 HP
 128C	b	u	0	WRAM	E2 HP
 007361	b	u	0	System Bus	Dmg
-0000FD	b	u	0	System Bus	Next Stat
 0096	b	u	0	RAM	Turn?
 00735B	b	u	0	System Bus	Turn Number
 006E0F	b	u	0	System Bus	Who's Turn
@@ -29,12 +28,6 @@ SystemID NES
 0157	w	u	0	WRAM	Gold
 00609D	b	u	0	System Bus	Taloon Str
 02ED	b	u	0	WRAM	Step Counter
-00609E	b	u	0	System Bus	Taloon Ag
-00609F	b	u	0	System Bus	Taloon Vit
-0060A0	b	u	0	System Bus	Taloon Int
-0060A1	b	u	0	System Bus	Taloon Luck
-0060A3	b	u	0	System Bus	Taloon Max HP
-00609C	b	u	0	System Bus	Taloon LV
 0059	b	u	0	RAM	Menu
 0071F2	b	u	0	System Bus	NPC Y
 00006F	w	h	0	System Bus	Offer
