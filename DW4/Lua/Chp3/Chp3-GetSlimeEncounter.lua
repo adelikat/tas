@@ -25,7 +25,7 @@ local function _isSingleSlime()
         return c.Bail('More than 1 slime')
     end
 
-    if c.ReadE1Hp > 6 then
+    if c.ReadE1Hp() > 6 then
         return c.Bail('Too much HP')
     end
 

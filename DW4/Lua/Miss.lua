@@ -1,9 +1,9 @@
 local c = require("DW4-ManipCore")
 c.InitSession()
 c.reportFrequency = 100
-c.maxDelay = 12
+c.maxDelay = 48
 
-local _wait3 = 50
+local _wait3 = 0
 local _wait2 = 47
 local _wait1 = 24
 
