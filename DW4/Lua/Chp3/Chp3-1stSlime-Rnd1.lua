@@ -31,7 +31,6 @@ while not c.done do
 
 			turn = c.ReadTurn()
 			if (turn == 0) then
-				c.Save(3)
 				c.PushA()
 				c.RandomFor(1)
 				c.WaitFor(30)
