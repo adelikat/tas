@@ -1,5 +1,5 @@
 local direction = 'Right'
-local cap = 10
+local cap = 25
 local best = 999999999
 
 local c = require("DW4-ManipCore")

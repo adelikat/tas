@@ -992,6 +992,10 @@ M.ReadDmg = function()
 	return M.Read(M.Addr.Dmg)
 end
 
+M.ReadDrop = function()
+	return M.Read(M.Addr.Drop)
+end
+
 M.Done = function()
 	M.done = true
 	M.fail = false
