@@ -552,15 +552,13 @@ M.PushRight = function()
 	_doFrame(_push('P1 Right'))
 end
 
-M.UntilNextMenu = function()
-	length = 0
-	advance = memory.readbyte(0x0059) ~= 248
+M.UntilNextMenuY = function()
+	local origMenu = M.Read(M.Addr.MenuPosY)
+	advance = true
 	while advance do
 		M.WaitFor(1)
-		length = length + 1
-		advance = memory.readbyte(0x0059) ~= 248
+		advance = M.Read(M.Addr.MenuPosY) == origMenu
 	end
-	return length
 end
 
 M.Bail = function(msg)
@@ -907,8 +905,8 @@ M.Items = {
 M.Addr = {
 	["Rng1"] = 0x0012,
 	["Rng2"] = 0x0013,
-	["CaveX"] = 0x0044,
-	["CaveY"] = 0x0045,
+	["XSquare"] = 0x0044,
+	["YSquare"] = 0x0045,
 	["BattleFlag"] = 0x008B,
 	["Turn"] = 0x0096,
 	["Drop"] = 0x00C4,
@@ -1057,6 +1055,93 @@ M.RngSearch = function(func)
 
 	M.Log('Unable to find an RNG seed')
 	return false
+end
+
+
+M.PushUntilX = function(direction, x, max)
+    if not max then
+        max = 1000 -- avoid a potentially infinite loop
+    end
+
+    for i = 0, max, 1 do
+        M.PushFor(direction, 1)
+        if M.Read(M.Addr.XSquare) == x then
+            return true
+        end
+    end
+
+    return false
+end
+
+M.PushUntilY = function(direction, y, max)
+    if not max then
+        max = 1000 -- avoid a potentially infinite loop
+    end
+
+    for i = 0, max, 1 do
+        M.PushFor(direction, 1)
+        if M.Read(M.Addr.YSquare) == y then
+            return true
+        end
+    end
+
+    return false
+end
+
+M.RndUntilY = function(direction, y, max)
+    if not max then
+        max = 1000 -- avoid a potentially infinite loop
+    end
+
+    for i = 0, max, 1 do
+        M.PushFor(direction, 1)
+        if M.Read(M.Addr.YSquare) == y then
+            return true
+        end
+    end
+
+    return false
+end
+
+M.RndUntilX = function(direction, x, max)
+    if not max then
+        max = 1000 -- avoid a potentially infinite loop
+    end
+
+    for i = 0, max, 1 do
+        M.RndWalkingFor(direction, 1)
+        if M.Read(M.Addr.XSquare) == x then
+            return true
+        end
+    end
+
+    return false
+end
+
+M.UseFirstMenuItem = function()
+    M.PushDown()
+    
+    if M.ReadMenuPosY() ~= 17 then
+        return M.Bail('Unable to navigate to status')
+    end
+    M.PushRight()
+    if M.ReadMenuPosY() ~= 33 then
+        return M.Bail('Unable to navigate to item')
+    end
+    M.PushA()
+    M.WaitFor(3)
+    M.UntilNextInputFrame()
+    M.PushA() -- Pick first character
+    M.WaitFor(2)
+    M.UntilNextInputFrame()
+    M.PushA() -- Pick first item
+    M.WaitFor(3)
+    M.UntilNextInputFrame()
+    M.PushA() -- Use
+    M.WaitFor(2)
+    M.UntilNextInputFrame()
+
+    return true
 end
 
 return M

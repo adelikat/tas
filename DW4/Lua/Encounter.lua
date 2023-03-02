@@ -1,17 +1,19 @@
 local c = require("DW4-ManipCore")
 c.InitSession()
 c.reportFrequency = 1 -- How many attempts before it logs a result
-c.maxDelay = 10
-
+c.maxDelay = 0
+local direction = 'Up'
 frames = 150
 -------------------------
 
-origBattleFlag = c.Read.BattleFlag
-while not c.done do
-	c.Save(0)
+local origBattleFlag = c.ReadBattle()
 
-	delay = delay + c.DelayUpTo(c.maxDelay - delay)
-	c.WaitFor(delay)
+c.Load(0)
+c.Save(100)
+while not c.done do
+	c.Load(100)
+	--delay = delay + c.DelayUpTo(c.maxDelay - delay)
+	--c.WaitFor(delay)
 
 	--direction =  c.RndDirectionButton()
 
@@ -21,7 +23,7 @@ while not c.done do
 	--direction = 'P1 Right'
 
 	for i = 0, frames, 1 do
-		battleFlag = memory.readbyte(0x008B )
+		battleFlag = c.ReadBattle()
 		if battleFlag ~= origBattleFlag then
 			c.Debug("battle found")
 			break
@@ -48,7 +50,7 @@ while not c.done do
 		--hp = c.Read(0xC27E)
 		--console.log('slime found hp: ' .. hp)
 		--if (hp == 4) then
-			c.done = true
+			c.Done()
 		--end
 	end
 
