@@ -41,7 +41,7 @@ while not c.done do
 	c.Load(100)
 	delay = 0
 
-	local result = c.Cap(_str3, 100)
+	local result = c.ProgressiveSearch(_str3, 400, 3)
 	if result then
         c.Done()
     end

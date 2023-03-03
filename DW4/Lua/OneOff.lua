@@ -3,35 +3,25 @@ c.InitSession()
 c.reportFrequency = 10000
 
 local function _do()
+	local direction = c.GenerateRndDirection()
+	--c.RndWalkingFor(direction, 10)
+	c.WaitFor(10)
 	c.RndAorB()
-	c.WaitFor(48)
-	c.UntilNextInputFrame()
-	c.WaitFor(1)
-	c.RndAtLeastOne()
-	c.WaitFor(90)
-	c.UntilNextInputFrame()
-
-	return true
-end
-
-function _critical()
-    c.RndAtLeastOne()
-    c.WaitFor(4)
-	local dmg = c.ReadDmg()
-	c.Debug('Dmg: ' .. dmg)
-    return dmg > 20
+	c.WaitFor(10)
+	
+	return c.AddToRngCache()
 end
 
 c.Load(0)
 c.Save(100)
+c.RngCacheClear()
 while not c.done do
 	c.Load(100)
-	--local result = c.RngSearch(_critical)
-	local result = c.FrameSearch(_critical, 1000)
+	local result = _do()
+	
 	if result then
-		c.Done()
+		c.Log('New RNG, total: ' .. c.RngCacheLength())
 	end
-	c.Log('Critical is impossible!')
 end
 
 c.Finish()

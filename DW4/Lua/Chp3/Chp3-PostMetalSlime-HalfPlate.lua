@@ -32,7 +32,7 @@ local function _getDrop()
     end
 
     if drop > 0x05 then --reduce noise a bit on these logs
-        c.Log(string.format('Got drop: %s delay: %s', c.Items[drop], delay))
+        c.Debug(string.format('Got drop: %s delay: %s', c.Items[drop], delay))
     end
     
     if drop ~= 0x28 then

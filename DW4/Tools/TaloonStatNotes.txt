@@ -1,0 +1,38 @@
+published v4 Taloon
+Str: 34
+Ag: 24
+HP: 79
+
+
+
+v5 Taloon
+Str: 34
+Ag: 27
+HP: 91
+
+after metal babble
+Str: 58
+Ag: 36
+HP: 122
+
+
+HP after 3 medical herbs, final
+148
+At boss:
+38
+
+23 more hp would save a 2nd medical herb usage
+7 less still saves 1
+37 less still allow curr strat
+
+
+v5
+2: 3, 3, 5, 10
+3: 3, 3, 3, 7
+4: 3, 3, 4, 11
+5: 3, 2, 4, 8
+6: 3, 2, 3, 8
+7: 3, 2, 3, 8
+8: 4, 2, 3, 8
+9: 4, 2, 4, 11
+0: 4, 3, 4, x!

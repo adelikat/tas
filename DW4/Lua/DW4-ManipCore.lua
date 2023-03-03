@@ -258,7 +258,7 @@ M.Best = function(func, tries)
 			current = emu.framecount()
 			if current < best then
 				best = current			
-				M.Debug('New best found: ' .. best)
+				M.Log('New best found: ' .. best)
 				M.Save('Best-End-' .. best)
 			end			
 		end
@@ -912,9 +912,16 @@ M.Addr = {
 	["Drop"] = 0x00C4,
 	["NextStat"] = 0x00FD,
 	["MenuPosX"] = 0x03CE,
-	["MenuPosY"] = 0x03CF,
+	["MenuPosY"] = 0x03CF,	
 	["CristoHP"] = 0x6020,
 	["BreyHP"] = 0x607A,
+	["TaloonStr"] = 0x609D,
+	["TaloonAg"] = 0x609E,
+	["TaloonVit"] = 0x609F,
+	["TaloonInt"] = 0x60A0,
+	["TaloonLuck"] = 0x60A1,
+	["TaloonMaxHP"] = 0x60A3,
+	["TaloonLv"] = 0x609C,
 	["RagnarLv"] = 0x60BA,
 	["AlenaHP"] = 0x60D4,
 	["AlenaLv"] = 0x60D8,
