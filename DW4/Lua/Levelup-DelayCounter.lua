@@ -3,7 +3,7 @@ local c = require("DW4-ManipCore")
 local wasInput = false
 local delayCount = 0
 c.Log('Counting delay frames')
-while not c.done do
+while true do
     emu.frameadvance()
     if not emu.islagged() then
         if wasInput then
@@ -11,9 +11,6 @@ while not c.done do
             delayCount = delayCount + 1
         end        
     end
-    wasInput = not emu.islagged()
-    
-
-    
+    wasInput = not emu.islagged()    
 end
 

@@ -6,7 +6,7 @@ local c = require("DW4-ManipCore")
 c.InitSession()
 c.reportFrequency = 10
 c.maxDelay = 4
-local minValue = 5
+local minValue = 3
 local delay = 0
 
 local function _magicFrame()
@@ -55,10 +55,11 @@ c.Save(100)
 c.RngCacheClear()
 while not c.done do
 	c.Load(100)
-    local strResult = c.Cap(_str, 100)
+    --local strResult = c.Cap(_str, 100)
+    strResult = true
     if strResult then
-        c.Log('Got str, trying Ag')
-        local result = c.Cap(_stat, 100)
+        --c.Log('Got str, trying Ag')
+        local result = c.ProgressiveSearchForLevels(_stat, 30)
         if result then
             c.Log('Delay: ' .. delay)
             c.Done()

@@ -317,18 +317,13 @@ Performs a boolean function until it returns true or the cap is reached.
 Once the cap is reached, delay frames are progressively added and it is tried
 again until cap.  Frames are added until maxFrames is reached
 ]]
-M.ProgressiveSearch = function (func, cap, maxFrames, isLevelUp)
+M.ProgressiveSearch = function (func, cap, maxFrames)
     local tempFile = 'Pg-' .. emu.framecount()
     M.Save(tempFile)
 	local psi
     for psi = 0, maxFrames do
         M.Log('Progressive Search with delay ' .. psi)
-		if isLevelUp then
-			M.DelayUpToForLevels(psi)
-		else
-			M.WaitFor(psi)
-		end
-		
+		M.WaitFor(psi)
         result = M.Cap(func, cap)
         if result then
             return true
@@ -341,6 +336,45 @@ M.ProgressiveSearch = function (func, cap, maxFrames, isLevelUp)
     M.LogProgress('Progress Search limit reached')
     return false
 end
+
+local __frames = 0
+local __func = nil
+local function _progressiveWrapper(func)	
+	M.RandomForLevels(__frames)
+	return __func()
+end
+
+--[[
+Performs a boolean function until it returns true or the cap is reached.
+Once the cap is reached, delay frames are progressively added and it is tried
+again until cap. Delays will happen on each attempt and will push random non-AorB
+buttons to increase RNG possibilities
+Frames are added until maxFrames is reached
+Cap is not a parameter because it will be calculated based on how many delay frames
+since possible rng values are so limited
+]]
+M.ProgressiveSearchForLevels = function (func, maxFrames)
+	__func = func
+    local tempFile = 'Pg-' .. emu.framecount()
+    M.Save(tempFile)
+	local psi
+    for psi = 0, maxFrames do
+		local cap = (psi * 4) + 8
+        M.Log('Progressive Search with delay ' .. psi)
+		__frames = psi				
+        result = M.Cap(_progressiveWrapper, cap)
+        if result then
+            return true
+        else
+			M.Increment()
+            M.Load(tempFile)
+        end
+    end
+
+    M.LogProgress('Progress Search limit reached')
+    return false
+end
+
 
 M.PushButtonsFor = function(buttons, frames)
 	for i = 0, frames, 1 do
@@ -511,6 +545,14 @@ M.RandomFor = function(frames)
 	if (frames > 0) then
 		for i = 0, frames - 1, 1 do
 			joypad.set(_rndButtons())
+			emu.frameadvance()
+		end
+	end
+end
+M.RandomForLevels = function(frames)	
+	if (frames > 0) then
+		for i = 0, frames - 1, 1 do
+			joypad.set(_rndButtonsNoAorB())
 			emu.frameadvance()
 		end
 	end

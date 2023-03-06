@@ -5,7 +5,7 @@
 local c = require("DW4-ManipCore")
 c.InitSession()
 c.reportFrequency = 100
-c.maxDelay = 19
+c.maxDelay = 20
 local minValue = 4
 local delay = 0
 local function _magicFrame()
@@ -21,14 +21,11 @@ local function _magicFrame()
 end
 
 local function _str()    
-    delay = c.DelayUpToForLevels(c.maxDelay)
 	c.RndAorB()
 	c.WaitFor(200)
 	c.UntilNextInputFrame()	
 
-    c.Log('Trying with delay: ' .. delay)
-
-	return c.Cap(_magicFrame, 50)
+	return c.Cap(_magicFrame, 25)
 end
 
 c.Load(0)
@@ -37,12 +34,13 @@ c.RngCacheClear()
 while not c.done do
 	c.Load(100)
     
-	local result = c.Cap(_str, 1000)
+	local result = c.ProgressiveSearchForLevels(_str, c.maxDelay)
     if result then
         c.Log('Found! delay: ' .. delay)
         c.Done()
     else
-        c.Log('Failed to get stat')
+        c.Log(':(')
+        c.Log('Failed to get stat!')
     end
 end
 
