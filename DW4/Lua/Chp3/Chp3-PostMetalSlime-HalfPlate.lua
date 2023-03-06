@@ -35,8 +35,12 @@ local function _getDrop()
         c.Debug(string.format('Got drop: %s delay: %s', c.Items[drop], delay))
     end
     
-    if drop ~= 0x28 then
-        return c.Bail('Did not get a half plate')
+    -- if drop ~= 0x28 then
+    --     return c.Bail('Did not get a half plate')
+    -- end
+
+    if drop ~= 0x06 then
+        return c.Bail('Did not get a broad sword')
     end
 
     c.Save(string.format('HalfPlate-%s', emu.framecount()))

@@ -2,12 +2,12 @@ local c = require("DW4-ManipCore")
 c.InitSession()
 c.reportFrequency = 10
 c.maxDelay = 9
-
+local targetStrGain = 4
 local delay = 0
 
 -- Starts from 'Metal Slime has a treasure chest'
 function _str3()
-
+    local origStr = c.Read(c.Addr.TaloonStr)
     c.RndAorB()
     c.WaitFor(30)
     c.UntilNextInputFrame()
@@ -25,15 +25,10 @@ function _str3()
     c.WaitFor(1)
     c.UntilNextInputFrame()
 
-    local str = c.Read(c.Addr.TaloonStr)
-    if str > 7 then
-        c.Log('Jackpot!!! 4 Str')
-        c.Done()
-        return true
-    end
-
-    c.Debug('Str gain: ' .. str - 4)
-    return str == 7
+    local currStr = c.Read(c.Addr.TaloonStr)
+    local gain = currStr - origStr
+    c.Debug('Str gain: ' .. gain)
+    return gain >= targetStrGain
 end
 
 c.Load(0)

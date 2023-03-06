@@ -11,8 +11,8 @@ c.reportFrequency = 100
 c.maxDelay = 29
 local minStr = 4
 local minAg = 2
-local minVit = 1
-local idealHp = 12
+local minVit = 3
+local idealHp = 9
 
 local function _magicFrame()
     local origStat = c.Read(c.Addr.TaloonStr)
@@ -125,7 +125,7 @@ local function _do()
         return _failLowManip('agility')
     end
 
-    result = c.ProgressiveSearchForLevels(_vit, 1)
+    result = c.ProgressiveSearchForLevels(_vit, 10)
     if not result then
         return _failLowManip('vitality')
     end
