@@ -4,11 +4,22 @@
 -- Looks for 'Jackpot' scenarios of skipping one of these major stats
 local c = require("DW4-ManipCore")
 c.InitSession()
-c.reportFrequency = 100
-local minStr = 3
+c.reportFrequency = 1000
+local minStr = 4
 local minAg = 2
 local minVit = 3
-local minHp = 6
+local minHp = 7
+
+-- Lv2 gets extra menuing
+local function _lv2()
+    c.RndAorB()
+    c.WaitFor(30)
+    c.UntilNextInputFrame()
+
+    c.RndAorB()
+    c.WaitFor(20)
+    c.UntilNextInputFrame()
+end
 
 local function _jackPot(stat)
     c.Log(string.format('Jackpot!! No %s', stat))
@@ -17,22 +28,26 @@ local function _jackPot(stat)
     return true
 end
 
-local function _str()
-    local origStr = c.Read(c.Addr.TaloonStr)
+local function _magicFrame()
+    local origStat = c.Read(c.Addr.TaloonStr)
+    c.RandomFor(1)
+    c.WaitFor(5)
+	c.UntilNextInputFrame()
+
+    local currStat = c.Read(c.Addr.TaloonStr)
+
+    c.Debug('Gain: ' .. currStat - origStat)
+    return currStat - origStat >= minStr
+end
+
+local function _str()    
 	c.RndAorB()
 	c.WaitFor(200)
 	c.UntilNextInputFrame()	
-	c.RandomFor(1)
-    c.WaitFor(2)
-	c.UntilNextInputFrame()
 
-    local currStr = c.Read(c.Addr.TaloonStr)
-    if currStr == origStr then
-        return _jackPot('str')
-    end
+    c.Debug('Trying with delay: ' .. delay)
 
-    c.Debug('Str gain: ' .. currStr - origStr)
-    return currStr - origStr >= minStr
+	return c.Cap(_magicFrame, 20)
 end
 
 local function _ag()
@@ -93,34 +108,34 @@ local function _hp()
         return _jackPot('HP')
     end
     return currHp - origHp >= minHp
-
 end
 
 local function _do()
-    local result = c.ProgressiveSearch(_str, 20, 50)
+    local result = c.ProgressiveSearch(_str, 10, 50, true)
     if not result then
         return false
     end
 
     c.Log('Str found')
-    result = c.Cap(_ag, 200)
+    result = c.ProgressiveSearch(_ag, 20, 50, true)
     if not result then
         return false
     end
 
     c.Log('Ag found')
-    result = c.Cap(_vit, 100)
+    result = c.ProgressiveSearch(_vit, 20, 50, true)
     if not result then
         return false
     end
 
     c.Log('Vitality found')    
-    result = c.FrameSearch(_hp, 200)
+    result = c.ProgressiveSearch(_hp, 20, 100, true)
     if not result then
         return false
     end
 
-    c.Log('HP found')
+    c.Log('-----')
+    c.Log('Level up Found')
     return true
 end
 
@@ -129,10 +144,11 @@ c.Save(100)
 c.RngCacheClear()
 while not c.done do
 	c.Load(100)
-	c.Best(_do, 10000)
+   -- _lv2()
+	local result = c.Best(_do, 0)
+    if result then
+        c.Done()
+    end
 end
 
 c.Finish()
-
-
-

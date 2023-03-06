@@ -4,9 +4,9 @@ c.reportFrequency = 10000
 
 local function _do()
 	local direction = c.GenerateRndDirection()
-	--c.RndWalkingFor(direction, 10)
-	c.WaitFor(10)
-	c.RndAorB()
+	c.DelayUpToForLevels(12)
+	c.WaitFor(2)
+	c.PushA()
 	c.WaitFor(10)
 	
 	return c.AddToRngCache()

@@ -5,10 +5,10 @@
 local c = require("DW4-ManipCore")
 c.InitSession()
 c.reportFrequency = 100
-local minStr = 3
+local minStr = 4
 local minAg = 2
-local minVit = 3
-local minHp = 6
+local minVit = 1
+local minHp = 2
 
 local function _jackPot(stat)
     c.Log(string.format('Jackpot!! No %s', stat))

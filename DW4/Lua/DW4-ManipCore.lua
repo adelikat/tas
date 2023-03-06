@@ -63,6 +63,20 @@ local function _rndAtLeastOne()
 	return result		
 end
 
+local function _rndButtonsNoAorB()
+	key1 = {}
+	key1['P1 Up'] = _rndBool()
+	key1['P1 Down'] = _rndBool()
+	key1['P1 Left'] = _rndBool()
+	key1['P1 Right'] = _rndBool()
+	key1['P1 B'] = false
+	key1['P1 A'] = false
+	key1['P1 Select'] = _rndBool()
+	key1['P1 Start'] = _rndBool()
+
+ 	return key1
+end
+
 local function _rndDirection()
 	key1 = {}
 	key1['P1 Up'] = _rndBool()
@@ -303,13 +317,18 @@ Performs a boolean function until it returns true or the cap is reached.
 Once the cap is reached, delay frames are progressively added and it is tried
 again until cap.  Frames are added until maxFrames is reached
 ]]
-M.ProgressiveSearch = function (func, cap, maxFrames)
+M.ProgressiveSearch = function (func, cap, maxFrames, isLevelUp)
     local tempFile = 'Pg-' .. emu.framecount()
     M.Save(tempFile)
 	local psi
     for psi = 0, maxFrames do
         M.Log('Progressive Search with delay ' .. psi)
-		M.WaitFor(psi)
+		if isLevelUp then
+			M.DelayUpToForLevels(psi)
+		else
+			M.WaitFor(psi)
+		end
+		
         result = M.Cap(func, cap)
         if result then
             return true
@@ -471,6 +490,17 @@ M.DelayUpTo = function(frames)
 	delay = math.random(0, frames)
 	if (delay > 0) then
 		for i = 0, delay - 1, 1 do
+			emu.frameadvance()
+		end
+	end
+	return delay
+end
+M.DelayUpToForLevels = function(frames)
+	if (frames <= 0) then return 0 end
+	delay = math.random(0, frames)
+	if (delay > 0) then
+		for i = 0, delay - 1, 1 do
+			_doFrame(_rndButtonsNoAorB())
 			emu.frameadvance()
 		end
 	end

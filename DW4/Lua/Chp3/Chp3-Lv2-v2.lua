@@ -7,6 +7,7 @@ local delay = 0
 
 -- Starts from 'Metal Slime has a treasure chest'
 function _str3()
+
     c.RndAorB()
     c.WaitFor(30)
     c.UntilNextInputFrame()
@@ -24,7 +25,7 @@ function _str3()
     c.WaitFor(1)
     c.UntilNextInputFrame()
 
-    local str = c.Read(0x609D)
+    local str = c.Read(c.Addr.TaloonStr)
     if str > 7 then
         c.Log('Jackpot!!! 4 Str')
         c.Done()
@@ -37,6 +38,7 @@ end
 
 c.Load(0)
 c.Save(100)
+c.RngCacheClear()
 while not c.done do
 	c.Load(100)
 	delay = 0
