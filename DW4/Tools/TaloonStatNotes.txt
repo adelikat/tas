@@ -1,3 +1,12 @@
+half plate offer possibilities: (based on actually seeing them)
+2400
+2381
+2343 (viable if another encounter before entering bonmalmo after winging)
+2306
+2287 
+2268
+
+
 published v4 Taloon
 Str: 34
 Ag: 24
@@ -37,6 +46,8 @@ v5
 8: 4, 2, 3, 8 		6
 9: 4, 2, 4, 11 		0
 0: 4, 3, 4, x! 		16
+----
+11: 4, 2, 3, 7
 
 v6
 2: 3, 2, 4, 9 		23
@@ -50,8 +61,12 @@ v6
 0: 4, 2, 3, 7 		27
 
 v6 again
-2: 3, 2, 4, 10 		10
+2: 3, 2, 4, 10 		2
 3: 2, 2, 4, 12      10
+4: 3, 2, 4, 11 	    15
+5: 3, 2, 3, 7  		20
+6: 3, 3, 4, 11		24
+7: 
 
 Taloon final XP:
 Lv24 65480 Next level: 67185

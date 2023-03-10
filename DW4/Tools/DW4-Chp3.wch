@@ -29,7 +29,7 @@ SystemID NES
 00609D	b	u	0	System Bus	Taloon Str
 0059	b	u	0	RAM	Menu
 0071F2	b	u	0	System Bus	NPC Y
-00006F	w	h	0	System Bus	Offer
+00006F	w	u	0	System Bus	Offer
 0003CF	b	u	0	System Bus	Menu Y
 02ED	b	u	0	WRAM	Step Counter
 0044	b	u	0	RAM	X

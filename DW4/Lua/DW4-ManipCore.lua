@@ -63,6 +63,20 @@ local function _rndAtLeastOne()
 	return result		
 end
 
+local function _rndButtonsLAndR()
+	key1 = {}
+	key1['P1 Up'] = false
+	key1['P1 Down'] = false
+	key1['P1 Left'] = _rndBool()
+	key1['P1 Right'] = _rndBool()
+	key1['P1 B'] = false
+	key1['P1 A'] = false
+	key1['P1 Select'] = false
+	key1['P1 Start'] = false
+
+ 	return key1
+end
+
 local function _rndButtonsNoAorB()
 	key1 = {}
 	key1['P1 Up'] = _rndBool()
@@ -535,6 +549,17 @@ M.DelayUpToForLevels = function(frames)
 	if (delay > 0) then
 		for i = 0, delay - 1, 1 do
 			_doFrame(_rndButtonsNoAorB())
+			emu.frameadvance()
+		end
+	end
+	return delay
+end
+M.DelayUpToWithLAndR = function(frames)
+	if (frames <= 0) then return 0 end
+	delay = math.random(0, frames)
+	if (delay > 0) then
+		for i = 0, delay - 1, 1 do
+			_doFrame(_rndButtonsLAndR())
 			emu.frameadvance()
 		end
 	end
@@ -1182,6 +1207,8 @@ M.RndUntilY = function(direction, y, max)
     return false
 end
 
+-- Note max needs to be half of the expected value
+-- Each loop is 2 frames??
 M.RndUntilX = function(direction, x, max)
     if not max then
         max = 1000 -- avoid a potentially infinite loop
