@@ -54,7 +54,6 @@ local function _wing()
     if c.ReadMenuPosY() ~= 18 then
         return c.Bail('Unable to navigate to Endor')
     end
-    c.Log('Saving 3')
     c.DelayUpToWithLAndR(1)
     c.PushA()
     c.RandomFor(1)
@@ -67,18 +66,25 @@ end
 local function _encounter()
     c.RandomFor(10)
     c.PushFor('Right', 7)
-    c.RndWalkingFor('Right', 18)
+    c.RndWalkingFor('Right', 28)
     c.AddToRngCache()
     if not _isEncounter() then
         return c.Bail('Did not get encounter')
     end
 
     if c.ReadEGroup2Type() ~= 0xFF then
+        c.Log('Got 2nd enemy group')
         return c.Bail('Got a 2nd enemy group')
     end
 
     if c.ReadE1Count() ~= 1 then
+        c.Log('Did not get 1 enemy')
         return c.Bail('Did not get 1 enemy')
+    end
+
+    if c.ReadEGroup1Type() == 0xAD then
+        c.Log('Got Merchant')
+        return c.Bail('Got Merchant')
     end
 
     return true
