@@ -169,7 +169,7 @@ local function _offer2()
     --c.Log('Saving 4')
     --c.Save(4)
 
-    local delay = c.DelayUpToForLevels(70)
+    local delay = c.DelayUpToForLevels(30)
     c.RndAorB()
     c.WaitFor(10)
     c.UntilNextInputFrame()
@@ -189,7 +189,7 @@ local function _offer2()
     end
 
     --delay = delay + c.DelayUpToWithLAndR(c.maxDelay - delay)
-    delay = delay + c.DelayUpToWithLAndR(60)
+    delay = delay + c.DelayUpToWithLAndR(40)
     c.PushA()
 
     c.WaitFor(25)
