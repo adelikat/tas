@@ -4,7 +4,7 @@
 local c = require("DW4-ManipCore")
 c.InitSession()
 c.reportFrequency = 1000
-c.maxDelay = 10
+c.maxDelay = 50
 local bestOffer1 = 0
 local bestOffer2 = 0
 local bestOffer3 = 0
@@ -169,7 +169,7 @@ local function _offer2()
     --c.Log('Saving 4')
     --c.Save(4)
 
-    local delay = c.DelayUpToForLevels(60)
+    local delay = c.DelayUpToForLevels(70)
     c.RndAorB()
     c.WaitFor(10)
     c.UntilNextInputFrame()
@@ -207,7 +207,7 @@ local function _offer2()
     end
 
     local rngResult = c.AddToRngCache()
-    if rngResult and c.RngCacheLength() > 100 then -- less than 100 to reduce noise
+    if rngResult and c.RngCacheLength() > 100 and c.RngCacheLength() % 10 == 0 then -- less than 100 to reduce noise
         c.Log(string.format('New RNG (%s)', c.RngCacheLength()))
     end   
 
