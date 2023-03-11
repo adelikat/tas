@@ -12,12 +12,10 @@ end
 
 local function _do()
 	c.PushA()
-	c.WaitFor(20)
-	if _readOffer() < 2381 then
-		return false
-	end
-
-	return true
+	c.WaitFor(10)
+	local dmg = c.ReadDmg()
+	c.Log('dmg: ' .. dmg)
+	return false
 end
 
 c.Load(0)
@@ -25,7 +23,7 @@ c.Save(100)
 c.RngCacheClear()
 while not c.done do
 	c.Load(100)
-	local result = c.RngSearch(_do)
+	local result = c.FrameSearch(_do, 100)
 	
 	if result then
 		c.Done()

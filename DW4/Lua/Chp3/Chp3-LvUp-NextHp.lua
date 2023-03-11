@@ -7,9 +7,9 @@ local c = require("DW4-ManipCore")
 c.InitSession()
 c.reportFrequency = 100
 c.maxDelay = 29
-local vitDelay = 5
-local minAg = 2
-local minHpValue = 8
+local vitDelay = 4
+local minAg = 0
+local minHpValue = 9
 local hpDelay = 20
 
 local bestVit = 0
@@ -41,7 +41,7 @@ local function _vit()
 
     local currStat = c.Read(c.Addr.TaloonVit)
     local gain = currStat - origStat
-    c.Debug('Gain: ' .. gain)    
+    c.Debug('Vit Gain: ' .. gain)    
     if gain > bestVit then
         bestVit = gain
         c.Log(string.format('New Best Vit: %s delay: ', gain, delay))
@@ -102,7 +102,8 @@ while not c.done do
         hpDelay = hpDelay + 10
         hpCal = 200
     end
-
+    c.Log('Saving 6')
+    c.Save(6)
     result = c.ProgressiveSearchForLevels(_hp, hpCap)
     if result then
         c.Done()

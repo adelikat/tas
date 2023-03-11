@@ -54,7 +54,7 @@ while not c.done do
     if result then
         local rngResult = c.AddToRngCache()
         if rngResult then
-            result = c.ProgressiveSearch(_getCritical, 1, 20)
+            result = c.ProgressiveSearch(_getCritical, 1, 1)
             if result then
                 c.Done()
             else

@@ -2,8 +2,8 @@ local c = require("DW4-ManipCore")
 c.InitSession()
 c.reportFrequency = 1 -- How many attempts before it logs a result
 c.maxDelay = 0
-local direction = 'Left'
-frames = 72
+local direction = 'Right'
+frames = 130
 -------------------------
 
 local origBattleFlag = c.ReadBattle()
