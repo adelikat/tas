@@ -46,7 +46,7 @@ local function _defeatEnemy()
 
     c.UntilNextInputFrame()
     c.WaitFor(2)
-    return true
+    return true 
 end
 
 local function _getDrop()
@@ -72,6 +72,8 @@ local function _getDrop()
         return c.Bail(string.format('Did not get %s', c.Items[neededDrop]))
     end
 
+    c.UntilNextInputFrame()
+
     return true
 end
 c.Load(0)
@@ -81,8 +83,6 @@ while not c.done do
 	c.Load(100)
     local result = c.Cap(_turn, 1000)        
 	if result then
-        c.Log('saving 5')
-        c.Save(5)
         result = c.Cap(_defeatEnemy, 2)
         if result then
             result = c.Cap(_getDrop, 500)

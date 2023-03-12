@@ -7,7 +7,7 @@ local c = require("DW4-ManipCore")
 c.InitSession()
 c.reportFrequency = 10000
 
-local direction = 'Left'
+local desiredDirection = 'Left'
 local origBattleFlag
 
 local function _isEncounter()
@@ -16,17 +16,17 @@ local function _isEncounter()
 end
 
 local function _finishFight()
-    c.DelayUpToForLevels(1)
+    c.DelayUpToForLevels(4)
     c.RndAorB() 
     c.WaitFor(30)
     c.UntilNextInputFrame()
 
-    c.DelayUpToForLevels(1)
+    c.DelayUpToForLevels(4)
     c.RndAorB() -- Taloon opens the treasure chest
     c.WaitFor(10)
     c.UntilNextInputFrame()
 
-    c.DelayUpToForLevels(1)
+    c.DelayUpToForLevels(4)
     c.RndAorB() -- Finds the x
     c.WaitFor(10)
     c.UntilNextInputFrame()
@@ -41,7 +41,8 @@ end
 
 local function _getEncounter()
     origBattleFlag = c.ReadBattle()
-    if direction == nil then
+    local direction = desiredDirection
+    if desiredDirection == nil then
         local flip = c.GenerateRndBool()
         if flip then
             direction = 'Left'
@@ -72,7 +73,11 @@ local function _getEncounter()
         return c.Bail('Got Merchant')
     end
 
-    return true
+    c.UntilNextInputFrame()
+    c.Log('------')
+    c.Log('Encounter Found!')
+    c.Save(string.format('aaaEncounter-%s-%s-%s', emu.framecount(), c.ReadEGroup1Type(), c.ReadRng2()))
+    return false
 end
 
 c.Load(0)

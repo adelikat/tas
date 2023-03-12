@@ -20,7 +20,7 @@ SystemID NES
 00AA	b	h	0	WRAM	Inv Slot 1
 00AB	b	h	0	WRAM	Inv Slot 2
 00AC	b	h	0	WRAM	Inv Slot 3
-00AC	b	h	0	WRAM	Inv Slot 4
+00AD	b	h	0	WRAM	Inv Slot 4
 00AE	b	h	0	WRAM	Inv Slot 5
 00AF	b	h	0	WRAM	Inv Slot 6
 00B0	b	h	0	WRAM	Inv Slot 7
