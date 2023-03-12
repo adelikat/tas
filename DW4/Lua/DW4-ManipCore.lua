@@ -1163,6 +1163,11 @@ end
 
 
 M.PushUntilX = function(direction, x, max)
+	if direction == nil then
+		c.Log('direction not specified')
+		return false
+	end
+	
     if not max then
         max = 1000 -- avoid a potentially infinite loop
     end
@@ -1178,6 +1183,11 @@ M.PushUntilX = function(direction, x, max)
 end
 
 M.PushUntilY = function(direction, y, max)
+	if direction == nil then
+		c.Log('direction not specified')
+		return false
+	end
+
     if not max then
         max = 1000 -- avoid a potentially infinite loop
     end
@@ -1193,12 +1203,17 @@ M.PushUntilY = function(direction, y, max)
 end
 
 M.RndUntilY = function(direction, y, max)
+	if direction == nil then
+		c.Log('direction not specified')
+		return false
+	end
+
     if not max then
         max = 1000 -- avoid a potentially infinite loop
     end
 
     for i = 0, max, 1 do
-        M.PushFor(direction, 1)
+        M.RndWalkingFor(direction, 1)
         if M.Read(M.Addr.YSquare) == y then
             return true
         end
@@ -1210,6 +1225,11 @@ end
 -- Note max needs to be half of the expected value
 -- Each loop is 2 frames??
 M.RndUntilX = function(direction, x, max)
+	if direction == nil then
+		c.Log('direction not specified')
+		return false
+	end
+
     if not max then
         max = 1000 -- avoid a potentially infinite loop
     end
