@@ -6,8 +6,8 @@ local c = require("DW4-ManipCore")
 c.InitSession()
 c.reportFrequency = 10000
 
-local neededDrop = 0x06 -- Broad Sword
---local neededDrop = 0x28 -- Half Plate
+--local neededDrop = 0x06 -- Broad Sword
+local neededDrop = 0x28 -- Half Plate
 
 local function _turn()
     c.RandomFor(1)

@@ -33,9 +33,10 @@
 0 .\Chp3\Chp3-DeathWarp-Post.lua
 0 .\Chp3\Chp3-ArmorHaggle-v2.lua
 0 .\Chp3\Chp3-Encounter-AfterArmorHaggle.lua
-0 .\Chp3\Chp3-WeaponDropFight.lua
-0 .\Chp3\Chp3-WeaponDropFight-NextEncoutner.lua
 0 .\Chp3\Chp3-ToStatueSell.lua
 0 .\Chp3\Chp3-Endor-FromStatueHouseToKing.lua
 0 .\Chp3\Chp3-WeaponDropEncounter-AfterKing.lua
-1 .\Chp3\Chp3-Endor-GetShopAndLeave.lua
+0 .\Chp3\Chp3-Endor-GetShopAndLeave.lua
+0 .\Chp3\Chp3-Endor-Leave-GetEncounter-2ndTime.lua
+0 .\Chp3\Chp3-WeaponDropFight.lua
+0 .\Chp3\Chp3-WeaponDropFight-NextEncoutner.lua

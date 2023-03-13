@@ -77,7 +77,7 @@ local function _getEncounter()
     c.Log('------')
     c.Log('Encounter Found!')
     c.Save(string.format('aaaEncounter-%s-%s-%s', emu.framecount(), c.ReadEGroup1Type(), c.ReadRng2()))
-    return false
+    return true
 end
 
 c.Load(0)

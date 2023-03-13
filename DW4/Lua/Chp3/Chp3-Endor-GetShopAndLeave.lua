@@ -225,11 +225,11 @@ local function _enterChambers()
 end
 
 local function _do()
-    local result = c.Best(_getShop, 40)	
+    local result = c.Best(_getShop, 8)	
 	if result > 0 then
-        result = c.Best(_enterCastle, 40)
+        result = c.Best(_enterCastle, 8)
         if result > 0 then
-            result = c.Best(_enterChambers, 50)
+            result = c.Best(_enterChambers, 10)
             if result > 0 then
                 return true        
             end
@@ -244,7 +244,7 @@ c.Save(100)
 c.RngCacheClear()
 while not c.done do
 	c.Load(100)
-	local result = c.Best(_do, 4)
+	local result = c.Best(_do, 1)
     if result > 0 then
         c.Done()
     end
