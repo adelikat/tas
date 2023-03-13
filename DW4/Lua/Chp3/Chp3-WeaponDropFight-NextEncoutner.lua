@@ -7,7 +7,7 @@ local c = require("DW4-ManipCore")
 c.InitSession()
 c.reportFrequency = 10000
 
-local desiredDirection = nil --'Left'
+local desiredDirection = 'Right'
 local origBattleFlag
 
 local function _isEncounter()
@@ -35,6 +35,7 @@ local function _finishFight()
     c.RndAtLeastOne()
     c.WaitFor(20)
     c.UntilNextInputFrame()
+    
 
     return true
 end
