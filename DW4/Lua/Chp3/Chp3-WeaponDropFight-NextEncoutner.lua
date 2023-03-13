@@ -7,7 +7,7 @@ local c = require("DW4-ManipCore")
 c.InitSession()
 c.reportFrequency = 10000
 
-local desiredDirection = 'Left'
+local desiredDirection = nil --'Left'
 local origBattleFlag
 
 local function _isEncounter()
