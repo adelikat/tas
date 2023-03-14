@@ -14,6 +14,7 @@ local function _enterCastle()
 
     c.RandomFor(10)
     c.UntilNextMenuY()
+    c.UntilNextMenuY()
     c.WaitFor(3)
     c.UntilNextInputFrame()
 
@@ -190,9 +191,9 @@ c.Save(100)
 c.RngCacheClear()
 while not c.done do
 	c.Load(100)
-    local result = c.Best(_enterCastle, 4)        
+    local result = c.Best(_enterCastle, 14)        
 	if result > 0 then
-        result = c.Best(_deliverPlates, 4)
+        result = c.Best(_deliverPlates, 14)
         if result > 0 then
             c.Done()
         end        

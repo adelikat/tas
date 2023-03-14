@@ -5,8 +5,11 @@ local stat = c.Addr.TaloonVit
 
 
 local function _do()
-	c.PushUp()
-	c.RandomFor(18)
+	c.PushLeft()
+	c.RandomFor(14)
+	c.WaitFor(1)
+	c.PushRight()
+	c.RandomFor(17)
 	c.UntilNextInputFrame()
 
 	return true
