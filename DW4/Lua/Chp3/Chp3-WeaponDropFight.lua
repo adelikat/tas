@@ -37,28 +37,21 @@ local function _turn()
 end
 
 local function _defeatEnemy()
-    local delay = c.DelayUpTo(4)
     c.RndAtLeastOne()
     c.WaitFor(5)
 
 
-    --if c.ReadE1Hp() > 0 then
-    if c.ReadDmg() < 21 then
+    if c.ReadE1Hp() > 0 then
         return c.Bail(string.format('Did not do enough dmg: %s delay: %s', c.ReadDmg(), delay))
     end
 
     c.UntilNextInputFrame()
     c.WaitFor(2)
-    c.Log(string.format('Critical! delay %s', delay))
+
     return true 
 end
 
 local function _getDrop()
-    c.RndAtLeastOne() -- x Damage points to y
-    c.WaitFor(10)
-    c.UntilNextInputFrame()
-    c.WaitFor(2)
-
     c.RndAtLeastOne() -- x Damage points to y
     c.WaitFor(10)
     c.UntilNextInputFrame()
@@ -92,7 +85,7 @@ while not c.done do
 	c.Load(100)
     local result = c.Cap(_turn, 1000)        
 	if result then
-        result = c.Cap(_defeatEnemy, 20)
+        result = c.Cap(_defeatEnemy, 4)
         if result then
             result = c.Cap(_getDrop, 500)
             if result then
