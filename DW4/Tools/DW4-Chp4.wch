@@ -1,0 +1,19 @@
+SystemID NES
+0012	b	u	0	RAM	RNG 1
+0013	b	u	0	RAM	RNG 2
+00727E	b	u	0	System Bus	E1 HP
+128C	b	u	0	WRAM	E2 HP
+007361	b	u	0	System Bus	Dmg
+0096	b	u	0	RAM	Turn
+00008B	b	u	0	System Bus	Battle Flag
+006E45	b	h	0	System Bus	EG1 Type
+006E46	b	h	0	System Bus	EG2 Type
+006E49	b	h	0	System Bus	EG1 Count
+006E4A	b	h	0	System Bus	EG2 Count
+0157	w	u	0	WRAM	Gold
+0059	b	u	0	RAM	Menu
+0003CF	b	u	0	System Bus	Menu Y
+02ED	b	u	0	WRAM	Step Counter
+0044	b	u	0	RAM	X
+0045	b	u	0	RAM	Y
+
