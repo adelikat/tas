@@ -16,4 +16,7 @@ SystemID NES
 02ED	b	u	0	WRAM	Step Counter
 0044	b	u	0	RAM	X
 0045	b	u	0	RAM	Y
+007C	b	u	0	RAM	O X Sq
+007B	b	u	0	RAM	O Y Sq
+003E	b	u	0	RAM	Move timer
 

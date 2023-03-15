@@ -247,7 +247,7 @@ M.Cap = function(func, limit)
 	local tempFile = 'Cap-'.. emu.framecount()
 	M.Save(tempFile)
 	local i
-	for i = 0, limit do
+	for i = 1, limit do
 		M.Increment()
 		M.Debug('Cap Attempt: ' .. i)
 		result = func()
@@ -276,7 +276,7 @@ M.Best = function(func, tries)
 	local tempFile = 'Best-Start-'.. emu.framecount()
 	M.Save(tempFile)
 	local i
-	for i = 0, tries do
+	for i = 1, tries do
 		M.Load(tempFile)
 		M.Increment()
 		M.Debug('Best Search Attempt: ' .. i)
@@ -391,7 +391,7 @@ end
 
 
 M.PushButtonsFor = function(buttons, frames)
-	for i = 0, frames, 1 do
+	for i = 1, frames, 1 do
 		_doFrame(buttons)
 	end
 end
@@ -527,7 +527,7 @@ end
 
 M.WaitFor = function(frames)
 	if (frames > 0) then
-		for i = 0, frames - 1, 1 do
+		for i = 1, frames, 1 do
 			emu.frameadvance()
 		end
 	end
@@ -537,7 +537,7 @@ M.DelayUpTo = function(frames)
 	if (frames <= 0) then return 0 end
 	delay = math.random(0, frames)
 	if (delay > 0) then
-		for i = 0, delay - 1, 1 do
+		for i = 1, delay, 1 do
 			emu.frameadvance()
 		end
 	end
@@ -547,7 +547,7 @@ M.DelayUpToForLevels = function(frames)
 	if (frames <= 0) then return 0 end
 	delay = math.random(0, frames)
 	if (delay > 0) then
-		for i = 0, delay - 1, 1 do
+		for i = 1, delay, 1 do
 			_doFrame(_rndButtonsNoAorB())
 			emu.frameadvance()
 		end
@@ -558,7 +558,7 @@ M.DelayUpToWithLAndR = function(frames)
 	if (frames <= 0) then return 0 end
 	delay = math.random(0, frames)
 	if (delay > 0) then
-		for i = 0, delay - 1, 1 do
+		for i = 1, delay, 1 do
 			_doFrame(_rndButtonsLAndR())
 			emu.frameadvance()
 		end
@@ -568,7 +568,7 @@ end
 M.GenerateRndBool = _rndBool
 M.RandomFor = function(frames)	
 	if (frames > 0) then
-		for i = 0, frames - 1, 1 do
+		for i = 1, frames, 1 do
 			joypad.set(_rndButtons())
 			emu.frameadvance()
 		end
@@ -576,7 +576,7 @@ M.RandomFor = function(frames)
 end
 M.RandomForLevels = function(frames)	
 	if (frames > 0) then
-		for i = 0, frames - 1, 1 do
+		for i = 1, frames, 1 do
 			joypad.set(_rndButtonsNoAorB())
 			emu.frameadvance()
 		end
@@ -603,7 +603,7 @@ M.RndWalkingFor = function(directionButton, frames)
 	if (not bizstring.startswith(directionButton, 'P1')) then
 		directionButton = 'P1 ' .. directionButton
 	end
-	for i = 0, frames, 1 do
+	for i = 1, frames, 1 do
 		_doFrame(_rndWalking(directionButton))
 	end
 end
@@ -616,7 +616,7 @@ M.PushFor = function(directionButton, frames)
 	if (not bizstring.startswith(directionButton, 'P1')) then
 		directionButton = 'P1 ' .. directionButton
 	end
-	for i = 0, frames, 1 do
+	for i = 1, frames, 1 do
 		_doFrame(_push(directionButton))
 	end
 end
@@ -1002,8 +1002,11 @@ M.Items = {
 M.Addr = {
 	["Rng1"] = 0x0012,
 	["Rng2"] = 0x0013,
+	["MoveTimer"] = 0x003E,
 	["XSquare"] = 0x0044,
 	["YSquare"] = 0x0045,
+	["OYSquare"] = 0x007B,
+	["OXSquare"] = 0x007C,
 	["BattleFlag"] = 0x008B,
 	["Turn"] = 0x0096,
 	["Drop"] = 0x00C4,
@@ -1167,12 +1170,12 @@ M.PushUntilX = function(direction, x, max)
 		c.Log('direction not specified')
 		return false
 	end
-	
+
     if not max then
         max = 1000 -- avoid a potentially infinite loop
     end
 
-    for i = 0, max, 1 do
+    for i = 1, max, 1 do
         M.PushFor(direction, 1)
         if M.Read(M.Addr.XSquare) == x then
             return true
@@ -1192,7 +1195,7 @@ M.PushUntilY = function(direction, y, max)
         max = 1000 -- avoid a potentially infinite loop
     end
 
-    for i = 0, max, 1 do
+    for i = 1, max, 1 do
         M.PushFor(direction, 1)
         if M.Read(M.Addr.YSquare) == y then
             return true
@@ -1212,7 +1215,7 @@ M.RndUntilY = function(direction, y, max)
         max = 1000 -- avoid a potentially infinite loop
     end
 
-    for i = 0, max, 1 do
+    for i = 1, max, 1 do
         M.RndWalkingFor(direction, 1)
         if M.Read(M.Addr.YSquare) == y then
             return true
@@ -1234,7 +1237,7 @@ M.RndUntilX = function(direction, x, max)
         max = 1000 -- avoid a potentially infinite loop
     end
 
-    for i = 0, max, 1 do
+    for i = 1, max, 1 do
         M.RndWalkingFor(direction, 1)
         if M.Read(M.Addr.XSquare) == x then
             return true
@@ -1268,6 +1271,10 @@ M.UseFirstMenuItem = function()
     M.UntilNextInputFrame()
 
     return true
+end
+
+M.IsEncounter = function()
+	return M.ReadEGroup1Type() ~= 0xFF or M.ReadEGroup2Type() ~= 0xFF
 end
 
 return M

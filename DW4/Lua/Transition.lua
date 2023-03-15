@@ -1,4 +1,4 @@
-local direction = 'Right'
+local direction = 'Left'
 local cap = 50
 local best = 999999999
 
@@ -56,10 +56,11 @@ end
 
 c.Load(0)
 c.Save(100)
-client.displaymessages(false)
+c.RngCacheClear()
 while not c.done do
 	c.Load(100) 
-	_walkToTransition()	
+	_walkToTransition()
+	c.AddToRngCache()
 	c.WaitFor(30) -- An optimization, we know a screen transition is never this fast
 	c.UntilNextInputFrame()
 
@@ -71,12 +72,13 @@ while not c.done do
 		_saveBest(frames)
 	end
 
+	
 	c.Increment()
 	if (c.attempts > cap) then
 		c.Abort()
 	end
 end
-client.displaymessages(false)
-c.Load(9)
+c.Log(string.format('RNG: %s', c.RngCacheLength()))
 c.Log(string.format('Best Transition frames: %s', totalTransFrames))
 c.Finish()
+c.Load(9)
