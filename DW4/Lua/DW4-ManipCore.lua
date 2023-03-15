@@ -1,4 +1,4 @@
-local M = {
+local c = {
 	buttonmap = { [1]='P1 Up',[2]='P1 Down',[4]='P1 Left',[8]='P1 Right',[16]='P1 A',[32]='P1 B',[64]='P1 Start',[128]='P1 Select' },
 	attempts = 0,
 	done = false,
@@ -221,20 +221,20 @@ local function _toHex(val)
 	return "0x" .. string.format("%X", val)
 end
 
-M.UntilNextInputFrame = function ()
-	M.Save("CoreTemp")
+c.UntilNextInputFrame = function ()
+	c.Save("CoreTemp")
 	local startFrameCount = emu.framecount()
 
 	while emu.islagged() == true do
-		M.WaitFor(1)
+		c.WaitFor(1)
 	end
 
 	local endFrameCount = emu.framecount()
 	local targetFrames = endFrameCount - startFrameCount - 1
 
-	M.Load("CoreTemp")
+	c.Load("CoreTemp")
 	if targetFrames > 0 then		
-		M.WaitFor(targetFrames)
+		c.WaitFor(targetFrames)
 	end
 end
 
@@ -243,22 +243,22 @@ runs a parameterless boolean function until it
 returns true or the cap is reached in which it will
 return false
 ]]
-M.Cap = function(func, limit)
+c.Cap = function(func, limit)
 	local tempFile = 'Cap-'.. emu.framecount()
-	M.Save(tempFile)
+	c.Save(tempFile)
 	local i
 	for i = 1, limit do
-		M.Increment()
-		M.Debug('Cap Attempt: ' .. i)
+		c.Increment()
+		c.Debug('Cap Attempt: ' .. i)
 		result = func()
 		if result then
 			return true
 		else
-			M.Load(tempFile)
+			c.Load(tempFile)
 		end
 	end
 	
-	M.LogProgress('Cap limit reached')
+	c.LogProgress('Cap limit reached')
 	return false
 end
 
@@ -270,34 +270,34 @@ successful attempts (where the function returns true) will be
 considered, if 0 is returned it indicated that no successful 
 attempt occurred
 ]]
-M.Best = function(func, tries)
+c.Best = function(func, tries)
 	local noResult = 9999999
 	local best = noResult
 	local tempFile = 'Best-Start-'.. emu.framecount()
-	M.Save(tempFile)
+	c.Save(tempFile)
 	local i
 	for i = 1, tries do
-		M.Load(tempFile)
-		M.Increment()
-		M.Debug('Best Search Attempt: ' .. i)
+		c.Load(tempFile)
+		c.Increment()
+		c.Debug('Best Search Attempt: ' .. i)
 		result = func()
 
 		if result then
 			current = emu.framecount()
 			if current < best then
 				best = current			
-				M.Log('New best found: ' .. best)
-				M.Save('Best-End-' .. best)
+				c.Log('New best found: ' .. best)
+				c.Save('Best-End-' .. best)
 			end			
 		end
 	end
 
 	if best == noResult then
-		M.LogProgress('Failed to complete a single attempt')
+		c.LogProgress('Failed to complete a single attempt')
 		return 0		
 	else
-		M.LogProgress('Loading best version: ' .. best)
-		M.Load('Best-End-' .. best)
+		c.LogProgress('Loading best version: ' .. best)
+		c.Load('Best-End-' .. best)
 		return best
 	end	
 end
@@ -307,22 +307,22 @@ runs a parameterless boolean function and delays by
 1 frame until it returns true or the limit is reach
 in which it will return false
 ]]
-M.FrameSearch = function (func, limit)
+c.FrameSearch = function (func, limit)
 	tempFile = 'Search-' .. emu.framecount()
-	M.Save(tempFile)
+	c.Save(tempFile)
 	local fsi
 	for fsi = 0, limit do
-		M.WaitFor(fsi)
+		c.WaitFor(fsi)
 		result = func()
 		if result then
 			return true
 		else
-			M.Increment()
-			M.Load(tempFile)
+			c.Increment()
+			c.Load(tempFile)
 		end
 	end
 
-	M.LogProgress('Search limit reached')
+	c.LogProgress('Search limit reached')
 	return false
 end
 
@@ -331,30 +331,30 @@ Performs a boolean function until it returns true or the cap is reached.
 Once the cap is reached, delay frames are progressively added and it is tried
 again until cap.  Frames are added until maxFrames is reached
 ]]
-M.ProgressiveSearch = function (func, cap, maxFrames)
+c.ProgressiveSearch = function (func, cap, maxFrames)
     local tempFile = 'Pg-' .. emu.framecount()
-    M.Save(tempFile)
+    c.Save(tempFile)
 	local psi
     for psi = 0, maxFrames do
-        M.Log('Progressive Search with delay ' .. psi)
-		M.WaitFor(psi)
-        result = M.Cap(func, cap)
+        c.Log('Progressive Search with delay ' .. psi)
+		c.WaitFor(psi)
+        result = c.Cap(func, cap)
         if result then
             return true
         else
-			M.Increment()
-            M.Load(tempFile)
+			c.Increment()
+            c.Load(tempFile)
         end
     end
 
-    M.LogProgress('Progress Search limit reached')
+    c.LogProgress('Progress Search limit reached')
     return false
 end
 
 local __frames = 0
 local __func = nil
 local function _progressiveWrapper(func)	
-	M.RandomForLevels(__frames)
+	c.RandomForLevels(__frames)
 	return __func()
 end
 
@@ -367,36 +367,36 @@ Frames are added until maxFrames is reached
 Cap is not a parameter because it will be calculated based on how many delay frames
 since possible rng values are so limited
 ]]
-M.ProgressiveSearchForLevels = function (func, maxFrames)
+c.ProgressiveSearchForLevels = function (func, maxFrames)
 	__func = func
     local tempFile = 'Pg-' .. emu.framecount()
-    M.Save(tempFile)
+    c.Save(tempFile)
 	local psi
     for psi = 0, maxFrames do
 		local cap = (psi * 4) + 8
-        M.Log('Progressive Search with delay ' .. psi)
+        c.Log('Progressive Search with delay ' .. psi)
 		__frames = psi				
-        result = M.Cap(_progressiveWrapper, cap)
+        result = c.Cap(_progressiveWrapper, cap)
         if result then
             return true
         else
-			M.Increment()
-            M.Load(tempFile)
+			c.Increment()
+            c.Load(tempFile)
         end
     end
 
-    M.LogProgress('Progress Search limit reached')
+    c.LogProgress('Progress Search limit reached')
     return false
 end
 
 
-M.PushButtonsFor = function(buttons, frames)
+c.PushButtonsFor = function(buttons, frames)
 	for i = 1, frames, 1 do
 		_doFrame(buttons)
 	end
 end
 
-M.GenerateRndDirection = function()	
+c.GenerateRndDirection = function()	
 	x = math.random(0, 3)
 	if x == 0 then return 'P1 Left' end
 	if x == 1 then return 'P1 Right' end
@@ -404,36 +404,36 @@ M.GenerateRndDirection = function()
 	return 'P1 Down'
 end
 
-M.PokeRng = function()
+c.PokeRng = function()
 	memory.writebyte(0x0012, math.random(0, 255))
 	memory.writebyte(0x0013, math.random(0, 255))
 end
 
-M.PokeRngVal = function(val)
+c.PokeRngVal = function(val)
 	mainmemory.write_u16_be(0x0012, val)
 end
 
-M.Abort = function()
-	M.done = true
-	M.fail = true
+c.Abort = function()
+	c.done = true
+	c.fail = true
 end
 
-M.Log = function(msg)
+c.Log = function(msg)
 	console.log(msg)
 end
 
-M.DebugAddr = function(addr)
+c.DebugAddr = function(addr)
 	if (_isDebug()) then
 		local val = memory.readbyte(addr)
 		console.log('Read ' .. _toHex(addr) .. ' got ' .. val)
 	end
 end
 
-M.Read = function(addr)
+c.Read = function(addr)
 	return memory.readbyte(addr)
 end
 
-M.Save = function(slot)
+c.Save = function(slot)
 	if slot == nil then
 		error("slot can not be nil")
 	end
@@ -450,7 +450,7 @@ M.Save = function(slot)
 	end
 end
 
-M.Load = function(slot)
+c.Load = function(slot)
 	if slot == nil then
 		error("slot must be a number")
 	end
@@ -468,64 +468,64 @@ M.Load = function(slot)
 	end
 end
 
-M.Debug = function(msg)
+c.Debug = function(msg)
 	if _isDebug() then
 		console.log(msg)
 	end
 end
 
-M.RndDirectionButton = function()
+c.RndDirectionButton = function()
 	_doFrame(_rndDirection())
 end
 
-M.Increment = function()
-	M.attempts = M.attempts + 1
-	M.LogProgress(logInfo)
+c.Increment = function()
+	c.attempts = c.attempts + 1
+	c.LogProgress(logInfo)
 end
 
-M.InitSession = function()
-	M.attempts = 0
-	M.done = false
-	M.maxDelay = 0
+c.InitSession = function()
+	c.attempts = 0
+	c.done = false
+	c.maxDelay = 0
 	math.randomseed(os.time())
 	client.displaymessages(false)
 	memory.usememorydomain('System Bus')
 	--client.unpause()
 end
 
-M.Finish = function()
+c.Finish = function()
 	console.log('---------------')
 	client.displaymessages(true)
 	client.pause()
 
-	if (M.fail == false) then
+	if (c.fail == false) then
 		
 		console.log('Success!')
-		M.Save(99)
-		M.Save(9)
+		c.Save(99)
+		c.Save(9)
 	else
 		console.log('Aborted.')
 	end
 end
 
-M.LogProgress = function(extraInfo, force)
-	if (M.attempts % M.reportFrequency == 0 or M.done or force == true) then
+c.LogProgress = function(extraInfo, force)
+	if (c.attempts % c.reportFrequency == 0 or c.done or force == true) then
 		ei = ''
 		if (extraInfo ~= nil) then
 			ei = extraInfo
 		end
-		console.log('attempt: ' .. M.attempts .. ' maxDelay: ' .. M.maxDelay .. ' ' .. ei)
+		console.log('attempt: ' .. c.attempts .. ' maxDelay: ' .. c.maxDelay .. ' ' .. ei)
 	end
 end
 
-M.Push = function()
+c.Push = function()
 	if (not bizstring.startswith(name, 'P1')) then
 		name = 'P1 ' .. name
 	end
 	_doFrame(_push(name))	
 end
 
-M.WaitFor = function(frames)
+c.WaitFor = function(frames)
 	if (frames > 0) then
 		for i = 1, frames, 1 do
 			emu.frameadvance()
@@ -533,7 +533,7 @@ M.WaitFor = function(frames)
 	end
 end
 
-M.DelayUpTo = function(frames)
+c.DelayUpTo = function(frames)
 	if (frames <= 0) then return 0 end
 	delay = math.random(0, frames)
 	if (delay > 0) then
@@ -543,7 +543,7 @@ M.DelayUpTo = function(frames)
 	end
 	return delay
 end
-M.DelayUpToForLevels = function(frames)
+c.DelayUpToForLevels = function(frames)
 	if (frames <= 0) then return 0 end
 	delay = math.random(0, frames)
 	if (delay > 0) then
@@ -554,7 +554,7 @@ M.DelayUpToForLevels = function(frames)
 	end
 	return delay
 end
-M.DelayUpToWithLAndR = function(frames)
+c.DelayUpToWithLAndR = function(frames)
 	if (frames <= 0) then return 0 end
 	delay = math.random(0, frames)
 	if (delay > 0) then
@@ -565,8 +565,8 @@ M.DelayUpToWithLAndR = function(frames)
 	end
 	return delay
 end
-M.GenerateRndBool = _rndBool
-M.RandomFor = function(frames)	
+c.GenerateRndBool = _rndBool
+c.RandomFor = function(frames)	
 	if (frames > 0) then
 		for i = 1, frames, 1 do
 			joypad.set(_rndButtons())
@@ -574,7 +574,7 @@ M.RandomFor = function(frames)
 		end
 	end
 end
-M.RandomForLevels = function(frames)	
+c.RandomForLevels = function(frames)	
 	if (frames > 0) then
 		for i = 1, frames, 1 do
 			joypad.set(_rndButtonsNoAorB())
@@ -582,24 +582,24 @@ M.RandomForLevels = function(frames)
 		end
 	end
 end
-M.RndButtons = function()
+c.RndButtons = function()
 	_doFrame(_rndButtons())
 end
-M.RndAtLeastOne = function()
+c.RndAtLeastOne = function()
 	_doFrame(_rndAtLeastOne())
 end
-M.RndLeftOrRight = function()
+c.RndLeftOrRight = function()
 	_doFrame(_rndLeftOrRight())
 end
 
-M.RndWalking = function(directionButton)
+c.RndWalking = function(directionButton)
 	if (not bizstring.startswith(directionButton, 'P1')) then
 		directionButton = 'P1 ' .. directionButton
 	end
 	_doFrame(_rndWalking(directionButton))
 end
 
-M.RndWalkingFor = function(directionButton, frames)
+c.RndWalkingFor = function(directionButton, frames)
 	if (not bizstring.startswith(directionButton, 'P1')) then
 		directionButton = 'P1 ' .. directionButton
 	end
@@ -608,11 +608,11 @@ M.RndWalkingFor = function(directionButton, frames)
 	end
 end
 
-M.RandomDirectionAtLeastOne = function()
+c.RandomDirectionAtLeastOne = function()
 	_doFrame(_rndDirectionAtLeastOne())
 end
 
-M.PushFor = function(directionButton, frames)
+c.PushFor = function(directionButton, frames)
 	if (not bizstring.startswith(directionButton, 'P1')) then
 		directionButton = 'P1 ' .. directionButton
 	end
@@ -621,49 +621,49 @@ M.PushFor = function(directionButton, frames)
 	end
 end
 
-M.PushA = function()
+c.PushA = function()
 	_doFrame(_push('P1 A'))
 end
-M.PushB = function()
+c.PushB = function()
 	_doFrame(_push('P1 B'))
 end
-M.PushAorB = function()
+c.PushAorB = function()
 	_doFrame(_pushAorB())
 end
-M.RndAorB = function()
+c.RndAorB = function()
 	_doFrame(_rndAorB())
 end
-M.PushLorR = function()
+c.PushLorR = function()
 	_doFrame(_pushLorR())
 end
-M.PushUp = function()
+c.PushUp = function()
 	_doFrame(_push('P1 Up'))
 end
-M.PushDown = function()
+c.PushDown = function()
 	_doFrame(_push('P1 Down'))
 end
-M.PushLeft = function()
+c.PushLeft = function()
 	_doFrame(_push('P1 Left'))
 end
-M.PushRight = function()
+c.PushRight = function()
 	_doFrame(_push('P1 Right'))
 end
 
-M.UntilNextMenuY = function()
-	local origMenu = M.Read(M.Addr.MenuPosY)
+c.UntilNextMenuY = function()
+	local origMenu = c.Read(c.Addr.MenuPosY)
 	advance = true
 	while advance do
-		M.WaitFor(1)
-		advance = M.Read(M.Addr.MenuPosY) == origMenu
+		c.WaitFor(1)
+		advance = c.Read(c.Addr.MenuPosY) == origMenu
 	end
 end
 
-M.Bail = function(msg)
-	M.Debug(msg)
+c.Bail = function(msg)
+	c.Debug(msg)
 	return false
 end
 
-M.Etypes = {
+c.Etypes = {
 	[0x00] = 'Slime',
 	[0x01] = 'Kaskos Hopper',
 	[0x02] = 'Prank Gopher',
@@ -868,7 +868,7 @@ M.Etypes = {
 	[0xFF] = 'None'
 }
 
-M.Items = {
+c.Items = {
 	[0x00] = 'Cypress Stick',
 	[0x01] = 'Club',
 	[0x02] = 'Copper Sword',
@@ -999,111 +999,111 @@ M.Items = {
 	[0xFF] = 'Empty'
 }
 
-M.Addr = {
-	["Rng1"] = 0x0012,
-	["Rng2"] = 0x0013,
-	["MoveTimer"] = 0x003E,
-	["XSquare"] = 0x0044,
-	["YSquare"] = 0x0045,
-	["OYSquare"] = 0x007B,
-	["OXSquare"] = 0x007C,
-	["BattleFlag"] = 0x008B,
-	["Turn"] = 0x0096,
-	["Drop"] = 0x00C4,
-	["NextStat"] = 0x00FD,
-	["MenuPosX"] = 0x03CE,
-	["MenuPosY"] = 0x03CF,	
-	["CristoHP"] = 0x6020,
-	["BreyHP"] = 0x607A,
-	["TaloonStr"] = 0x609D,
-	["TaloonAg"] = 0x609E,
-	["TaloonVit"] = 0x609F,
-	["TaloonInt"] = 0x60A0,
-	["TaloonLuck"] = 0x60A1,
-	["TaloonMaxHP"] = 0x60A3,
-	["TaloonLv"] = 0x609C,
-	["RagnarLv"] = 0x60BA,
-	["AlenaHP"] = 0x60D4,
-	["AlenaLv"] = 0x60D8,
-	["AlenaStr"] = 0x60D9,
-	["AlenaAg"] = 0x60DA,
-	["AlenaVit"] = 0x60DB,
-	["AlenaInt"] = 0x60DC,
-	["AlenaLuck"] = 0x60DD,
-	["AlenaMaxHP"] = 0x60DE,
-	["AlenaSlot1"] = 0x60E6,
-	["AlenaSlot2"] = 0x60E7,
-	["AlenaSlot3"] = 0x60E8,
-	["AlenaSlot4"] = 0x60E9,
-	["AlenaSlot5"] = 0x60EA,
-	["AlenaSlot6"] = 0x60EB,
-	["AlenaSlot7"] = 0x60EC,
-	["AlenaSlot8"] = 0x60ED,
-	["StepCounter"] = 0x62ED,
-	["EGroup1Type"] = 0x6E45,
-	["EGroup2Type"] = 0x6E46,
-	["E1Count"] = 0x6E49,
-	["E1Hp"] = 0x727E,
-	["E2Hp"] = 0x728C,
-	["Dmg"] = 0x7361,
-	["TaloonHp"] = 0x6098
+c.Addr = {
+	['Rng1'] = 0x0012,
+	['Rng2'] = 0x0013,
+	['MoveTimer'] = 0x003E,
+	['XSquare'] = 0x0044,
+	['YSquare'] = 0x0045,
+	['OYSquare'] = 0x007B,
+	['OXSquare'] = 0x007C,
+	['BattleFlag'] = 0x008B,
+	['Turn'] = 0x0096,
+	['Drop'] = 0x00C4,
+	['NextStat'] = 0x00FD,
+	['MenuPosX'] = 0x03CE,
+	['MenuPosY'] = 0x03CF,	
+	['CristoHP'] = 0x6020,
+	['BreyHP'] = 0x607A,
+	['TaloonStr'] = 0x609D,
+	['TaloonAg'] = 0x609E,
+	['TaloonVit'] = 0x609F,
+	['TaloonInt'] = 0x60A0,
+	['TaloonLuck'] = 0x60A1,
+	['TaloonMaxHP'] = 0x60A3,
+	['TaloonLv'] = 0x609C,
+	['RagnarLv'] = 0x60BA,
+	['AlenaHP'] = 0x60D4,
+	['AlenaLv'] = 0x60D8,
+	['AlenaStr'] = 0x60D9,
+	['AlenaAg'] = 0x60DA,
+	['AlenaVit'] = 0x60DB,
+	['AlenaInt'] = 0x60DC,
+	['AlenaLuck'] = 0x60DD,
+	['AlenaMaxHP'] = 0x60DE,
+	['AlenaSlot1'] = 0x60E6,
+	['AlenaSlot2'] = 0x60E7,
+	['AlenaSlot3'] = 0x60E8,
+	['AlenaSlot4'] = 0x60E9,
+	['AlenaSlot5'] = 0x60EA,
+	['AlenaSlot6'] = 0x60EB,
+	['AlenaSlot7'] = 0x60EC,
+	['AlenaSlot8'] = 0x60ED,
+	['StepCounter'] = 0x62ED,
+	['EGroup1Type'] = 0x6E45,
+	['EGroup2Type'] = 0x6E46,
+	['E1Count'] = 0x6E49,
+	['E1Hp'] = 0x727E,
+	['E2Hp'] = 0x728C,
+	['Dmg'] = 0x7361,
+	['TaloonHp'] = 0x6098
 }
 
-M.ReadE1Hp = function()
-	return M.Read(M.Addr.E1Hp)
+c.ReadE1Hp = function()
+	return c.Read(c.Addr.E1Hp)
 end
 
-M.ReadE2Hp = function()
-	return M.Read(M.Addr.E2Hp)
+c.ReadE2Hp = function()
+	return c.Read(c.Addr.E2Hp)
 end
 
-M.ReadRng1 = function()
-	return M.Read(M.Addr.Rng1)
+c.ReadRng1 = function()
+	return c.Read(c.Addr.Rng1)
 end
 
-M.ReadRng2 = function()
-	return M.Read(M.Addr.Rng2)
+c.ReadRng2 = function()
+	return c.Read(c.Addr.Rng2)
 end
 
-M.ReadBattle = function()
-	return M.Read(M.Addr.BattleFlag)
+c.ReadBattle = function()
+	return c.Read(c.Addr.BattleFlag)
 end
 
-M.ReadStepCounter = function()
-	return M.Read(M.Addr.StepCounter)
+c.ReadStepCounter = function()
+	return c.Read(c.Addr.StepCounter)
 end
 
-M.ReadEGroup1Type = function()
-	return M.Read(M.Addr.EGroup1Type)
+c.ReadEGroup1Type = function()
+	return c.Read(c.Addr.EGroup1Type)
 end
 
-M.ReadEGroup2Type = function()
-	return M.Read(M.Addr.EGroup2Type)
+c.ReadEGroup2Type = function()
+	return c.Read(c.Addr.EGroup2Type)
 end
 
-M.ReadE1Count = function()
-	return M.Read(M.Addr.E1Count)
+c.ReadE1Count = function()
+	return c.Read(c.Addr.E1Count)
 end
 
-M.ReadMenuPosY = function()
-	return M.Read(M.Addr.MenuPosY)
+c.ReadMenuPosY = function()
+	return c.Read(c.Addr.MenuPosY)
 end
 
-M.ReadTurn = function()
-	return M.Read(M.Addr.Turn)
+c.ReadTurn = function()
+	return c.Read(c.Addr.Turn)
 end
 
-M.ReadDmg = function()
-	return M.Read(M.Addr.Dmg)
+c.ReadDmg = function()
+	return c.Read(c.Addr.Dmg)
 end
 
-M.ReadDrop = function()
-	return M.Read(M.Addr.Drop)
+c.ReadDrop = function()
+	return c.Read(c.Addr.Drop)
 end
 
-M.Done = function()
-	M.done = true
-	M.fail = false
+c.Done = function()
+	c.done = true
+	c.fail = false
 end
 
 function _generateRngCacheKey(r)
@@ -1112,47 +1112,47 @@ end
 
 function _generateRngeState()
 	return {
-        Rng1 = M.ReadRng1(),
-        Rng2 = M.ReadRng2(),
+        Rng1 = c.ReadRng1(),
+        Rng2 = c.ReadRng2(),
         FrameCount= emu.framecount()
     }
 end
 
-M.RngCache = {}
+c.RngCache = {}
 -- Adds Current Framecount and Rng to cache if it does not already exists
 -- If already exist, this returns false, else true
-M.AddToRngCache = function()
+c.AddToRngCache = function()
 	local r = _generateRngeState()
 	local key = _generateRngCacheKey(r)
-	if M.RngCache[key] == nil then
-		M.RngCache[key] = r
+	if c.RngCache[key] == nil then
+		c.RngCache[key] = r
 		return true
 	end
 
 	return false
 end
 
-M.RngCacheLength = function()
+c.RngCacheLength = function()
 	local count = 0
-	for _ in pairs(M.RngCache) do count = count + 1 end
+	for _ in pairs(c.RngCache) do count = count + 1 end
 	return count
 end
 
-M.RngCacheClear = function()
-	M.RngCache = {}
+c.RngCacheClear = function()
+	c.RngCache = {}
 end
 
 -- Not safe for recording!
 -- Takes a function that returns a boolean value and
 -- Pokes the RNG incrementally by 1 until the function returns true
 -- returns true if an RNG seed is found, else false
-M.RngSearch = function(func)
+c.RngSearch = function(func)
 	local tempFile = 'RngSearch-' .. emu.framecount()
-    M.Save(tempFile)
+    c.Save(tempFile)
 	local result = false
 	for i = 0, 65535, 1 do
-		M.Load(tempFile)
-		M.Debug('Attempting rng seed: ' .. i)
+		c.Load(tempFile)
+		c.Debug('Attempting rng seed: ' .. i)
 		memory.write_u16_be(0x0012, i)
 		result = func()
 		if result then
@@ -1160,12 +1160,12 @@ M.RngSearch = function(func)
 		end
 	end
 
-	M.Log('Unable to find an RNG seed')
+	c.Log('Unable to find an RNG seed')
 	return false
 end
 
 
-M.PushUntilX = function(direction, x, max)
+c.PushUntilX = function(direction, x, max)
 	if direction == nil then
 		c.Log('direction not specified')
 		return false
@@ -1176,8 +1176,8 @@ M.PushUntilX = function(direction, x, max)
     end
 
     for i = 1, max, 1 do
-        M.PushFor(direction, 1)
-        if M.Read(M.Addr.XSquare) == x then
+        c.PushFor(direction, 1)
+        if c.Read(c.Addr.XSquare) == x then
             return true
         end
     end
@@ -1185,7 +1185,7 @@ M.PushUntilX = function(direction, x, max)
     return false
 end
 
-M.PushUntilY = function(direction, y, max)
+c.PushUntilY = function(direction, y, max)
 	if direction == nil then
 		c.Log('direction not specified')
 		return false
@@ -1196,8 +1196,8 @@ M.PushUntilY = function(direction, y, max)
     end
 
     for i = 1, max, 1 do
-        M.PushFor(direction, 1)
-        if M.Read(M.Addr.YSquare) == y then
+        c.PushFor(direction, 1)
+        if c.Read(c.Addr.YSquare) == y then
             return true
         end
     end
@@ -1205,7 +1205,7 @@ M.PushUntilY = function(direction, y, max)
     return false
 end
 
-M.RndUntilY = function(direction, y, max)
+c.RndUntilY = function(direction, y, max)
 	if direction == nil then
 		c.Log('direction not specified')
 		return false
@@ -1216,8 +1216,8 @@ M.RndUntilY = function(direction, y, max)
     end
 
     for i = 1, max, 1 do
-        M.RndWalkingFor(direction, 1)
-        if M.Read(M.Addr.YSquare) == y then
+        c.RndWalkingFor(direction, 1)
+        if c.Read(c.Addr.YSquare) == y then
             return true
         end
     end
@@ -1227,7 +1227,7 @@ end
 
 -- Note max needs to be half of the expected value
 -- Each loop is 2 frames??
-M.RndUntilX = function(direction, x, max)
+c.RndUntilX = function(direction, x, max)
 	if direction == nil then
 		c.Log('direction not specified')
 		return false
@@ -1238,8 +1238,8 @@ M.RndUntilX = function(direction, x, max)
     end
 
     for i = 1, max, 1 do
-        M.RndWalkingFor(direction, 1)
-        if M.Read(M.Addr.XSquare) == x then
+        c.RndWalkingFor(direction, 1)
+        if c.Read(c.Addr.XSquare) == x then
             return true
         end
     end
@@ -1247,34 +1247,67 @@ M.RndUntilX = function(direction, x, max)
     return false
 end
 
-M.UseFirstMenuItem = function()
-    M.PushDown()
+c.UseFirstMenuItem = function()
+    c.PushDown()
     
-    if M.ReadMenuPosY() ~= 17 then
-        return M.Bail('Unable to navigate to status')
+    if c.ReadMenuPosY() ~= 17 then
+        return c.Bail('Unable to navigate to status')
     end
-    M.PushRight()
-    if M.ReadMenuPosY() ~= 33 then
-        return M.Bail('Unable to navigate to item')
+    c.PushRight()
+    if c.ReadMenuPosY() ~= 33 then
+        return c.Bail('Unable to navigate to item')
     end
-    M.PushA()
-    M.WaitFor(3)
-    M.UntilNextInputFrame()
-    M.PushA() -- Pick first character
-    M.WaitFor(2)
-    M.UntilNextInputFrame()
-    M.PushA() -- Pick first item
-    M.WaitFor(3)
-    M.UntilNextInputFrame()
-    M.PushA() -- Use
-    M.WaitFor(2)
-    M.UntilNextInputFrame()
+    c.PushA()
+    c.WaitFor(3)
+    c.UntilNextInputFrame()
+    c.PushA() -- Pick first character
+    c.WaitFor(2)
+    c.UntilNextInputFrame()
+    c.PushA() -- Pick first item
+    c.WaitFor(3)
+    c.UntilNextInputFrame()
+    c.PushA() -- Use
+    c.WaitFor(2)
+    c.UntilNextInputFrame()
 
     return true
 end
 
-M.IsEncounter = function()
-	return M.ReadEGroup1Type() ~= 0xFF or M.ReadEGroup2Type() ~= 0xFF
+c.IsEncounter = function()
+	return c.ReadEGroup1Type() ~= 0xFF or c.ReadEGroup2Type() ~= 0xFF
 end
 
-return M
+c.WalkOneSquare = function(direction, cap)
+    if c.Read(c.Addr.MoveTimer) ~= 0 then
+        c.Log('Move timer must be zero to call this method!')
+        return false
+    end
+
+    if cap == nil or cap <= 0 then
+        cap = 100
+    end
+    
+    c.Save('WalkStart')
+
+    local attempts = 0
+    while attempts < cap do
+        c.Load('WalkStart')
+        c.PushFor(direction, 1)
+        if c.Read(c.Addr.MoveTimer) ~= 15 then
+            return c.Bail('Move timer did not start on 15')
+        end
+
+        c.RandomFor(14)
+        c.WaitFor(1)
+        if c.IsEncounter() then
+            attempts = attempts + 1
+        else
+            return true
+        end
+    end
+    
+    c.Debug('Could not avoid encounter')
+    return false
+end
+
+return c
