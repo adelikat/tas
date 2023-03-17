@@ -3,9 +3,9 @@ c.InitSession()
 c.reportFrequency = 100
 c.maxDelay = 48
 
-local _wait3 = 61
-local _wait2 = 21
-local _wait1 = 30
+local _wait3 = 0
+local _wait2 = 0
+local _wait1 = 32
 
 local _hpAddr = c.Addr.E1Hp
 local _attack = 76
@@ -50,6 +50,7 @@ while not c.done do
 	postBattle = _readBattle()
 	--------------------------------------
 	newHP = _readHp()
+	c.Debug('Dmg: ' .. oHp - newHP)
 	if newHP == oHp
 		and battle == _attack
 		and postBattle == _miss

@@ -1,3 +1,5 @@
+--Starts at the first frame to push left after walking up 1 square into Balzack's chambers
+--Manipulates until the magic frame, with ideal HP
 local c = require("DW4-ManipCore")
 c.InitSession()
 c.reportFrequency = 1000
@@ -32,8 +34,7 @@ local function _do()
 	c.WaitFor(40)
 	c.UntilNextInputFrame()
 
-	c.Log('Saving 6')
-	c.Save(6)
+    c.Log('Balzack HP: ' .. c.ReadE1Hp())
 	
 	return true
 end
@@ -43,8 +44,8 @@ c.Save(100)
 c.RngCacheClear()
 while not c.done do
 	c.Load(100)
-	local result = c.Cap(_do, 100)	
-	if result then
+	local result = c.Best(_do, 100)	
+	if result > 0 then
 		c.Done()
 	else
 		c.Log('Nothing found')

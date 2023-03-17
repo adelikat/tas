@@ -65,7 +65,7 @@ end
 local function _do()
     local result = c.Cap(_walkCloseToCave, 100)
     if result then
-        return c.Best(_enterCave, 40)
+        return c.Best(_enterCave, 25)
     end
 
     return true
@@ -77,7 +77,7 @@ c.RngCacheClear()
 while not c.done do
 	c.Load(100)
 
-    local result = c.Best(_do, 100)
+    local result = c.Best(_do, 2)
     if result > 0 then
         c.Done()
     else

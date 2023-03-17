@@ -1432,4 +1432,25 @@ c.Search = function()
     return true
 end
 
+c.Door = function()
+	c.PushDown()
+    if c.ReadMenuPosY() ~= 17 then
+        return c.Bail('Unable to navigate to status')
+    end
+	c.WaitFor(1)
+	c.PushDown()
+    if c.ReadMenuPosY() ~= 18 then
+        return c.Bail('Unable to navigate to equip')
+    end
+	c.WaitFor(1)
+	c.PushDown()
+	if c.ReadMenuPosY() ~= 19 then
+        return c.Bail('Unable to navigate to door')
+    end
+
+	c.PushA() -- Pick Door
+	c.RandomFor(2) -- Input frame that can be used for RNG
+    c.UntilNextInputFrame()
+end
+
 return c

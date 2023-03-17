@@ -1,4 +1,4 @@
-local direction = 'Left'
+local direction = 'Right'
 local cap = 50
 local best = 999999999
 
@@ -8,11 +8,9 @@ c.reportFrequency = 100
 
 local start = 0
 local totalTransFrames = 0
-local origBattleFlag = c.ReadBattle()
 
 local function _isEncounter()
-	local battle = c.ReadBattle()
-	return battle ~= origBattleFlag
+	return c.ReadEGroup1Type() ~= 0xFF or c.ReadEGroup2Type() ~= 0xFF
 end
 
 local function _isLag()
