@@ -3,11 +3,11 @@ c.InitSession()
 c.reportFrequency = 100
 c.maxDelay = 48
 
-local _wait3 = 0
-local _wait2 = 47
-local _wait1 = 24
+local _wait3 = 61
+local _wait2 = 21
+local _wait1 = 30
 
-local _hpAddr = c.Addr.AlenaHP
+local _hpAddr = c.Addr.E1Hp
 local _attack = 76
 local _miss = 98
 

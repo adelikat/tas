@@ -312,6 +312,7 @@ c.FrameSearch = function (func, limit)
 	c.Save(tempFile)
 	local fsi
 	for fsi = 0, limit do
+		c.Debug(string.format('Attempting delay %s', fsi))
 		c.WaitFor(fsi)
 		result = func()
 		if result then
@@ -446,7 +447,7 @@ c.Save = function(slot)
 	if slotNum ~= nill and slotNum > 0 and slotNum <= 10 then
 		savestate.saveslot(slot)
 	else
-		savestate.save(slot .. '.State')
+		savestate.save(string.format('state-archive/%s.State', slot))
 	end
 end
 
@@ -464,7 +465,7 @@ c.Load = function(slot)
 	if slotNum ~= nil and slotNum > 0 and slotNum <= 10 then
 		savestate.loadslot(slotNum)
 	else
-		savestate.load(slot .. '.State')
+		savestate.load(string.format('state-archive/%s.State', slot))
 	end
 end
 
@@ -1308,6 +1309,127 @@ c.WalkOneSquare = function(direction, cap)
     
     c.Debug('Could not avoid encounter')
     return false
+end
+
+c.Walk = function(direction, squares)
+	if squares == nil then
+		squares = 1
+	end
+    local result
+    for i = 1, squares do
+        result = c.WalkOneSquare(direction)
+        if not result then
+            return false
+        end
+    end
+
+    return true
+end
+
+c.WalkUp = function(squares)
+    return c.Walk('Up', squares)
+end
+
+c.WalkDown = function(squares)
+    return c.Walk('Down', squares)
+end
+
+c.WalkLeft = function(squares)
+    return c.Walk('Left', squares)
+end
+
+c.WalkRight = function(squares)
+    return c.Walk('Right', squares)
+end
+
+c.WalkToCaveTransition = function(direction)
+    c.WalkOneSquare(direction)
+    c.WaitFor(1)
+    if not emu.islagged() then
+        return c.Bail('Did not arrive at a transition!')
+    end
+
+    c.WaitFor(2)
+    c.UntilNextInputFrame() -- Super inefficient on encounters, but encounter happens on exactly the last lag frame
+    if c.IsEncounter() then
+        return false
+    end
+
+    return true
+end
+
+c.WalkUpToCaveTransition = function()
+    return c.WalkToCaveTransition('Up')
+end
+
+c.WalkDownToCaveTransition = function()
+    return c.WalkToCaveTransition('Down')
+end
+
+c.WalkRightToCaveTransition = function()
+    return c.WalkToCaveTransition('Right')
+end
+
+c.WalkLeftToCaveTransition = function()
+    return c.WalkToCaveTransition('Left')
+end
+
+local function _mapDirectionToWalk(directionStr)
+    if directionStr == 'Up' then
+        return c.WalkUp
+    elseif directionStr == 'Down' then
+        return c.WalkDown
+    elseif directionStr == 'Left' then
+        return c.WalkLeft
+    elseif directionStr == 'Right' then
+        return c.WalkRight
+    end
+
+    error('Unknown direction: ' .. tostring(directionStr))
+end
+
+c.WalkMap = function(dirTable)
+    if dirTable == nil then
+        error('Must have a table!')
+    end
+
+    local result
+    for i = 1, #dirTable do
+        for k, v in pairs(dirTable[i]) do
+            c.Debug(string.format('walking %s for %s squares', k, v))
+            local func = _mapDirectionToWalk(k)
+            result = func(v)
+            if not result then
+                return false
+            end
+        end
+      end
+
+    return true
+end
+
+c.Search = function()
+    c.PushDown()
+    if c.ReadMenuPosY() ~= 17 then
+        return c.Bail('Unable to navigate to status')
+    end
+    c.PushRight()
+    if c.ReadMenuPosY() ~= 33 then
+        return c.Bail('Unable to navigate to item')
+    end
+    c.PushDown()
+    if c.ReadMenuPosY() ~= 34 then
+        return c.Bail('Unable to navigate to tactics')
+    end
+    c.WaitFor(1)
+    c.PushDown()
+    if c.ReadMenuPosY() ~= 35 then
+        return c.Bail('Unable to navigate to search')
+    end
+    c.PushA() -- Pick Search
+    c.RandomFor(2) -- Input frame that can be used for RNG
+    c.UntilNextInputFrame()
+    return true
 end
 
 return c

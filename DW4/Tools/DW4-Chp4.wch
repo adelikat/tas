@@ -19,4 +19,13 @@ SystemID NES
 007C	b	u	0	RAM	O X Sq
 007B	b	u	0	RAM	O Y Sq
 003E	b	u	0	RAM	Move timer
+007304	b	u	0	System Bus	E1 Targeting
+007348	b	u	0	System Bus	BOr 1
+007349	b	u	0	System Bus	BOr 2
+00734A	b	u	0	System Bus	BOr 3
+00734B	b	u	0	System Bus	BOr 4
+00734C	b	u	0	System Bus	BOr 5
+00734D	b	u	0	System Bus	BOr 6
+00734E	b	u	0	System Bus	BOr 7
+00734F	b	u	0	System Bus	BOr 8
 

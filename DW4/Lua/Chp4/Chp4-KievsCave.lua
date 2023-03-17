@@ -4,13 +4,6 @@ local c = require("DW4-ManipCore")
 c.InitSession()
 c.reportFrequency = 1000
 
-c.WalkUntilTransition = function(direction)
-    c.Save('WalkTransition')
-    local arrived = false
-
-
-end
-
 local function _walkCloseToCave()
     local result = c.WalkUp(13)
     if not result then return false end
@@ -77,7 +70,7 @@ c.RngCacheClear()
 while not c.done do
 	c.Load(100)
 
-    local result = c.Best(_do, 100)
+    local result = c.Best(_do, 2)
     if result > 0 then
         c.Done()
     else
