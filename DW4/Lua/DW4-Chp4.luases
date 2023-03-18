@@ -1,5 +1,4 @@
 0 .\Transition.lua
-0 .\RngSearch.lua
 0 .\OneOff.lua
 0 .\Miss.lua
 0 .\Encounter.lua
@@ -20,3 +19,5 @@
 0 .\Chp4\Chp4-BalzackRnd2.lua
 0 .\Chp4\Chp4-BalzackRnd3.lua
 0 .\Chp4\Chp4-Lv2.lua
+0 .\Chp4\Chp4-Lv3.lua
+0 .\Chp4\Chp4-KeeleonFight.lua

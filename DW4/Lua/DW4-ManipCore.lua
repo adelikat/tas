@@ -1283,7 +1283,8 @@ c.UseFirstMenuItem = function()
 end
 
 c.IsEncounter = function()
-	return c.ReadEGroup1Type() ~= 0xFF or c.ReadEGroup2Type() ~= 0xFF
+	return false
+	--return c.ReadEGroup1Type() ~= 0xFF or c.ReadEGroup2Type() ~= 0xFF
 end
 
 c.WalkOneSquare = function(direction, cap)

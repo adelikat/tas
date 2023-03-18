@@ -1,4 +1,4 @@
-local direction = 'Right'
+local direction = 'Left'
 local cap = 50
 local best = 999999999
 
@@ -10,7 +10,8 @@ local start = 0
 local totalTransFrames = 0
 
 local function _isEncounter()
-	return c.ReadEGroup1Type() ~= 0xFF or c.ReadEGroup2Type() ~= 0xFF
+	return false
+	--return c.ReadEGroup1Type() ~= 0xFF or c.ReadEGroup2Type() ~= 0xFF
 end
 
 local function _isLag()
