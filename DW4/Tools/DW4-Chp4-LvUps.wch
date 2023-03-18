@@ -1,0 +1,9 @@
+SystemID NES
+006061	b	u	0	System Bus	Mara Str
+006062	b	u	0	System Bus	Mara Agility
+006063	b	u	0	System Bus	Mara Vit
+006064	b	u	0	System Bus	Mara Int
+006065	b	u	0	System Bus	Mara Luck
+006067	b	u	0	System Bus	Mara Max HP
+006069	b	u	0	System Bus	Mara Max MP
+

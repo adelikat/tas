@@ -1048,7 +1048,14 @@ c.Addr = {
 	['E2Hp'] = 0x728C,
 	['Dmg'] = 0x7361,
 	['TaloonHp'] = 0x6098,
-	['MaraHp'] = 0x605C
+	['MaraHp'] = 0x605C,
+	['MaraStr'] = 0x6061,
+	['MaraAg'] = 0x6062,
+	['MaraVit'] = 0x6063,
+	['MaraInt'] = 0x6064,
+	['MaraLuck'] = 0x6065,
+	['MaraMaxHp'] = 0x6067,
+	['MaraMaxMp'] = 0x6069,
 }
 
 c.ReadE1Hp = function()

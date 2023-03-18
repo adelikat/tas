@@ -4,12 +4,18 @@ c.reportFrequency = 1000
 c.maxDelay = 30
 
 local function _do()
+	local origLuck = c.Read(c.Addr.MaraVit)
 	c.PushA()
-	c.WaitFor(10)
+	c.WaitFor(50)
 
-	local dmg = c.ReadDmg()
-	c.Debug('Dmg: ' .. dmg)
-	return dmg >= 80
+	local currLuck = c.Read(c.Addr.MaraVit)
+	local increase = currLuck - origLuck
+
+	if increase > 3 then
+		c.Log('Increase ' .. increase)
+	end
+	c.Debug('Luck Increase: ' .. increase)
+	return increase == 0
 end
 
 c.Load(0)
@@ -17,7 +23,7 @@ c.Save(100)
 c.RngCacheClear()
 while not c.done do
 	c.Load(100)
-	local result = c.FrameSearch(_do, 500)	
+	local result = c.RngSearch(_do)	
 	if result then
 		c.Done()
 	else
