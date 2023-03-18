@@ -1047,7 +1047,8 @@ c.Addr = {
 	['E1Hp'] = 0x727E,
 	['E2Hp'] = 0x728C,
 	['Dmg'] = 0x7361,
-	['TaloonHp'] = 0x6098
+	['TaloonHp'] = 0x6098,
+	['MaraHp'] = 0x605C
 }
 
 c.ReadE1Hp = function()

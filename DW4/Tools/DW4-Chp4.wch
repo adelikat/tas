@@ -28,4 +28,5 @@ SystemID NES
 00734D	b	u	0	System Bus	BOr 6
 00734E	b	u	0	System Bus	BOr 7
 00734F	b	u	0	System Bus	BOr 8
+00605C	b	u	0	System Bus	Mara HP
 
