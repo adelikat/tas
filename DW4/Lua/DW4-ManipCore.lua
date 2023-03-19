@@ -221,6 +221,7 @@ local function _toHex(val)
 	return "0x" .. string.format("%X", val)
 end
 
+-- Ensures you will be on the lag frame before the input frame
 c.UntilNextInputFrame = function ()
 	c.Save("CoreTemp")
 	local startFrameCount = emu.framecount()
@@ -231,6 +232,24 @@ c.UntilNextInputFrame = function ()
 
 	local endFrameCount = emu.framecount()
 	local targetFrames = endFrameCount - startFrameCount - 1
+
+	c.Load("CoreTemp")
+	if targetFrames > 0 then		
+		c.WaitFor(targetFrames)
+	end
+end
+
+-- Ensures you will be on the lag frame after input
+c.UntilNextLagFrame = function ()
+	c.Save("CoreTemp")
+	local startFrameCount = emu.framecount()
+
+	while emu.islagged() == false do
+		c.WaitFor(1)
+	end
+
+	local endFrameCount = emu.framecount()
+	local targetFrames = endFrameCount - startFrameCount
 
 	c.Load("CoreTemp")
 	if targetFrames > 0 then		
@@ -498,6 +517,7 @@ c.Finish = function()
 	console.log('---------------')
 	client.displaymessages(true)
 	client.pause()
+	client.speedmode(100)
 
 	if (c.fail == false) then
 		
@@ -1283,13 +1303,18 @@ c.UseFirstMenuItem = function()
 end
 
 c.IsEncounter = function()
-	return false
-	--return c.ReadEGroup1Type() ~= 0xFF or c.ReadEGroup2Type() ~= 0xFF
+	if c.ReadEGroup2Type() ~= 0xFF then
+		return true
+	end
+
+	-- Special hack because Keeleon value is not cleared after boss fight of Chp 4
+	-- Stays until the next encounter in Chp 5, and Keeleon is never a random encounter
+	return c.ReadEGroup1Type() ~= 0xFF and c.ReadEGroup1Type() ~= 0xBB
 end
 
 c.WalkOneSquare = function(direction, cap)
     if c.Read(c.Addr.MoveTimer) ~= 0 then
-        c.Log('Move timer must be zero to call this method!')
+        error('Move timer must be zero to call this method!')
         return false
     end
 
@@ -1460,6 +1485,66 @@ c.Door = function()
 	c.PushA() -- Pick Door
 	c.RandomFor(2) -- Input frame that can be used for RNG
     c.UntilNextInputFrame()
+	return true
+end
+
+c.Item = function()
+    c.PushDown()
+    if c.ReadMenuPosY() ~= 17 then
+        return c.Bail('Unable to navigate to status')
+    end
+    c.PushRight()
+    if c.ReadMenuPosY() ~= 33 then
+        return c.Bail('Unable to navigate to item')
+    end
+
+    return true
+end
+
+c.BringUpMenu = function()   
+	c.PushA()
+    if c.Read(c.Addr.MenuPosY) == 16 then
+        error('Menu is already 16, this function will not work')
+        return false
+    end
+    
+	advance = true
+	while advance do
+		c.WaitFor(1)
+		advance = c.Read(c.Addr.MenuPosY) ~= 16
+	end
+
+    c.UntilNextLagFrame()
+    c.UntilNextInputFrame()
+    return true
+end
+
+c.AorBAdvance = function()
+    c.RndAorB()
+    c.WaitFor(1)
+    c.UntilNextInputFrame()
+end
+
+c.DismissDialog = function()
+	c.RndAtLeastOne()
+	c.WaitFor(1)
+    c.UntilNextInputFrame()
+end
+
+c.Success = function(val)
+	if val == nil then
+		return false
+	end
+
+	if type(val) == "number" then
+		return val > 0
+	end
+
+	if type(val) == "boolean" then
+		return val
+	end
+
+	error('Unsupported type in Success call: ' .. tostring(val))
 end
 
 return c

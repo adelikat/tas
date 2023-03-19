@@ -1,0 +1,47 @@
+SystemID NES
+0012	b	u	0	RAM	RNG 1
+0013	b	u	0	RAM	RNG 2
+006002	b	u	0	System Bus	A Hp
+007361	b	u	0	System Bus	Dmg
+00727E	w	u	0	System Bus	E1 HP
+128C	b	u	0	WRAM	E2 HP
+00729A	b	u	0	System Bus	E3 HP
+0518	b	u	0	RAM	Day Night
+0000FD	b	u	0	System Bus	Next Stat
+0	S	_	1		
+0096	b	u	0	RAM	Turn
+00008B	b	u	0	System Bus	In Battle
+0	S	_	1		
+00735B	b	u	0	System Bus	Turn Number
+00FD	b	u	0	RAM	Stats
+006E0F	b	u	0	System Bus	action
+006E45	b	h	0	System Bus	EG1 Type
+006E46	b	h	0	System Bus	EG2 Type
+006E49	b	h	0	System Bus	EG1 Count
+006E4A	b	h	0	System Bus	EG2 Count
+006008	b	u	0	System Bus	Hero Ag
+006009	b	u	0	System Bus	Hero Vit
+00600A	b	u	0	System Bus	Hero luck
+00600B	b	u	0	System Bus	Hero int
+007304	b	u	0	System Bus	E1 target
+007305	b	u	0	System Bus	E2 target
+007306	b	u	0	System Bus	E3 target
+007348	b	u	0	System Bus	Battleror1
+007349	b	u	0	System Bus	Battleror2
+00734A	b	u	0	System Bus	Battleror3
+00603E	b	u	0	System Bus	Nara HP
+006098	b	u	0	System Bus	Taloon HP
+007310	b	u	0	System Bus	Enemy action
+006E5C	b	u	0	System Bus	balzack action
+0	S	_	1		
+007348	b	u	0	System Bus	Battle Order Related
+007349	b	u	0	System Bus	Battle Order Related
+00734A	b	u	0	System Bus	Battle Order Related
+00734B	b	u	0	System Bus	Battle Order Related
+00734C	b	u	0	System Bus	Battle Order Related
+00734D	b	u	0	System Bus	Battle Order Related
+00734E	b	u	0	System Bus	Battle Order Related
+00734F	b	u	0	System Bus	Battle Order Related
+006007	b	u	0	System Bus	Hero Str
+1220	b	u	0	WRAM	Taloon Building Power Flag
+
