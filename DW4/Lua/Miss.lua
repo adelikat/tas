@@ -1,13 +1,13 @@
 local c = require("DW4-ManipCore")
 c.InitSession()
 c.reportFrequency = 100
-c.maxDelay = 48
+c.maxDelay = 7
 
 local _wait3 = 0
 local _wait2 = 0
-local _wait1 = 32
+local _wait1 = 23
 
-local _hpAddr = c.Addr.E1Hp
+local _hpAddr = c.Addr.HeroHP
 local _attack = 76
 local _miss = 98
 
@@ -33,6 +33,7 @@ end
 
 c.Load(0)
 c.Save(100)
+c.RngCacheClear()
 while not c.done do
 	c.Load(100)
 	delay = 0
@@ -51,6 +52,8 @@ while not c.done do
 	--------------------------------------
 	newHP = _readHp()
 	c.Debug('Dmg: ' .. oHp - newHP)
+	c.AddToRngCache()
+	c.Debug('RNG: ' .. c.RngCacheLength())
 	if newHP == oHp
 		and battle == _attack
 		and postBattle == _miss

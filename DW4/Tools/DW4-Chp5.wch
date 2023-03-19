@@ -1,7 +1,7 @@
 SystemID NES
 0012	b	u	0	RAM	RNG 1
 0013	b	u	0	RAM	RNG 2
-006002	b	u	0	System Bus	A Hp
+006002	b	u	0	System Bus	Hero Hp
 007361	b	u	0	System Bus	Dmg
 00727E	w	u	0	System Bus	E1 HP
 128C	b	u	0	WRAM	E2 HP

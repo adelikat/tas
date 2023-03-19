@@ -1,11 +1,11 @@
-_odds = 64 --1 in x
-_minDmg = 80
+_odds = 128 --1 in x
+_minDmg = 20
 _idealDmg = 0 --Max critical
 _idealDelay = 0
 
 _wait3 = 0
 _wait2 = 0
-_wait1 = 30
+_wait1 = 23
 
 local c = require("DW4-ManipCore")
 c.InitSession()
@@ -54,8 +54,11 @@ function _checkBattleFlag(battle)
 	return battle ~= attackBegin and battle ~= sleep and battle ~= miss
 end
 
+c.Load(0)
+c.Save(100)
+c.RngCacheClear()
 while not c.done do
-	c.Load(10)
+	c.Load(100)
 	delay = 0
 
 	_step(_wait3, true)
@@ -66,11 +69,17 @@ while not c.done do
 	c.RndAtLeastOne()
 	c.WaitFor(10)
 
+	c.AddToRngCache()
+	c.Debug('RNG: ' .. c.RngCacheLength())
 	-- Eval
 	--------------------------------------
 	dmg = _readDmg()
 	battle = _readBattle()
 	c.Debug('dmg: ' .. dmg .. ' battle: ' .. battle)
+
+	if dmg > 10 then
+		c.Log('Dmg: ' .. dmg)
+	end
 
 	if dmg >= _minDmg and (_idealDmg == 0 or dmg <= _idealDmg)
 		and _checkBattleFlag(battle)
