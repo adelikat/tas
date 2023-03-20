@@ -91,7 +91,7 @@ client.unpause()
 while not c.done do
     c.Load(100)
     
-    local result = c.Cap(_vit, 100)
+    local result = c.Cap(_mp, 100)
     if c.Success(result) then
         c.Done()
     end
