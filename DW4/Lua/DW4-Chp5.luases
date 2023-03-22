@@ -3,6 +3,7 @@
 0 .\Miss.lua
 0 .\Encounter.lua
 0 .\Critical.lua
+0 .\RngSearch.lua
 0 .\Chp5\LeaveHeroVillage.lua
 0 .\Chp5\FromStartVillageToCave.lua
 0 .\Chp5\LeaveCaveToEndor.lua
@@ -20,3 +21,5 @@
 0 .\Chp5\HeroLv2.lua
 0 .\Chp5\CaveOfBetrayal-ToTricksyEncounter.lua
 0 .\Chp5\TricksyRnd1.lua
+0 .\Chp5\TricksyRnd2.lua
+0 .\Chp5\TricksyRnd3.lua

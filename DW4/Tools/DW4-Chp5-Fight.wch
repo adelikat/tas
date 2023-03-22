@@ -1,0 +1,21 @@
+SystemID NES
+0012	b	u	0	RAM	RNG 1
+0013	b	u	0	RAM	RNG 2
+006002	b	u	0	System Bus	Hero Hp
+007361	b	u	0	System Bus	Dmg
+0096	b	u	0	RAM	Turn
+00008B	b	u	0	System Bus	Battle
+00727E	w	u	0	System Bus	E1 HP
+128C	b	u	0	WRAM	E2 HP
+00729A	b	u	0	System Bus	E3 HP
+0072A8	b	u	0	System Bus	E4 HP
+0062ED	b	u	0	System Bus	Step Counter
+006E45	b	h	0	System Bus	EG1 Type
+006E46	b	h	0	System Bus	EG2 Type
+03CF	b	u	0	RAM	Menu Y
+132B	b	h	0	WRAM	Hero targeting somehow
+006E5C	b	u	0	System Bus	E? action
+00732A	b	u	0	System Bus	Tricksy A Action
+00732B	b	u	0	System Bus	Tricksy B Action
+007300	b	u	0	System Bus	Hero Target?
+

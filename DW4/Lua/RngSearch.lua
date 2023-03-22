@@ -1,48 +1,48 @@
+
+-- Runs through a scenario poking all RNG values to see if the situation is possible
+-- The _do method should not have any random button presses or delays
 local c = require("DW4-ManipCore")
 c.InitSession()
-c.reportFrequency = 100
-c.maxDelay = 64
+c.reportFrequency = 1000
+c.maxDelay = 2
 
-local start = 0
-local function _incrementRng()	
-	memory.write_u16_be(0x0012, start)
-	local rng1 = c.ReadRng1()
-	local rng2 = c.ReadRng2()
-	c.Debug(string.format('Attempt: %s Rng1: %s Rng2: %s', start, rng1, rng2))
-	start = start + 1
+local function _tempSave(slot)
+    c.Log('Saving ' .. slot)
+    c.Save(slot)
 end
 
-local origVit = c.Read(0x60BD)
-local origLuck = c.Read(0x60BF)
-local origInt = c.Read(0x60BE)
--- Arbituary commands god here
-local function _runScenario()
-	
+local function _do()
+	local origHp = c.Read(c.Addr.HeroHP)
+	c.Debug('Orig HP: ' .. origHp)
 	c.PushA()
-	c.WaitFor(51)
-end
+	c.RandomFor(25)
+	c.UntilNextInputFrame()
+	c.WaitFor(2)
 
--- Check if attempt was successful
-local function _checkSuccess()
-	local curVit = c.Read(0x60BD)
-	local curLuck = c.Read(0x60BF)
-	local curInt = c.Read(0x60BE)
+	c.PushA()
+	c.WaitFor(10)
+	
+	local currHp = c.Read(c.Addr.HeroHP)
+	c.Debug('Curr HP: ' .. currHp)
 
-	return origVit == curVit
+	if currHp == origHp then
+		c.Log('Miss found ' .. emu.framecount())
+		c.Save(string.format('TricksyRnd1-Miss-%s-Rng2-%s-Rng1-%s', emu.framecount(), c.ReadRng2(), c.ReadRng1()))
+		return true
+	end
 end
 
 c.Load(0)
 c.Save(100)
+c.RngCacheClear()
 while not c.done do
 	c.Load(100)
-	
-	_incrementRng()
-	_runScenario()
-	local result = _checkSuccess()
-	if result then
+	local result = c.RngSearch(_do)	
+	if c.Success(result) then
 		c.Done()
-		c.Save(9)
-	end	
+	else
+		c.Log('Nothing found')
+	end
 end
 
 c.Finish()
