@@ -387,13 +387,16 @@ Frames are added until maxFrames is reached
 Cap is not a parameter because it will be calculated based on how many delay frames
 since possible rng values are so limited
 ]]
-c.ProgressiveSearchForLevels = function (func, maxFrames)
+c.ProgressiveSearchForLevels = function (func, maxFrames, multiplier)
+	if multipler == nil then
+		multipler = 4
+	end
 	__func = func
     local tempFile = 'Pg-' .. emu.framecount()
     c.Save(tempFile)
 	local psi
     for psi = 0, maxFrames do
-		local cap = (psi * 4) + 8
+		local cap = (psi * multipler) + 8
         c.Log('Progressive Search with delay ' .. psi)
 		__frames = psi				
         result = c.Cap(_progressiveWrapper, cap)

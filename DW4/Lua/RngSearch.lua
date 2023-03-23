@@ -12,22 +12,16 @@ local function _tempSave(slot)
 end
 
 local function _do()
-	local origHp = c.Read(c.Addr.HeroHP)
-	c.Debug('Orig HP: ' .. origHp)
-	c.PushA()
-	c.RandomFor(25)
-	c.UntilNextInputFrame()
-	c.WaitFor(2)
-
+	local origStat = c.Read(c.Addr.HeroVit)
 	c.PushA()
 	c.WaitFor(10)
+	c.UntilNextInputFrame()
 	
-	local currHp = c.Read(c.Addr.HeroHP)
-	c.Debug('Curr HP: ' .. currHp)
+	local currStat = c.Read(c.Addr.HeroVit)
+	local gain = currStat - origStat
+	c.Debug('gain: ' .. gain)
 
-	if currHp == origHp then
-		c.Log('Miss found ' .. emu.framecount())
-		c.Save(string.format('TricksyRnd1-Miss-%s-Rng2-%s-Rng1-%s', emu.framecount(), c.ReadRng2(), c.ReadRng1()))
+	if gain == 0 then
 		return true
 	end
 end
