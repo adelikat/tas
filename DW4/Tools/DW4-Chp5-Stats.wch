@@ -8,4 +8,5 @@ SystemID NES
 00600B	b	u	0	System Bus	Hero Luck
 00600D	b	u	0	System Bus	Hero Max Hp
 00600F	b	u	0	System Bus	Hero Max Mp
+0004	b	u	0	WRAM	Current MP
 

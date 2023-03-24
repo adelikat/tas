@@ -1327,7 +1327,7 @@ end
 
 c.WalkOneSquare = function(direction, cap)
     if c.Read(c.Addr.MoveTimer) ~= 0 then
-        error('Move timer must be zero to call this method!')
+        error(string.format('Move timer must be zero to call this method! %s', c.Read(c.Addr.MoveTimer)))
         return false
     end
 
@@ -1350,6 +1350,11 @@ c.WalkOneSquare = function(direction, cap)
         if c.IsEncounter() then
             attempts = attempts + 1
         else
+			local moveTimer = c.Read(c.Addr.MoveTimer)
+			if moveTimer == 1 then
+				c.WaitFor(1) -- Accounts for lag during day/night transition
+				c.Debug('Lagged, increasing walk by 1 frame')
+			end
             return true
         end
     end
