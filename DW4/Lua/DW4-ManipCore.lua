@@ -1075,12 +1075,9 @@ c.Addr = {
 	['EGroup1Type'] = 0x6E45,
 	['EGroup2Type'] = 0x6E46,
 	['E1Count'] = 0x6E49,
-	['E1Hp'] = 0x727E,
-	['E2Hp'] = 0x728C,
-	['E3Hp'] = 0x729A,
-	['E4Hp'] = 0x72A8,
-	['Dmg'] = 0x7361,
+	
 	['TaloonHp'] = 0x6098,
+	['NaraHp'] = 0x603E,
 	['MaraHp'] = 0x605C,
 	['MaraStr'] = 0x6061,
 	['MaraAg'] = 0x6062,
@@ -1089,6 +1086,29 @@ c.Addr = {
 	['MaraLuck'] = 0x6065,
 	['MaraMaxHp'] = 0x6067,
 	['MaraMaxMp'] = 0x6069,
+	['E1Hp'] = 0x727E,
+	['E2Hp'] = 0x728C,
+	['E3Hp'] = 0x729A,
+	['E4Hp'] = 0x72A8,
+	['E1Target'] = 0x7304,
+	['E2Target'] = 0x7305,
+	['E3Target'] = 0x7306,
+	['P2Action'] = 0x7325,
+	['P3Action'] = 0x7326,
+	['P4Action'] = 0x7327,
+	['E1Action'] = 0x7328,
+	['E2Action'] = 0x7329,
+	['E3Action'] = 0x732A,
+	['E4Action'] = 0x732B,
+	['BattleOrder1'] = 0x7348,
+	['BattleOrder2'] = 0x7349,
+	['BattleOrder3'] = 0x734A,
+	['BattleOrder4'] = 0x734B,
+	['BattleOrder5'] = 0x734C,
+	['BattleOrder6'] = 0x734D,
+	['BattleOrder7'] = 0x734E,
+	['BattleOrder8'] = 0x734F,
+	['Dmg'] = 0x7361,
 }
 
 c.ReadE1Hp = function()
@@ -1563,6 +1583,38 @@ c.Success = function(val)
 	end
 
 	error('Unsupported type in Success call: ' .. tostring(val))
+end
+
+c.ReadBattleOrder1 = function()
+    return c.Read(c.Addr.BattleOrder1) & 0xF
+end
+
+c.ReadBattleOrder2 = function()
+    return c.Read(c.Addr.BattleOrder2) & 0xF
+end
+
+c.ReadBattleOrder3 = function()
+    return c.Read(c.Addr.BattleOrder3) & 0xF
+end
+
+c.ReadBattleOrder4 = function()
+    return c.Read(c.Addr.BattleOrder4) & 0xF
+end
+
+c.ReadBattleOrder5 = function()
+    return c.Read(c.Addr.BattleOrder5) & 0xF
+end
+
+c.ReadBattleOrder6 = function()
+    return c.Read(c.Addr.BattleOrder6) & 0xF
+end
+
+c.ReadBattleOrder7 = function()
+    return c.Read(c.Addr.BattleOrder7) & 0xF
+end
+
+c.ReadBattleOrder8 = function()
+    return c.Read(c.Addr.BattleOrder8) & 0xF
 end
 
 return c

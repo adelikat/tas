@@ -11,19 +11,27 @@ local function _tempSave(slot)
     c.Save(slot)
 end
 
-local function _do()
-	local origStat = c.Read(c.Addr.HeroVit)
-	c.PushA()
-	c.WaitFor(10)
-	c.UntilNextInputFrame()
+-- local function _do()
+-- 	local origStat = c.Read(c.Addr.HeroVit)
+-- 	c.PushA()
+-- 	c.WaitFor(10)
+-- 	c.UntilNextInputFrame()
 	
-	local currStat = c.Read(c.Addr.HeroVit)
-	local gain = currStat - origStat
-	c.Debug('gain: ' .. gain)
+-- 	local currStat = c.Read(c.Addr.HeroVit)
+-- 	local gain = currStat - origStat
+-- 	c.Debug('gain: ' .. gain)
 
-	if gain == 0 then
-		return true
-	end
+-- 	if gain == 0 then
+-- 		return true
+-- 	end
+-- end
+
+local function _do()
+	c.PushA()
+	c.WaitFor(50)
+	local turn =  c.ReadTurn()
+	c.Debug('turn: ' .. turn)
+	return turn == 0
 end
 
 c.Load(0)
