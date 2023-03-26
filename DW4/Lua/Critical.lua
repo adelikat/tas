@@ -1,11 +1,11 @@
 _odds = 64 --1 in x
-_minDmg = 20
+_minDmg = 70
 _idealDmg = 0 --Max critical
 _idealDelay = 0
 
 _wait3 = 0
 _wait2 = 0
-_wait1 = 23
+_wait1 = 52
 
 local c = require("DW4-ManipCore")
 c.InitSession()
@@ -76,10 +76,6 @@ while not c.done do
 	dmg = _readDmg()
 	battle = _readBattle()
 	c.Debug('dmg: ' .. dmg .. ' battle: ' .. battle)
-
-	if dmg > 10 then
-		c.Log('Dmg: ' .. dmg)
-	end
 
 	if dmg >= _minDmg and (_idealDmg == 0 or dmg <= _idealDmg)
 		and _checkBattleFlag(battle)
