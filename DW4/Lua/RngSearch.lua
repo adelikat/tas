@@ -27,11 +27,29 @@ end
 -- end
 
 local function _do()
-	c.PushA()
-	c.WaitFor(50)
-	local turn =  c.ReadTurn()
-	c.Debug('turn: ' .. turn)
-	return turn == 0
+	c.PushUp()
+	c.WaitFor(20)
+	if not c.IsEncounter() then
+		c.Debug('No encounter')
+		return false
+	end
+	
+	if c.ReadEGroup1Type() ~= 0x75 then
+		c.Debug('Did not get metal babbles')
+        return false
+    end
+
+	local count = c.ReadE1Count()
+	c.Log('Got metal babbles: ' .. count)
+
+    if c.ReadEGroup2Type() ~= 0xFF then
+		c.Log('But metals were with other enemies')
+		c.Debug('Got 2nd enemy group')
+        return false
+    end
+
+	
+	return count == 1
 end
 
 c.Load(0)

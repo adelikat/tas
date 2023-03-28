@@ -3,8 +3,7 @@
 -- Manipulates entering the royal crypt, and getting an optimal metal babble encounter
 local c = require("DW4-ManipCore")
 c.InitSession()
-c.reportFrequency = 1000
-c.maxDelay = 2
+c.reportFrequency = 2000
 
 local function _tempSave(slot)
     c.Log('Saving ' .. slot)
@@ -90,7 +89,7 @@ client.unpause()
 client.speedmode(3200)
 while not c.done do
 	c.Load(100)
-	local result = c.Best(_travelToCrypt, 9)
+	local result = c.Best(_travelToCrypt, 5)
     if c.Success(result) then
         result = c.Cap(_enter, 100)
         if result then
