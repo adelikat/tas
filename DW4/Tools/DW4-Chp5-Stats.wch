@@ -9,4 +9,11 @@ SystemID NES
 00600D	b	u	0	System Bus	Hero Max Hp
 00600F	b	u	0	System Bus	Hero Max Mp
 0004	b	u	0	WRAM	Current MP
+00609C	b	u	0	System Bus	Taloon Lv
+00609D	b	u	0	System Bus	Taloon Str
+00609E	b	u	0	System Bus	Taloon Ag
+00609F	b	u	0	System Bus	Taloon Vit
+0060A0	b	u	0	System Bus	Taloon Int
+0060A1	b	u	0	System Bus	Taloon Luck
+0060A3	b	u	0	System Bus	Taloon Max HP
 
