@@ -1617,4 +1617,29 @@ c.ReadBattleOrder8 = function()
     return c.Read(c.Addr.BattleOrder8) & 0xF
 end
 
+c.HeroCastReturn = function()
+    c.PushRight()
+    if c.ReadMenuPosY() ~= 32 then
+        return c.Bail('Could not navigate to spell')
+    end
+    c.PushA()
+    if c.Read(0x0644) ~= 0xFF then
+        return c.Bail('Could not pick spell')
+    end
+    c.WaitFor(5)
+    c.UntilNextInputFrame()
+    c.PushA()
+    if c.Read(0x0644) ~= 0xFF then
+        return c.Bail('Could not pick A')
+    end
+    c.WaitFor(5)
+    c.UntilNextInputFrame()
+    c.PushA()
+    if c.Read(0x0644) ~= 0xFF then
+        return c.Bail('Could not pick A')
+    end
+    c.WaitFor(5)
+    c.UntilNextInputFrame()
+end
+
 return c
