@@ -1539,6 +1539,23 @@ c.Item = function()
     return true
 end
 
+c.Tactics = function()
+    c.PushDown()
+    if c.ReadMenuPosY() ~= 17 then
+        return c.Bail('Unable to navigate to status')
+    end
+    c.PushRight()
+    if c.ReadMenuPosY() ~= 33 then
+        return c.Bail('Unable to navigate to item')
+    end
+	c.PushDown()
+	if c.ReadMenuPosY() ~= 34 then
+        return c.Bail('Unable to navigate to tactics')
+    end
+
+    return true
+end
+
 c.BringUpMenu = function()   
 	c.PushA()
     if c.Read(c.Addr.MenuPosY) == 16 then
@@ -1640,6 +1657,53 @@ c.HeroCastReturn = function()
     end
     c.WaitFor(5)
     c.UntilNextInputFrame()
+end
+
+c.HeroCastOutside = function()
+    c.PushRight()
+    if c.ReadMenuPosY() ~= 32 then
+        return c.Bail('Could not navigate to spell')
+    end
+    c.PushA()
+    if c.Read(0x0644) ~= 0xFF then
+        return c.Bail('Could not pick spell')
+    end
+    c.WaitFor(5)
+    c.UntilNextInputFrame()
+    c.PushA()
+    if c.Read(0x0644) ~= 0xFF then
+        return c.Bail('Could not pick A')
+    end
+    c.WaitFor(5)
+    c.UntilNextInputFrame()
+    c.PushDown()
+    if c.ReadMenuPosY() ~= 17 then
+        return c.Bail('Could not navigate to Healmore')
+    end
+    c.WaitFor(1)
+    c.PushDown()
+    if c.ReadMenuPosY() ~= 18 then
+        return c.Bail('Could not navigate to Repel')
+    end
+    c.WaitFor(1)
+    c.PushDown()
+    if c.ReadMenuPosY() ~= 19 then
+        return c.Bail('Could not navigate to Outside')
+    end
+    c.PushA()
+    if c.Read(0x0644) ~= 0xFF then
+        return c.Bail('Could not pick Return')
+    end
+    c.RandomFor(5)
+    c.UntilNextInputFrame()
+end
+
+c.PushAWithCheck = function()
+	c.PushA()
+    if c.Read(0x0644) ~= 0xFF then
+        return c.Bail('Pressing A did not pick something')
+    end
+	return true
 end
 
 return c
