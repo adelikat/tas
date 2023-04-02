@@ -501,7 +501,7 @@ c.RndDirectionButton = function()
 	_doFrame(_rndDirection())
 end
 
-c.Increment = function()
+c.Increment = function(logInfo)
 	c.attempts = c.attempts + 1
 	c.LogProgress(logInfo)
 end
@@ -1093,6 +1093,7 @@ c.Addr = {
 	['E1Target'] = 0x7304,
 	['E2Target'] = 0x7305,
 	['E3Target'] = 0x7306,
+	['P1Action'] = 0x7324,
 	['P2Action'] = 0x7325,
 	['P3Action'] = 0x7326,
 	['P4Action'] = 0x7327,
@@ -1109,6 +1110,12 @@ c.Addr = {
 	['BattleOrder7'] = 0x734E,
 	['BattleOrder8'] = 0x734F,
 	['Dmg'] = 0x7361,
+}
+
+c.Actions = {
+	['BuildingPower'] = 62,
+	['Attack'] = 67,
+	['Reinforcements'] = 169
 }
 
 c.ReadE1Hp = function()

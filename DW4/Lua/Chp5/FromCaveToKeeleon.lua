@@ -1,5 +1,5 @@
 -- Starts at the last lag frame upon exiting the cave west of kievs with the magic key
--- Manipulates entering Keeleon castle and then into the castle portion once inside
+-- Manipulates entering Keeleon castle and getting into the encounter with Keeleon
 local c = require("DW4-ManipCore")
 c.InitSession()
 c.reportFrequency = 1000

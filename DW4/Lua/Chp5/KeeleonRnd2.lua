@@ -1,31 +1,31 @@
-
--- Runs through a scenario poking all RNG values to see if the situation is possible
--- The _do method should not have any random button presses or delays
+-- Starts at the first frame to dismiss the last dialog from round 1
+-- Taloon building power = 62
 local c = require("DW4-ManipCore")
 c.InitSession()
 c.reportFrequency = 1000
-
+c.maxDelay = 3
+local delay = 0
 local function _tempSave(slot)
     c.Log('Saving ' .. slot)
     c.Save(slot)
 end
 
 local function _turn()
-    c.PushA()
-    c.WaitFor(27)
+    c.RndAtLeastOne()
+    c.RandomFor(27)
     c.UntilNextInputFrame()
     c.WaitFor(3)
     if not c.PushAWithCheck() then return false end -- Fight
-    c.WaitFor(8)
+    c.RandomFor(8)
     c.WaitFor(6)
     if not c.PushAWithCheck() then return false end -- Attack
     c.WaitFor(4)
     delay = c.DelayUpToWithLAndR(c.maxDelay)
     if not c.PushAWithCheck() then return false end -- Keeleon
-    c.WaitFor(20)
+    c.RandomFor(20)
     c.WaitFor(20)
 
-    --c.AddToRngCache()
+    c.AddToRngCache()
 
     ---------------------------------
 
@@ -47,19 +47,18 @@ end
 c.Load(3)
 c.Save(100)
 c.RngCacheClear()
-client.unpause()
 client.speedmode(3200)
+client.unpause()
 while not c.done do
-	c.Load(100)
-	local result = c.RngSearch(_turn)	
-	if c.Success(result) then
-		c.Done()
-	else
-		c.Log('Nothing found')
-	end
+    c.Load(100)
+    local result = c.Cap(_turn, 100)
+    if c.Success(result) then
+        c.Log('Delay: ' .. delay)
+        c.Done()
+    end
+
+    c.Log('RNG: ' .. c.RngCacheLength())
 end
 
 c.Finish()
-
-
 

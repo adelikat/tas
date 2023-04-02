@@ -1,15 +1,15 @@
 _odds = 64 --1 in x
-_minDmg = 10
+_minDmg = 40
 _idealDmg = 0 --Max critical
 _idealDelay = 0
 
-_wait3 = 0
-_wait2 = 0
-_wait1 = 49
+_wait3 = 47
+_wait2 = 46
+_wait1 = 43
 
 local c = require("DW4-ManipCore")
 c.InitSession()
-c.reportFrequency = 1000
+c.reportFrequency = 100
 c.maxDelay = _odds
 
 local bestDmg = 0
@@ -91,15 +91,15 @@ while not c.done do
 		then
 		bestDmg = dmg
 		_saveBest(delay)
-		c.LogProgress('New Best for this delay: ' .. dmg .. ' delay: ' .. delay, true)
+		c.LogProgress('New Best for this delay: ' .. dmg .. ' delay: ' .. delay .. ' RNG: ' .. c.RngCacheLength(), true)
 	else
 		found = false
 	end
 
-	c.Increment('dmg: ' .. dmg)
+	c.Increment('dmg: ' .. dmg .. ' RNG: ' .. c.RngCacheLength())
 
 	if (found == true and delay <= _idealDelay and (bestDmg == _idealDmg or _idealDmg == 0)) then
-		c.done = true
+		c.Done()
 	end
 end
 
