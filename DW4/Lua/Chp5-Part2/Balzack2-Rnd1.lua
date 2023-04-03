@@ -62,22 +62,70 @@ local function _do()
     if c.Read(0x7334) ~= 67 then
         return c.Bail('Balzack 2nd action was not an attack')
     end
-    
+
     -------------------------------
-    
+    c.UntilNextInputFrame()
+    c.WaitFor(2)
+
     return true
 end
 
-c.Load(3)
+-- Taloon builds power
+-- Hero parries
+-- Balzack attacks Ragnar who dies
+-- Balzack attacks already dead Ragnar
+local function _finishRound()
+    c.RndAtLeastOne()
+    c.RandomFor(21)
+    c.UntilNextInputFrame()
+    c.WaitFor(2)
+
+    c.RndAtLeastOne()
+    c.RandomFor(22)
+    c.UntilNextInputFrame()
+    c.WaitFor(2)
+
+    c.RndAtLeastOne()
+    c.WaitFor(8)
+    local currRagnarHp = c.Read(c.Addr.RagnarHp)
+    if currRagnarHp > 0 then
+        return c.Bail('Ragnar did not die')
+    end
+    c.UntilNextInputFrame()
+    c.WaitFor(2)
+
+    c.RndAtLeastOne() -- x Damage points
+    c.WaitFor(5)
+    c.UntilNextInputFrame()
+    c.WaitFor(2)
+
+    c.RndAtLeastOne()
+    c.RandomFor(11)
+    c.UntilNextInputFrame()
+    c.WaitFor(2)
+
+    c.RndAtLeastOne()
+    c.RandomFor(8)
+    c.UntilNextInputFrame()
+    c.WaitFor(2)
+
+    return true
+end
+
+c.Load(4)
 c.Save(100)
 c.RngCacheClear()
 client.speedmode(3200)
 client.unpause()
 while not c.done do
     c.Load(100)
-    local result = c.Cap(_do, 100)
+    --local result = c.Cap(_do, 100)
+    local result = true
     if c.Success(result) then
-        c.Done()
+        result = c.Best(_finishRound, 25)
+        if c.Success(result) then
+            c.Done()
+        end
     end
     c.Log('RNG: ' .. c.RngCacheLength())
 end

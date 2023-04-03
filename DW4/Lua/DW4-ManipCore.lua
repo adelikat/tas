@@ -1054,6 +1054,7 @@ c.Addr = {
 	['TaloonInt'] = 0x60A0,
 	['TaloonLuck'] = 0x60A1,
 	['TaloonMaxHP'] = 0x60A3,
+	['RagnarHp'] = 0x60B6,
 	['RagnarLv'] = 0x60BA,
 	['AlenaHP'] = 0x60D4,
 	['AlenaLv'] = 0x60D8,
