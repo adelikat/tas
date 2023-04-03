@@ -35,7 +35,6 @@ SystemID NES
 00605C	b	u	0	System Bus	MaraHp
 00603E	b	u	0	System Bus	NaraHp
 007327	b	u	0	System Bus	P4 Action
-007220	b	u	0	System Bus	Tallon Building Power Flag
 007325	b	u	0	System Bus	P2 Action
 00732C	b	u	0	System Bus	E5 Action
 

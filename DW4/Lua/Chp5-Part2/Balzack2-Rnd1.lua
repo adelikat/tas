@@ -2,7 +2,8 @@
 -- manipulates walking to him and starting the fight
 local c = require("DW4-ManipCore")
 c.InitSession()
-c.reportFrequency = 100
+c.reportFrequency = 1000
+c.maxDelay = 5
 
 local function _tempSave(slot)
     c.Log('Saving ' .. slot)
@@ -10,105 +11,75 @@ local function _tempSave(slot)
 end
 
 local function _do()
-    c.PushA()
-    c.RandomFor(13)
-    c.WaitFor(1)
-    if not c.WalkDown() then return false end
-    c.RandomFor(1)
-    c.BringUpMenu()
-    c.Tactics()
-    if not c.PushAWithCheck() then return false end
+    c.RandomFor(2)
+    c.WaitFor(13)
+    c.RndAtLeastOne()
+    c.RandomFor(25)
     c.WaitFor(4)
+    c.UntilNextInputFrame()
     if not c.PushAWithCheck() then return false end
-    c.WaitFor(18)
-    if not c.PushAWithCheck() then return false end -- Pick Hero
-    c.WaitFor(5)
-    c.RandomFor(15)
+    c.RandomFor(10)
     c.UntilNextInputFrame()
-    c.RandomFor(2)
-    c.UntilNextInputFrame()
-    c.WaitFor(2)
-    c.UntilNextInputFrame()
-    if not c.PushAWithCheck() then return false end -- Pick Taloon
-    c.WaitFor(5)
-    c.RandomFor(15)
-    c.UntilNextInputFrame()
-    c.RandomFor(2)
-    c.UntilNextInputFrame()
-    c.WaitFor(2)
-    c.UntilNextInputFrame()
-    if not c.PushAWithCheck() then return false end -- Pick Taloon
-    c.WaitFor(5)
-    c.RandomFor(18)
-    c.UntilNextInputFrame()
-    c.WaitFor(5)
-    c.UntilNextInputFrame()
+    c.WaitFor(4)
     c.PushDown()
     if c.ReadMenuPosY() ~= 17 then
-        return c.Bail('Could not navigate to Cristo')
-    end
-    c.WaitFor(3)
-    c.PushDown()
-    if c.ReadMenuPosY() ~= 18 then
-        return c.Bail('Could not navigate to Nara')
-    end
-    c.WaitFor(3)
-    c.PushDown()
-    if c.ReadMenuPosY() ~= 19 then
-        return c.Bail('Could not navigate to Mara')
-    end
-    c.WaitFor(3)
-    c.PushDown()
-    if c.ReadMenuPosY() ~= 20 then
-        return c.Bail('Could not navigate to Brey')
-    end
-    c.WaitFor(3)
-    c.PushDown()
-    if c.ReadMenuPosY() ~= 21 then
-        return c.Bail('Could not navigate to END')
+        return c.Bail('Could not navigate to spell')
     end
     c.WaitFor(1)
-    c.UntilNextInputFrame()
-    if not c.PushAWithCheck() then return false end -- Pick END
-    c.WaitFor(3)
-    c.UntilNextInputFrame()
-    c.WaitFor(3)
-    c.UntilNextInputFrame()
-    c.WaitFor(2)
-    c.DismissDialog()
+    c.PushDown()
+    if c.ReadMenuPosY() ~= 18 then
+        return c.Bail('Could not navigate to parry')
+    end
+    c.DelayUpToWithLAndR(c.maxDelay)
+    if not c.PushAWithCheck() then return false end 
+    c.RandomFor(43)
 
-    c.RandomFor(11)
-    c.PushFor('Right', 20)
+    c.AddToRngCache()
+    -------------------------------
+    local balzackAction = c.Read(c.Addr.E1Action)
+    if balzackAction ~= 67 then
+        return c.Bail('Balzack did not attack')
+    end
 
-    local result = c.WalkMap({
-        { ['Right'] = 1 },
-        { ['Down'] = 9 },
-        { ['Left'] = 4 },
-        { ['Down'] = 2 },
-        { ['Left'] = 67 },
-        { ['Up'] = 36 },
-        { ['Right'] = 6 },
-    })
-    c.PushUp()
-    if not result then return false end
-    result = c.WalkUp(5)
-    if not result then return false end
-    c.WaitFor(10)
-    c.UntilNextInputFrame()
+    local balzackTarget = c.Read(c.Addr.E1Target)
+    if balzackTarget ~= 2 then
+        return c.Bail('Balzack did not target Ragnar')
+    end
+
+    -- if c.ReadTurn() ~= 0 then
+    --     return c.Bail('Hero did not go first')
+    -- end
+
+    if c.ReadTurn() ~= 1 then
+        return c.Bail('Taloon did not go first')
+    end
+
+    if c.Read(c.Addr.P2Action) ~= c.Actions.BuildingPower then
+        return c.Bail('Taloon did not build power')
+    end
+
+    --Seems to be the 2nd action of Balzack, possibly other bosses
+    if c.Read(0x7334) ~= 67 then
+        return c.Bail('Balzack 2nd action was not an attack')
+    end
+    
+    -------------------------------
+    
     return true
 end
 
-c.Load(0)
+c.Load(3)
 c.Save(100)
 c.RngCacheClear()
 client.speedmode(3200)
 client.unpause()
 while not c.done do
     c.Load(100)
-    local result = c.Best(_do, 25)
+    local result = c.Cap(_do, 100)
     if c.Success(result) then
         c.Done()
     end
+    c.Log('RNG: ' .. c.RngCacheLength())
 end
 
 c.Finish()
