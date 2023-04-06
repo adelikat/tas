@@ -29,19 +29,22 @@ local function _do()
     c.UntilNextInputFrame()
     c.WaitFor(2)
     c.UntilNextInputFrame()
-    if not c.PushAWithCheck() then return false end -- Pick Taloon
+    c.PushDown()
+    if c.ReadMenuPosY() ~= 17 then
+        return c.Bail('Could not navigate to Ragnar')
+    end
+    c.WaitFor(2)
+    if not c.PushAWithCheck() then return false end -- Pick Ragnar
     c.WaitFor(5)
-    c.RandomFor(15)
-    c.UntilNextInputFrame()
-    c.RandomFor(2)
+    c.RandomFor(20)
     c.UntilNextInputFrame()
     c.WaitFor(2)
     c.UntilNextInputFrame()
     if not c.PushAWithCheck() then return false end -- Pick Taloon
-    c.WaitFor(5)
-    c.RandomFor(18)
+    c.WaitFor(10)
+    c.RandomFor(13)
     c.UntilNextInputFrame()
-    c.WaitFor(5)
+    c.WaitFor(2)
     c.UntilNextInputFrame()
     c.PushDown()
     if c.ReadMenuPosY() ~= 17 then
@@ -95,17 +98,18 @@ local function _do()
     if not result then return false end
     c.WaitFor(10)
     c.UntilNextInputFrame()
+
     return true
 end
 
-c.Load(0)
+c.Load(2)
 c.Save(100)
 c.RngCacheClear()
 client.speedmode(3200)
 client.unpause()
 while not c.done do
     c.Load(100)
-    local result = c.Best(_do, 25)
+    local result = c.Best(_do, 20)
     if c.Success(result) then
         c.Done()
     end

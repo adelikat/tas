@@ -1114,9 +1114,17 @@ c.Addr = {
 }
 
 c.Actions = {
+	['Dazed'] = 61,
 	['BuildingPower'] = 62,
 	['Attack'] = 67,
-	['Reinforcements'] = 169
+	['Shouts'] = 120,
+	['Sings'] = 122,
+	['AwfulPun'] = 124,
+	['Trips'] = 125,
+	['StealsTreasure'] = 126,
+	['GrabsSand'] = 168,
+	['Reinforcements'] = 169,
+	['WagsFinger'] = 170,
 }
 
 c.ReadE1Hp = function()
@@ -1367,7 +1375,10 @@ c.WalkOneSquare = function(direction, cap)
 
     local attempts = 0
     while attempts < cap do
-        c.Load('WalkStart')
+		if attempts > 0 then
+			c.Load('WalkStart')
+		end
+        
         c.PushFor(direction, 1)
         if c.Read(c.Addr.MoveTimer) ~= 15 then
             return c.Bail('Move timer did not start on 15')

@@ -1,9 +1,9 @@
 -- Starts at the magic frame before lv 16 (lv 15 had an HP skip)
 -- Str 4
 -- Ag 2
--- Vit 3
--- Int 1 or 2
--- Hp 5
+-- Vit 4
+-- Int 2
+-- Hp 10
 local c = require("DW4-ManipCore")
 c.InitSession()
 c.reportFrequency = 100
@@ -107,7 +107,7 @@ local function _hp()
     return false
 end
 
-c.Load(0)
+c.Load(4)
 c.Save(100)
 c.RngCacheClear()
 client.speedmode(3200)
@@ -115,29 +115,29 @@ client.unpause()
 while not c.done do
     c.Load(100)
     local result = c.ProgressiveSearchForLevels(_str, 1, 200)
-    if result then
-        if rngCache then
-            c.Log('Str found')
-            result = c.ProgressiveSearchForLevels(_ag, 5)
-            if result then
-                c.Done()
-            else
-                c.Log('Unable to get ag RNG: ' .. c.RngCacheLength())
-            end
-        else
-            c.Log('RNG already found')
-        end        
-    end
+    -- if result then
+    --     if rngCache then
+    --         c.Log('Str found')
+    --         result = c.ProgressiveSearchForLevels(_ag, 5)
+    --         if result then
+    --             c.Done()
+    --         else
+    --             c.Log('Unable to get ag RNG: ' .. c.RngCacheLength())
+    --         end
+    --     else
+    --         c.Log('RNG already found')
+    --     end        
+    -- end
 
     -- local result = c.ProgressiveSearchForLevels(_vit, 10)
     -- if result then
     --     c.Done()
     -- end
 
-    -- local result = c.ProgressiveSearchForLevels(_hp, 20)
-    -- if result then
-    --     c.Done()
-    -- end
+    local result = c.ProgressiveSearchForLevels(_hp, 20)
+    if result then
+        c.Done()
+    end
 end
 
 c.Finish()

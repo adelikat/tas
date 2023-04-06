@@ -1,13 +1,13 @@
 local c = require("DW4-ManipCore")
 c.InitSession()
 c.reportFrequency = 100
-c.maxDelay = 100
+c.maxDelay = 0
 
-local _wait3 = 0
-local _wait2 = 36
-local _wait1 = 35
+local _wait3 = 62
+local _wait2 = 22
+local _wait1 = 24
 
-local _hpAddr = c.Addr.TaloonHp
+local _hpAddr = c.Addr.HeroHP
 local _attack = 76
 local _miss = 98
 
@@ -59,7 +59,7 @@ while not c.done do
 		and postBattle == _miss
 	 then
 	 	found = true
-	 	c.LogProgress('Miss! ' .. ' delay: ' .. delay, true)
+	 	c.LogProgress('Miss! delay: ' .. delay, true)
 	 	c.maxDelay = delay - 1
 	 	c.Save(9)
 	else
@@ -67,10 +67,10 @@ while not c.done do
 	end
 
 	dmg = oHp - newHP
-	c.Increment('delay: ' .. delay .. ' dmg: ' .. dmg .. ' newHP: ' .. newHP .. ' action: ' .. battle)
+	c.Increment('delay: ' .. delay .. ' dmg: ' .. dmg .. ' newHP: ' .. newHP .. ' action: ' .. battle .. ' RNG: ' .. c.RngCacheLength())
 
 	if (found == true and delay == 0) then
-		c.done = true
+		c.Done()
 	end
 end
 

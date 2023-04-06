@@ -6,8 +6,8 @@
 -- Vit 3 or less
 -- Int 2
 -- Luck 3
--- HP 4 or less
--- MP 7
+-- HP 5 or less
+-- MP 8
 local c = require("DW4-ManipCore")
 c.InitSession()
 c.reportFrequency = 100
@@ -16,7 +16,7 @@ local delay = 0
 local targetStr = 2
 local targetAg = 2
 local targetVit = 3
-local targetMp = 4
+local targetMp = 7
 local rngCache
 local function _tempSave(slot)
     c.Log('Saving ' .. slot)
@@ -45,7 +45,7 @@ local function _str()
     c.UntilNextInputFrame()
 
     c.RandomFor(2)
-    c.WaitFor(11)
+    c.UntilNextInputFrame()
 
     local currStr = c.Read(c.Addr.HeroStr)
     if currStr == origStr then
@@ -140,33 +140,33 @@ local function _mp()
     return false
 end
 
-c.Load(3)
+c.Load(5)
 c.Save(100)
 c.RngCacheClear()
 --client.speedmode(3200)
 client.unpause()
 while not c.done do 
     c.Load(100)
-    local result = c.ProgressiveSearchForLevels(_str, 5, 100)
-    if result then
-        result = c.Cap(_ag, 10)
-        if result then
-            result = c.Cap(_vit, 10)
-            if result then
-                c.Done()
-            end
-        end
-    end
+    -- local result = c.ProgressiveSearchForLevels(_str, 5, 100)
+    -- if result then
+    --     result = c.Cap(_ag, 10)
+    --     if result then
+    --         result = c.Cap(_vit, 10)
+    --         if result then
+    --             c.Done()
+    --         end
+    --     end
+    -- end
 
     -- local result = c.ProgressiveSearchForLevels(_intSkip, 10)
     -- if result then
     --     c.Done()
     -- end
 
-    -- local result = c.ProgressiveSearchForLevels(_mp, 20)
-    -- if result then
-    --     c.Done()
-    -- end
+    local result = c.ProgressiveSearchForLevels(_mp, 20)
+    if result then
+        c.Done()
+    end
 end
 
 c.Finish()

@@ -51,7 +51,7 @@ client.speedmode(3200)
 client.unpause()
 while not c.done do
 	c.Load(100)
-	local result = c.Cap(_do, 10)
+	local result = c.Best(_do, 10)
 	if c.Success(result) then
 		c.Done()
 	end

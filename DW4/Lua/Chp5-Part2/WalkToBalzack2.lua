@@ -9,7 +9,16 @@ local function _tempSave(slot)
     c.Save(slot)
 end
 
-local function _do()
+local function _floor1()
+    local result = c.WalkUp(13)
+    if not result then return false end
+    c.WaitFor(10)
+    c.UntilNextInputFrame()
+    _tempSave(4)
+    return not c.IsEncounter()
+end
+
+local function _floor2()
     local result = c.WalkMap({
         { ['Right'] = 1 },
         { ['Up'] = 3 },
@@ -24,15 +33,13 @@ local function _do()
     if not c.PushAWithCheck() then return false end
     c.WaitFor(10)
     c.UntilNextInputFrame()
+
+    
     c.PushDown()
     if c.ReadMenuPosY() ~= 17 then
-        return c.Bail('Unable to navigate to Taloon')
-    end
-    c.WaitFor(10)
-    c.PushDown()
-    if c.ReadMenuPosY() ~= 18 then
         return c.Bail('Unable to navigate to Ragnar')
     end
+    
     c.WaitFor(9)
     if not c.PushAWithCheck() then return false end
     c.WaitFor(10)
@@ -57,15 +64,23 @@ local function _do()
     c.UntilNextInputFrame()
     c.PushDown()
     if c.ReadMenuPosY() ~= 17 then
+        return c.Bail('Unable to navigate to Ragnar')
+    end
+    c.WaitFor(2)
+    c.UntilNextInputFrame()
+    c.WaitFor(1)
+    c.PushDown()
+    if c.ReadMenuPosY() ~= 18 then
         return c.Bail('Unable to navigate to Taloon')
     end
+    
     c.WaitFor(9)    
     if not c.PushAWithCheck() then return false end
     c.RandomFor(2)
     c.UntilNextInputFrame()
     c.WaitFor(2)
     c.DismissDialog()
-
+    
     -- Equip Taloon with Sword of Malice (necessary since you cannot tell the AI controlled players to do this in battle)
     c.BringUpMenu()
     c.PushDown()
@@ -77,13 +92,23 @@ local function _do()
     if c.ReadMenuPosY() ~= 18 then
         return c.Bail('Unable to navigate to Equip')
     end
+    
     if not c.PushAWithCheck() then return false end
     c.WaitFor(2)
     c.UntilNextInputFrame()
     c.PushDown()
+    
     if c.ReadMenuPosY() ~= 17 then
+        return c.Bail('Unable to navigate to Ragnar')
+    end
+    c.WaitFor(2)
+    c.UntilNextInputFrame()
+    c.WaitFor(1)
+    c.PushDown()
+    if c.ReadMenuPosY() ~= 18 then
         return c.Bail('Unable to navigate to Taloon')
     end
+    
     c.WaitFor(2)
     c.UntilNextInputFrame()
     if not c.PushAWithCheck() then return false end
@@ -135,9 +160,12 @@ client.speedmode(3200)
 client.unpause()
 while not c.done do
     c.Load(100)
-    local result = c.Best(_do, 25)
+    local result = c.Best(_floor1, 25)
     if c.Success(result) then
-        c.Done()
+        result = c.Best(_floor2, 25)
+        if c.Success(result) then
+            c.Done()
+        end
     end
 end
 

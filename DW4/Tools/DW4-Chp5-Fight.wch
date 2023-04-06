@@ -37,4 +37,5 @@ SystemID NES
 007327	b	u	0	System Bus	P4 Action
 007325	b	u	0	System Bus	P2 Action
 00732C	b	u	0	System Bus	E5 Action
+007326	b	u	0	System Bus	P3 Action
 

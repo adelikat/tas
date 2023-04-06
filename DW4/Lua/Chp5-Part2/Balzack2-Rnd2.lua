@@ -31,11 +31,11 @@ local function _turn()
     c.WaitFor(2)
     c.AddToRngCache()
     -------------------
-    if c.ReadTurn() ~= 1 then
+    if c.ReadTurn() ~= 2 then
         return c.Bail()
     end
 
-    if c.Read(c.Addr.P2Action) ~= c.Actions.Reinforcements then
+    if c.Read(c.Addr.P3Action) ~= c.Actions.Reinforcements then
         return c.Bail('Taloon did not call for reinforcements')
     end
 
@@ -81,25 +81,24 @@ local function _lastCritical()
         return c.Bail('Did not get critical')
     end
 
-    _tempSave(7)
     return true
 end
 
-c.Load(6)
+c.Load(3)
 c.Save(100)
 c.RngCacheClear()
 client.speedmode(3200)
 client.unpause()
 while not c.done do
     c.Load(100)
-    -- local result = c.Cap(_turn, 1000)
-    -- if c.Success(result) then
-    --     c.Done()
-    -- end
-    local result = c.ProgressiveSearch(_lastCritical, 1000, 3)
+    local result = c.Cap(_turn, 1000)
     if c.Success(result) then
         c.Done()
     end
+    -- local result = c.ProgressiveSearch(_lastCritical, 1000, 3)
+    -- if c.Success(result) then
+    --     c.Done()
+    -- end
     c.Log('RNG: ' .. c.RngCacheLength())
 end
 

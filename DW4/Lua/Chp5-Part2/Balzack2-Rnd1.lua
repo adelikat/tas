@@ -3,7 +3,7 @@
 local c = require("DW4-ManipCore")
 c.InitSession()
 c.reportFrequency = 1000
-c.maxDelay = 5
+c.maxDelay = 3
 
 local function _tempSave(slot)
     c.Log('Saving ' .. slot)
@@ -36,25 +36,19 @@ local function _do()
 
     c.AddToRngCache()
     -------------------------------
-    local balzackAction = c.Read(c.Addr.E1Action)
-    if balzackAction ~= 67 then
+    if c.Read(c.Addr.E1Action) ~= 67 then
         return c.Bail('Balzack did not attack')
     end
 
-    local balzackTarget = c.Read(c.Addr.E1Target)
-    if balzackTarget ~= 2 then
+    if c.Read(c.Addr.E1Target) ~= 1 then
         return c.Bail('Balzack did not target Ragnar')
     end
 
-    -- if c.ReadTurn() ~= 0 then
-    --     return c.Bail('Hero did not go first')
-    -- end
-
-    if c.ReadTurn() ~= 1 then
+    if c.ReadTurn() ~= 2 then
         return c.Bail('Taloon did not go first')
     end
 
-    if c.Read(c.Addr.P2Action) ~= c.Actions.BuildingPower then
+    if c.Read(c.Addr.P3Action) ~= c.Actions.BuildingPower then
         return c.Bail('Taloon did not build power')
     end
 
@@ -67,13 +61,14 @@ local function _do()
     c.UntilNextInputFrame()
     c.WaitFor(2)
 
+    _tempSave(4)
     return true
 end
 
 -- Taloon builds power
 -- Hero parries
 -- Balzack attacks Ragnar who dies
--- Balzack attacks already dead Ragnar
+-- Balzack attacks hero and misses
 local function _finishRound()
     c.RndAtLeastOne()
     c.RandomFor(21)
@@ -104,8 +99,16 @@ local function _finishRound()
     c.UntilNextInputFrame()
     c.WaitFor(2)
 
-    c.RndAtLeastOne()
-    c.RandomFor(8)
+    c.AddToRngCache()
+    
+    local origHeroHp = c.Read(c.Addr.HeroHp)
+    c.RndAtLeastOne()    
+    c.WaitFor(7)
+    local currHeroHp = c.Read(c.Addr.HeroHp)
+    if origHeroHp ~= currHeroHp then
+        return c.Bail('Hero got hit')
+    end
+    
     c.UntilNextInputFrame()
     c.WaitFor(2)
 
@@ -122,7 +125,7 @@ while not c.done do
     --local result = c.Cap(_do, 100)
     local result = true
     if c.Success(result) then
-        result = c.Best(_finishRound, 25)
+        result = c.ProgressiveSearch(_finishRound, 200, 5)
         if c.Success(result) then
             c.Done()
         end

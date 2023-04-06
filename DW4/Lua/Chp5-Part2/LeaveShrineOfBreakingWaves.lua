@@ -103,9 +103,9 @@ local function _leave()
 end
 
 local function _do()
-    local result = c.Best(_downStairs, 5)
+    local result = c.Best(_downStairs, 15)
     if c.Success(result) then
-        result = c.Best(_leave, 5)
+        result = c.Best(_leave, 15)
         if c.Success(result) then
             return true
         end
@@ -121,7 +121,7 @@ client.speedmode(3200)
 client.unpause()
 while not c.done do
 	c.Load(100)
-	local result = c.Cap(_do, 55)
+	local result = c.Cap(_do, 1)
 	if c.Success(result) then
 		c.Done()
 	end
