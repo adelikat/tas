@@ -22,6 +22,7 @@ SystemID NES
 007329	b	u	0	System Bus	E2 Action
 00732A	b	u	0	System Bus	E3 Action
 00732B	b	u	0	System Bus	E4 Action
+00732C	b	u	0	System Bus	E5 Action
 007348	b	b	0	System Bus	BOr 1
 007349	b	b	0	System Bus	BOr 2
 00734A	b	b	0	System Bus	BOr 3
@@ -31,11 +32,7 @@ SystemID NES
 00734E	b	b	0	System Bus	BOr 7
 00734F	b	b	0	System Bus	BOr 8
 0644	b	u	0	RAM	Menu stuff
-007327	b	u	0	System Bus	P4 Action
-00605C	b	u	0	System Bus	MaraHp
-00603E	b	u	0	System Bus	NaraHp
-007327	b	u	0	System Bus	P4 Action
 007325	b	u	0	System Bus	P2 Action
-00732C	b	u	0	System Bus	E5 Action
 007326	b	u	0	System Bus	P3 Action
+007327	b	u	0	System Bus	P4 Action
 

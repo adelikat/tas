@@ -45,7 +45,6 @@ local function _stairs(direction)
     return false
 end
 
--- Ran this manually
 local function _floor1()
     local result = c.WalkDown()
     if not result then return false end

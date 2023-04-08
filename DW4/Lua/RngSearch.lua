@@ -10,62 +10,30 @@ local function _tempSave(slot)
     c.Save(slot)
 end
 
+local bestDamage = 0
+-- local function _do()
+-- 	c.PushA()
+-- 	c.WaitFor(10)
+-- 	local dmg = c.ReadDmg()
+-- 	c.Debug('dmg: ' .. dmg)
+-- 	if dmg > bestDamage then
+-- 		c.Log('New Best Damage: ' .. dmg)
+-- 		bestDamage = dmg
+-- 	end
+--     return false
+-- end
+
+local leastDamage = 99999
+local maxNonCritDmg = 30
 local function _do()
-    c.WaitFor(2)
-    c.WaitFor(13)
-    c.PushA()
-    c.WaitFor(25)
-    c.WaitFor(4)
-    c.UntilNextInputFrame()
-    if not c.PushAWithCheck() then return false end
-    c.WaitFor(10)
-    c.UntilNextInputFrame()
-    c.WaitFor(4)
-    c.PushDown()
-    if c.ReadMenuPosY() ~= 17 then
-        return c.Bail('Could not navigate to spell')
-    end
-    c.WaitFor(1)
-    c.PushDown()
-    if c.ReadMenuPosY() ~= 18 then
-        return c.Bail('Could not navigate to parry')
-    end
-    --c.DelayUpToWithLAndR(c.maxDelay)
-    if not c.PushAWithCheck() then return false end 
-    c.WaitFor(43)
-
-    --c.AddToRngCache()
-    -------------------------------
-    local balzackAction = c.Read(c.Addr.E1Action)
-    if balzackAction ~= 67 then
-        return c.Bail('Balzack did not attack')
-    end
-
-    local balzackTarget = c.Read(c.Addr.E1Target)
-    if balzackTarget ~= 2 then
-        return c.Bail('Balzack did not target Ragnar')
-    end
-
-    -- if c.ReadTurn() ~= 0 then
-    --     return c.Bail('Hero did not go first')
-    -- end
-
-    if c.ReadTurn() ~= 1 then
-        return c.Bail('Taloon did not go first')
-    end
-
-    if c.Read(c.Addr.P2Action) ~= c.Actions.BuildingPower then
-        return c.Bail('Taloon did not build power')
-    end
-
-    --Seems to be the 2nd action of Balzack, possibly other bosses
-    if c.Read(0x7334) ~= 67 then
-        return c.Bail('Balzack 2nd action was not an attack')
-    end
-    -------------------------------
-    
-    c.Log('Candidate found')
-    c.Save(string.format('BalzackRnd1-Candidate-%s-Rng2-%s-Rng1-%s', emu.framecount(), c.ReadRng2(), c.ReadRng1()))
+	c.PushA()
+	c.WaitFor(10)
+	local dmg = c.ReadDmg()
+	c.Debug('dmg: ' .. dmg)
+	if dmg < leastDamage and dmg > maxNonCritDmg then
+		c.Log('New Best Damage: ' .. dmg)
+		leastDamage = dmg
+	end
     return false
 end
 
@@ -84,6 +52,9 @@ while not c.done do
 	else
 		c.Log('Nothing found')
 	end
+
+	c.Log('Total Best Damage: ' .. bestDamage)
+	c.Done()
 end
 
 c.Finish()
