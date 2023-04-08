@@ -1727,4 +1727,11 @@ c.PushAWithCheck = function()
 	return true
 end
 
+-- Manipulates the 15 frame delay before you can start walking
+c.ChargeUpWalking = function()
+	c.PushA()
+	c.RandomFor(13)
+	c.WaitFor(1)
+end
+
 return c
