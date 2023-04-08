@@ -13,7 +13,7 @@ c.InitSession()
 c.reportFrequency = 100
 c.maxDelay = 0
 local delay = 0
-local targetStr = 2
+local targetStr = 1
 local targetAg = 2
 local targetVit = 3
 local targetMp = 7
@@ -34,15 +34,14 @@ local function _str()
     c.WaitFor(10)
     c.UntilNextInputFrame()
     c.WaitFor(2)
-
+    
     c.RndAtLeastOne()
-    c.WaitFor(10)
+    c.RandomFor(50)
     c.UntilNextInputFrame()
-    c.WaitFor(2)
-
-    c.RndAtLeastOne()
-    c.RandomFor(100)
-    c.UntilNextInputFrame()
+    
+    c.AorBAdvance()    
+    c.AorBAdvance()    
+    c.AorBAdvance()    
 
     c.RandomFor(2)
     c.UntilNextInputFrame()
@@ -140,33 +139,34 @@ local function _mp()
     return false
 end
 
-c.Load(5)
+c.Load(3)
 c.Save(100)
 c.RngCacheClear()
---client.speedmode(3200)
+client.speedmode(3200)
 client.unpause()
 while not c.done do 
     c.Load(100)
-    -- local result = c.ProgressiveSearchForLevels(_str, 5, 100)
-    -- if result then
-    --     result = c.Cap(_ag, 10)
-    --     if result then
-    --         result = c.Cap(_vit, 10)
-    --         if result then
-    --             c.Done()
-    --         end
-    --     end
-    -- end
+
+    local result = c.Cap(_str, 100)
+    if result then
+        result = c.Cap(_ag, 10)
+        if result then
+            result = c.Cap(_vit, 10)
+            if result then
+                c.Done()
+            end
+        end
+    end
 
     -- local result = c.ProgressiveSearchForLevels(_intSkip, 10)
     -- if result then
     --     c.Done()
     -- end
 
-    local result = c.ProgressiveSearchForLevels(_mp, 20)
-    if result then
-        c.Done()
-    end
+    -- local result = c.ProgressiveSearchForLevels(_mp, 20)
+    -- if result then
+    --     c.Done()
+    -- end
 end
 
 c.Finish()
