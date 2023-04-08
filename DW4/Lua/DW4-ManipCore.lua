@@ -1676,6 +1676,7 @@ c.HeroCastReturn = function()
     end
     c.WaitFor(5)
     c.UntilNextInputFrame()
+	return true
 end
 
 c.HeroCastOutside = function()
@@ -1715,6 +1716,7 @@ c.HeroCastOutside = function()
     end
     c.RandomFor(5)
     c.UntilNextInputFrame()
+	return true
 end
 
 c.PushAWithCheck = function()
