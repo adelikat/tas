@@ -85,6 +85,14 @@ local function __walk()
         return c.Bail('Got 2nd enemy group')
     end
 
+    if c.ReadE1Count() > 2 then
+        return c.Bail('Got 3 enemies')
+    end
+
+    if c.ReadEGroup1Type() ~= 0x87 then
+        return c.Bail('Did not get Chaos Hopper')
+    end
+
     c.UntilNextInputFrame()
 
     return true

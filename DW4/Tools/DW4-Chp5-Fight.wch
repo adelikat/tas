@@ -35,4 +35,5 @@ SystemID NES
 007326	b	u	0	System Bus	P3 Action
 007327	b	u	0	System Bus	P4 Action
 007334	b	u	0	System Bus	E1 2nd action
+006098	b	u	0	System Bus	Taloon HP
 
