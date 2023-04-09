@@ -109,8 +109,8 @@ local function _rndLeftOrRight()
 	key1 = {}
 	key1['P1 Up'] = false
 	key1['P1 Down'] = false
-	key1['P1 Left'] = RndBool()
-	key1['P1 Right'] = RndBool()
+	key1['P1 Left'] = _rndBool()
+	key1['P1 Right'] = _rndBool()
 	key1['P1 B'] = false
 	key1['P1 A'] = false
 	key1['P1 Select'] = false

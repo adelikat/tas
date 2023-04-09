@@ -14,7 +14,6 @@ SystemID NES
 006E46	b	h	0	System Bus	EG2 Type
 03CF	b	u	0	RAM	Menu Y
 132B	b	h	0	WRAM	Hero targeting somehow
-006E5C	b	u	0	System Bus	E? action
 007304	b	u	0	System Bus	E1 Target
 007305	b	u	0	System Bus	E2 Target
 007306	b	u	0	System Bus	E3 Target
@@ -35,4 +34,5 @@ SystemID NES
 007325	b	u	0	System Bus	P2 Action
 007326	b	u	0	System Bus	P3 Action
 007327	b	u	0	System Bus	P4 Action
+007334	b	u	0	System Bus	E1 2nd action
 
