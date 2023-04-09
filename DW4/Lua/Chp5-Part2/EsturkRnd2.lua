@@ -1,4 +1,4 @@
--- Starts at the magic frame before the Esturk Fight
+-- Starts at the first frame to dimiss "Taloon is building up power" from round 1
 -- Manipulates round 1
 local c = require("DW4-ManipCore")
 c.InitSession()
@@ -10,25 +10,23 @@ local function _tempSave(slot)
 end
 
 local function _turn()
-    c.RandomFor(1)
-    c.WaitFor(14)
-    
     c.RndAtLeastOne()
-    c.WaitFor(52)
-
-    c.RndAtLeastOne()
-    c.RandomFor(14)
-    c.WaitFor(4)
+    c.RandomFor(35)
+    c.WaitFor(5)
     if not c.PushAWithCheck() then return false end
     c.RandomFor(30)
-
+    c.WaitFor(8)
     --------------------
-    if c.ReadTurn() ~= 4 then
-        return c.Bail('Esturk did not go first')
+    if c.ReadTurn() ~= 1 then
+        return c.Bail('Taloon did not go first')
     end
 
-    if c.ReadBattle() ~= 18 then
-        return c.Bail('Esturk did not wake up')
+    local taloonAction = c.Read(c.Addr.P2Action)
+    if taloonAction ~= 67 then
+        c.Log('Taloon action: ' .. taloonAction)
+    end
+    if c.Read(c.Addr.P2Action) ~= c.Actions.Reinforcements then
+        return c.Bail('Taloon did not call for reinforcements')
     end
 
     --------------------
@@ -40,7 +38,7 @@ end
 
 -- Did not write the Taloon building power method because I got it on the first try
 
-c.Load(3)
+c.Load(4)
 c.Save(100)
 c.RngCacheClear()
 client.speedmode(3200)
