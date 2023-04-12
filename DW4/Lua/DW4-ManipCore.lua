@@ -46,6 +46,20 @@ local function _rndButtons()
  	return key1
 end
 
+local function _rndButtonsNoA()
+	key1 = {}
+	key1['P1 Up'] = _rndBool()
+	key1['P1 Down'] = _rndBool()
+	key1['P1 Left'] = _rndBool()
+	key1['P1 Right'] = _rndBool()
+	key1['P1 B'] = _rndBool()
+	key1['P1 A'] = false
+	key1['P1 Select'] = false
+	key1['P1 Start'] = _rndBool()
+
+ 	return key1
+end
+
 local function _rndAtLeastOne()
 	result = _rndButtons()
 	if (key1['P1 Up'] == false
@@ -598,6 +612,14 @@ c.RandomFor = function(frames)
 		end
 	end
 end
+c.RandomForNoA = function(frames)	
+	if (frames > 0) then
+		for i = 1, frames, 1 do
+			joypad.set(_rndButtonsNoA())
+			emu.frameadvance()
+		end
+	end
+end
 c.RandomForLevels = function(frames)	
 	if (frames > 0) then
 		for i = 1, frames, 1 do
@@ -1118,6 +1140,7 @@ c.Actions = {
 	['BuildingPower'] = 62,
 	['Attack'] = 67,
 	['Shouts'] = 120,
+	['Strange Dance'] = 121,
 	['Sings'] = 122,
 	['AwfulPun'] = 124,
 	['Trips'] = 125,
@@ -1125,6 +1148,25 @@ c.Actions = {
 	['GrabsSand'] = 168,
 	['Reinforcements'] = 169,
 	['WagsFinger'] = 170,
+	['SweepsLegs'] = 171
+}
+
+c.TaloonActions = {
+    [61] = 'Dazed',
+    [62] = 'Building Power',
+    [65] = 'On Guard',
+    [67] = 'Attacks',
+    [120] = 'Shouts',
+    [121] = 'Strange Dance',
+    [122] = 'Sings',
+    [123] = 'Everybody Calm Down',
+    [124] = 'Awful Pun',
+    [125] = 'Trips',
+    [126] = 'Steals Treasure',
+    [168] = 'Grabs Sand',
+    [169] = 'Calls for Reinforcements',
+    [170] = 'Wags Finger',
+    [171] = 'Sweeps legs'
 }
 
 c.ReadE1Hp = function()
@@ -1384,7 +1426,7 @@ c.WalkOneSquare = function(direction, cap)
             return c.Bail('Move timer did not start on 15')
         end
 
-        c.RandomFor(14)
+        c.RandomForNoA(14)
         c.WaitFor(1)
         if c.IsEncounter() then
             attempts = attempts + 1
