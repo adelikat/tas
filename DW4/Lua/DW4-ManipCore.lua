@@ -1769,10 +1769,19 @@ c.PushAWithCheck = function()
 	return true
 end
 
+c.PushDownWithCheck = function(menuY)
+	c.PushDown()
+	if c.ReadMenuPosY() ~= menuY then
+		return c.Bail(stringofrmat('Pressing Down did not go to expected value %s', menuY))
+	end
+
+	return true
+end
+
 -- Manipulates the 15 frame delay before you can start walking
 c.ChargeUpWalking = function()
 	c.PushA()
-	c.RandomFor(13)
+	c.RandomForNoA(13)
 	c.WaitFor(1)
 end
 
