@@ -52,3 +52,8 @@
 0 .\FromStanciaToMonbaraba.lua
 0 .\FromMonbarabaToStancia.lua
 0 .\FromStanciaToKonenber.lua
+0 .\FromKonenberToZenithianTower.lua
+0 .\FromZenithianTowerToZenithia.lua
+0 .\FromZenithiaToFinalCave.lua
+0 .\FromFinalCaveToDarkWorldTower.lua
+0 .\FromDarkWorldTowerToDarkWorld.lua
