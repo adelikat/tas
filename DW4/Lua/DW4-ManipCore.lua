@@ -1267,11 +1267,10 @@ end
 -- Pokes the RNG incrementally by 1 until the function returns true
 -- returns true if an RNG seed is found, else false
 c.RngSearch = function(func)
-	local tempFile = 'RngSearch-' .. emu.framecount()
-    c.Save(tempFile)
+    local temp = memorysavestate.savecorestate()
 	local result = false
 	for i = 0, 65535, 1 do
-		c.Load(tempFile)
+		memorysavestate.loadcorestate(temp)
 		c.Debug('Attempting rng seed: ' .. i)
 		memory.write_u16_be(0x0012, i)
 		result = func()
