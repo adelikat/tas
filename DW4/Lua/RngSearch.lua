@@ -10,20 +10,59 @@ local function _tempSave(slot)
     c.Save(slot)
 end
 
-local bestDamage = 0
-local function _do()
-	c.PushA()
-	c.WaitFor(10)
-	local dmg = c.ReadDmg()
-	c.Debug('dmg: ' .. dmg)
-	if dmg > bestDamage then
-		c.Log('New Best Damage: ' .. dmg)
-		bestDamage = dmg
-	end
-    if dmg >= 225 then
-        return true
+-- local bestDamage = 0
+-- local function _do()
+-- 	c.PushA()
+-- 	c.WaitFor(10)
+-- 	local dmg = c.ReadDmg()
+-- 	c.Debug('dmg: ' .. dmg)
+-- 	if dmg > bestDamage then
+-- 		c.Log('New Best Damage: ' .. dmg)
+-- 		bestDamage = dmg
+-- 	end
+--     -- if dmg >= 225 then
+--     --     return true
+--     -- end
+--     -- return false
+-- end
+
+local function _do()	
+    c.PushA()
+    c.WaitFor(35)
+
+    if c.ReadTurn() ~= 4 then
+        return c.Bail('Radimvice did not go first')
     end
-    return false
+
+    if c.ReadBattleOrder1() > 2 then
+        return c.Bail('Hero did not get initiative over Demighouls')
+    end
+
+	if c.Read(c.E1Action) ~= 15 then
+		return c.Bail('Radimvice must cast Intermost in order for Taloon to cover mouth')
+	end
+
+	c.UntilNextInputFrame()
+	c.WaitFor(2)
+	_tempSave(4)
+	-----------------
+	c.Save('RadimviceTemp')
+	local origHeroHp = c.Read(c.Addr.HeroHP)
+	local origTaloHp = c.Read(c.Addr.TaloonHP)
+	c.RndAtLeastOne()
+	c.WaitFor(5)
+	local currHeroHp = c.Read(c.Addr.HeroHP)
+	local currTaloHp = c.Read(c.Addr.TaloonHP)
+	local heroLoss = origHeroHp - currHeroHp
+	local taloonLoss = origTaloHp - currTaloHp
+	c.Debug(string.format('H loss: %s, T loss: %s', heroLoss, taloonLoss))
+	if currHeroHp ~= origHeroHp or origTaloHp ~= currTaloHp then
+		return c.Bail('Taloon did not cover mouth')
+	end
+	-----------------
+	c.Load('RadimviceTemp')
+
+    return true
 end
 
 c.Load(0)
@@ -41,7 +80,7 @@ while not c.done do
 		c.Log('Nothing found')
 	end
 
-	c.Log('Total Best Damage: ' .. bestDamage)
+	--c.Log('Total Best Damage: ' .. bestDamage)
 	c.Done()
 end
 
