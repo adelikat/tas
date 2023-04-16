@@ -212,7 +212,7 @@ hud = {
 		local txt = c.CurrentOpponent()
 		local w = string.len(txt) * 8
 		gui.drawRectangle(256 - w, 0, w, 9, 'Black', 'Black')
-		gui.drawText(256, -3, txt, 'white', nil, nil, nil, nil, 'right')
+		 gui.drawText(256, -3, txt, 'white', nil, nil, nil, nil, 'right')
 	end,
 	Health = function()
 		if not c.IsInFight() then
@@ -253,7 +253,11 @@ hud = {
 		-- Mac
 		_drawHealthBar(88, 16, hp, dmg, color)
 	end,
-	StarCountdown = function()		
+	StarCountdown = function()	
+		if not c.IsInFight() then
+			return
+		end
+			
 		totalPunchesToGetStar = c.Read(c.Addr.TotalStarCountdown)
 		if totalPunchesToGetStar <= 1 then
 			return
