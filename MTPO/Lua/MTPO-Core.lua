@@ -82,6 +82,7 @@ local c = {
 		end
 	end,
 	Addr = {
+		['IsInFight'] = 0x0000,
 		['OppNumber'] = 0x0001,
 		['WhoIsKnockedDown'] = 0x0005,
 		['OpponentTimer'] = 0x0039,
@@ -94,13 +95,17 @@ local c = {
 		['HeartsTens'] = 0x0323,
 		['HeartsSingle'] = 0x0324,
 		['Stars'] = 0x0342,
+		['StarCountdown'] = 0x0347,
 		['MacHealth'] = 0x0391,
 		['MacHealthGraudal'] = 0x0393,
 		['MacNextHealth'] = 0x0397,
 		['OppHp'] = _oppHp,
 		['OppHpGradual'] = 0x039A,
 		['OppNextHealth'] = 0x039E,
-		['IsOppBeingHit'] = 0x03E0,		
+		['KnockdownsRound'] = 0x03CA,
+		['TotalKnockdowns'] = 0x03D1,
+		['IsOppBeingHit'] = 0x03E0,
+		['TotalStarCountdown'] = 0x05B0,		
 	},
 	Opponents = {
 		[0] = 'Glass Joe',
@@ -125,7 +130,7 @@ c.Processing = function()
 	return _done
 end
 c.IsOppBeingHit = function()
-	return c.Read(c.Addr.IsOppBeingHit) > 0
+	return c.Read(c.Addr.IsOppBeingHit) > 0 or c.Read(c.Addr.OppHpGradual) > c.Read(c.Addr.OppHp)
 end
 c.IsOppKnockedDown = function()
 	return c.Read(c.Addr.WhoIsKnockedDown) == 1
@@ -147,9 +152,33 @@ c.CurrentOpponent = function()
 
 	return 'Unknown'
 end
+c.IsInFight = function()
+	return c.Read(c.Addr.IsInFight) == 1
+end
+c.IsOpponentKnockedOut = function()
+	-- TODO: Ko's
+	if c.Read(c.Addr.KnockdownsRound) >= 3 then
+		return true
+	end
+
+	return false
+end
 ------------------------------------------------------------------------------------------------
 -- Drawing functions
+
+-- Some rings are offset by 1 pixel for some reason
+local function _isRngOffSet()
+	local opp = c.Read(c.Addr.OppNumber)
+	if opp == 2 or opp == 6 or opp == 7 or opp == 8 or opp == 9 or opp == 11 or opp == 12 or opp == 13 then
+		return true
+	end
+end
+
 local function _drawHealthBar(x1, y1, hp, dmg, color)
+	local opp = c.Read(c.Addr.OppNumber)
+	if _isRngOffSet() then
+		x1 = x1 + 1
+	end
 	local y2 = 22
 	gui.drawBox(x1, y1, x1 + 47, y2, 'black', 'black')
 	if hp > 0 then
@@ -167,6 +196,8 @@ local function _drawHealthBar(x1, y1, hp, dmg, color)
 
 		if dmg > 0 then
 			gui.drawBox(x2, y1, x2 + math.ceil((dmg / 2)), y2, 'Crimson', 'Crimson')
+			gui.drawBox(x1 + 16, y1 - 12, x1 + 40 , y1 - 1, 'black', 'black')
+			gui.drawText(x1 + 16, y1 - 14, '-' .. dmg, 'Crimson')
 		end
 		gui.drawBox(x1, y1 - 12, x1 + 16, y1 - 1, 'black', 'black')
 		gui.drawText(x1 - 1, y1 - 14, hp, color)
@@ -174,17 +205,33 @@ local function _drawHealthBar(x1, y1, hp, dmg, color)
 end
 hud = {
 	Opp = function()
+		if not c.IsInFight() then
+			return
+		end
+
 		local txt = c.CurrentOpponent()
 		local w = string.len(txt) * 8
 		gui.drawRectangle(256 - w, 0, w, 9, 'Black', 'Black')
 		gui.drawText(256, -3, txt, 'white', nil, nil, nil, nil, 'right')
 	end,
 	Health = function()
+		if not c.IsInFight() then
+			return
+		end
+
 		local hp, dmg, color
 		if c.IsOppKnockedDown() then
-			hp = c.Read(c.Addr.OppNextHealth)
+			if c.IsOpponentKnockedOut() then
+				hp = 0
+			else
+				hp = c.Read(c.Addr.OppNextHealth)
+			end			
 			dmg = 0
 			color = 'darkgray'
+		elseif c.IsOppBeingHit() then
+			hp = c.Read(c.Addr.OppHp)
+			dmg = c.LastDamage()
+			color = nil
 		else
 			hp = c.Read(c.Addr.OppHp)
 			dmg = c.Read(c.Addr.OppHpGradual) - hp
@@ -205,12 +252,25 @@ hud = {
 
 		-- Mac
 		_drawHealthBar(88, 16, hp, dmg, color)
+	end,
+	StarCountdown = function()		
+		totalPunchesToGetStar = c.Read(c.Addr.TotalStarCountdown)
+		if totalPunchesToGetStar <= 1 then
+			return
+		end
+		punchesLeftToGetStar = c.Read(c.Addr.StarCountdown)
+		local totalWidth = 26
+		local percent = punchesLeftToGetStar / totalPunchesToGetStar
+		local width = totalWidth * percent
+		gui.drawLine(13, totalWidth, 13 + totalWidth, 26, 'darkGray')
+		gui.drawLine(13, 26, 13 + width, 26, 'blue')
 	end
 }
 hud.Display = function()
 	gui.clearGraphics()
 	hud.Opp()
 	hud.Health()
+	hud.StarCountdown()
 end
 ------------------------------------------------------------------------------------------------
 
@@ -219,18 +279,6 @@ c.InitSession()
 --c.Load(0)
 while not c.Processing() do
 	hud.Display()
-
-	if c.IsOppBeingHit() then
-		gui.text(200, 230, c.LastDamage())
-		gui.text(200, 250, string.format('Last %s', _lastOppHealth))
-		gui.text(200, 270, string.format('Curr %s', _currOppHealth))		
-	end
-
-	if c.IsOppKnockedDown() then
-		gui.text(200, 230, 'Knocked down!')
-		gui.text(200, 250, string.format('Next Health %s', c.Read(c.Addr.OppNextHealth)))
-	end
-
 	emu.frameadvance();
 end
 

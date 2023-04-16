@@ -11,10 +11,13 @@ SystemID NES
 0323	b	u	0	RAM	Hearts Tens Digit
 0324	b	u	0	RAM	Hearts Digit
 0342	b	u	0	RAM	Starts
+0347	b	u	0	RAM	Star Countdown
 0391	b	u	0	RAM	Mac Health
 0393	b	u	0	RAM	Mac Health Gradual
 0398	b	u	0	RAM	Opponent Next Health
 039A	b	u	0	RAM	Opp Health Gradual
 039E	b	u	0	RAM	Opponent Next Health
+03CA	b	u	0	RAM	Knockdowns this Round of Opponent
+03D1	b	u	0	RAM	Total Knockdowns of Opponent
 03E0	b	u	0	RAM	Is Opponent Being Hit
 
