@@ -1,11 +1,20 @@
 SystemID NES
-0005	b	u	0	RAM	Is Opponent Knocked Down
+0001	b	u	0	RAM	Opponent Number
+0005	b	u	0	RAM	Who Is Knocked Down
 0039	b	u	0	RAM	Opponent Timer
+0170	b	u	0	RAM	Wins Tens Digit
+0171	b	u	0	RAM	Wins Digit
+0172	b	u	0	RAM	Losses Tens Digit
+0173	b	u	0	RAM	Losses Digit
+0174	b	u	0	RAM	KOs Tens Digit
+0175	b	u	0	RAM	KOs Digit
 0323	b	u	0	RAM	Hearts Tens Digit
 0324	b	u	0	RAM	Hearts Digit
 0342	b	u	0	RAM	Starts
-0398	b	u	0	RAM	Opponent HP
-0391	b	u	0	RAM	Mac HP
+0391	b	u	0	RAM	Mac Health
+0393	b	u	0	RAM	Mac Health Gradual
+0398	b	u	0	RAM	Opponent Next Health
+039A	b	u	0	RAM	Opp Health Gradual
 039E	b	u	0	RAM	Opponent Next Health
 03E0	b	u	0	RAM	Is Opponent Being Hit
 
