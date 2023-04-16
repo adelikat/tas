@@ -6,6 +6,7 @@
 local c = require("DW4-ManipCore")
 c.InitSession()
 c.reportFrequency = 1000
+c.maxDelay = 7
 
 local function _tempSave(slot)
     c.Log('Saving ' .. slot)
@@ -35,21 +36,21 @@ local function _turn()
     if c.ReadMenuPosY() ~= 17 then
         return c.Bail('Unable to navigate to Demighoul')
     end
+    c.DelayUpToWithLAndR(c.maxDelay)
     if not c.PushAWithCheck() then return false end
     c.RandomFor(35)
 
     c.AddToRngCache()
     ---------------------------------------
-    if c.ReadTurn() ~= 4 then
-        return c.Bail('Radimvice did not go first')
-    end
+    if c.ReadTurn() ~= 0 then
+		return c.Bail('Hero did not go first')
+	end
 
-    if c.ReadBattleOrder1() > 2 then
-        return c.Bail('Hero did not get initiative over Demighouls')
-    end
+	-- if c.Read(c.Addr.E1Action) ~= 15 then
+	-- 	return c.Bail('Radimvice must cast Intermost in order for Taloon to cover mouth')
+	-- end
 
     ---------------------------------------
-    _tempSave(3)
     return true
 end
 

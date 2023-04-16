@@ -1761,7 +1761,8 @@ end
 c.PushAWithCheck = function()
 	c.PushA()
     if c.Read(0x0644) ~= 0xFF then
-        return c.Bail('Pressing A did not pick something')
+		c.Log('Pressing A did not pick something')
+        return false
     end
 	return true
 end

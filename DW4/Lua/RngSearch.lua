@@ -4,7 +4,7 @@
 local c = require("DW4-ManipCore")
 c.InitSession()
 c.reportFrequency = 1000
-
+c.maxDelay = 0
 local function _tempSave(slot)
     c.Log('Saving ' .. slot)
     c.Save(slot)
@@ -27,45 +27,47 @@ end
 -- end
 
 local function _do()	
+    c.WaitFor(2)
+    c.WaitFor(12)
     c.PushA()
+    c.WaitFor(7)
+    c.PushA()
+    c.WaitFor(30)
+    c.WaitFor(5)
+    if not c.PushAWithCheck() then return false end -- Fight
+    c.WaitFor(10)
+    c.WaitFor(5)
+    c.PushDown()
+    if c.ReadMenuPosY() ~= 17 then
+        return c.Bail('Unable to navigate to Spell')
+    end
+    if not c.PushAWithCheck() then return false end -- Spell
+    c.WaitFor(6)
+    if not c.PushAWithCheck() then return false end -- Expel
+    c.WaitFor(6)
+    c.PushDown()
+    if c.ReadMenuPosY() ~= 17 then
+        return c.Bail('Unable to navigate to Demighoul')
+    end
+    c.DelayUpToWithLAndR(c.maxDelay)
+    if not c.PushAWithCheck() then return false end
     c.WaitFor(35)
 
-    if c.ReadTurn() ~= 4 then
-        return c.Bail('Radimvice did not go first')
-    end
+    c.AddToRngCache()
+    ---------------------------------------
+    if c.ReadTurn() ~= 0 then
+		return c.Bail('Hero did not go first')
+	end
 
-    if c.ReadBattleOrder1() > 2 then
-        return c.Bail('Hero did not get initiative over Demighouls')
-    end
-
-	if c.Read(c.E1Action) ~= 15 then
+	if c.Read(c.Addr.E1Action) ~= 15 then
 		return c.Bail('Radimvice must cast Intermost in order for Taloon to cover mouth')
 	end
 
-	c.UntilNextInputFrame()
-	c.WaitFor(2)
-	_tempSave(4)
-	-----------------
-	c.Save('RadimviceTemp')
-	local origHeroHp = c.Read(c.Addr.HeroHP)
-	local origTaloHp = c.Read(c.Addr.TaloonHP)
-	c.RndAtLeastOne()
-	c.WaitFor(5)
-	local currHeroHp = c.Read(c.Addr.HeroHP)
-	local currTaloHp = c.Read(c.Addr.TaloonHP)
-	local heroLoss = origHeroHp - currHeroHp
-	local taloonLoss = origTaloHp - currTaloHp
-	c.Debug(string.format('H loss: %s, T loss: %s', heroLoss, taloonLoss))
-	if currHeroHp ~= origHeroHp or origTaloHp ~= currTaloHp then
-		return c.Bail('Taloon did not cover mouth')
-	end
-	-----------------
-	c.Load('RadimviceTemp')
-
+    ---------------------------------------
     return true
 end
 
-c.Load(0)
+c.Load(2)
 c.Save(100)
 c.RngCacheClear()
 client.unpause()
