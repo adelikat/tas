@@ -39,14 +39,14 @@ local function _do()
     return true
 end
 
-c.Load(4)
+c.Load(2)
 c.Save(100)
 c.RngCacheClear()
 client.speedmode(3200)
 client.unpause()
 while not c.done do
 	c.Load(100)
-    local result = c.Best(_do, 100)
+    local result = c.Best(_do, 50)
     if c.Success(result) then
         c.Done()
     end

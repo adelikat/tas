@@ -74,13 +74,13 @@ local function _floor4()
 end
 
 local function _do()
-    local result = c.Best(_floor1, 12)
+    local result = c.Best(_floor1, 9)
     if c.Success(result) then
-        local result = c.Best(_floor2, 12)
+        local result = c.Best(_floor2, 9)
         if c.Success(result) then
-            local result = c.Best(_floor3, 12)
+            local result = c.Best(_floor3, 9)
             if c.Success(result) then
-                local result = c.Best(_floor4, 12)
+                local result = c.Best(_floor4, 9)
                 if c.Success(result) then
                     return true
                 end
@@ -97,7 +97,7 @@ client.speedmode(3200)
 client.unpause()
 while not c.done do
 	c.Load(100)
-    local result = c.Best(_do, 10)
+    local result = c.Best(_do, 2)
     if c.Success(result) then
         c.Done()
     end
