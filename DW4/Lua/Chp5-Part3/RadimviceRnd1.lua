@@ -6,7 +6,7 @@
 local c = require("DW4-ManipCore")
 c.InitSession()
 c.reportFrequency = 5000
-c.maxDelay = 10
+c.maxDelay = 8
 
 local function _tempSave(slot)
     c.Log('Saving ' .. slot)
@@ -58,11 +58,11 @@ local function _turn()
 		return true
 	end
     
-    if c.ReadTurn() == 1 then
-        if c.ReadBattleOrder1() == 1 then
-            return true
-        end
-    end
+    -- if c.ReadTurn() == 1 then
+    --     if c.ReadBattleOrder1() == 1 then
+    --         return true
+    --     end
+    -- end
 
     if c.ReadTurn() == 4 then
         local radimviceAction = c.Read(c.Addr.E1Action)
