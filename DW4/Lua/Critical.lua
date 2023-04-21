@@ -1,5 +1,5 @@
 _odds = 48 --1 in x
-_minDmg = 225
+_minDmg = 205
 _idealDmg = 0 --Max critical
 _idealDelay = 0
 

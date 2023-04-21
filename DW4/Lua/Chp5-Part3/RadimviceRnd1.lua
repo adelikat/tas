@@ -6,7 +6,8 @@
 local c = require("DW4-ManipCore")
 c.InitSession()
 c.reportFrequency = 5000
-c.maxDelay = 8
+c.maxDelay = 15
+delay = 0
 
 local function _tempSave(slot)
     c.Log('Saving ' .. slot)
@@ -98,14 +99,85 @@ local function _turn()
     return false
 end
 
-c.Load(4)
+local function _expelAndMouthCover()
+    c.RndAtLeastOne()
+    c.WaitFor(12)
+    if c.Read(c.Addr.E2Hp) > 0 then
+        return c.Bail('Expel did not work on Demighoul-A')
+    end
+    c.UntilNextInputFrame()
+    c.WaitFor(2)
+
+    c.RndAtLeastOne()
+    c.WaitFor(12)
+    if c.Read(c.Addr.E3Hp) > 0 then
+        return c.Bail('Expel did not work on Demighoul-B')
+    end
+    c.UntilNextInputFrame()
+    c.WaitFor(2)
+
+    c.RndAtLeastOne()
+    c.WaitFor(12)
+    if c.Read(c.Addr.E4Hp) > 0 then
+        return c.Bail('Expel did not work on Demighoul-C')
+    end
+    c.UntilNextInputFrame()
+    c.WaitFor(2)
+
+    c.RndAtLeastOne() -- End Expel, start Radimvice attack
+    c.RandomFor(70)
+    c.UntilNextInputFrame()
+    c.WaitFor(2)
+
+    local origHeroHp = c.Read(c.Addr.HeroHP)
+    local origTaloonHp = c.Read(c.Addr.TaloonHp)
+    c.RndAtLeastOne()
+    c.WaitFor(10)
+
+    c.AddToRngCache()
+
+    local currHeroHp = c.Read(c.Addr.HeroHP)
+    if currHeroHp < origHeroHp then
+        return c.Bail('Taloon did not cover Radimvice mouth')
+    end
+
+    local currTaloonHp = c.Read(c.Addr.TaloonHp)
+    if currTaloonHp < origTaloonHp then
+        return c.Bail('Taloon did not cover Radimvice mouth')
+    end
+
+    c.UntilNextInputFrame()
+    c.WaitFor(2)
+
+    return true
+end
+
+local function _buildPower()
+    --delay = c.DelayUpTo(c.maxDelay)
+    c.RndAtLeastOne()
+    c.RandomFor(55)
+
+    c.AddToRngCache()
+
+    if c.Read(c.Addr.P2Action) ~= c.Actions.BuildingPower then
+        return c.Bail('Taloon did not build power')
+    end
+
+    c.UntilNextInputFrame()
+    c.WaitFor(2)
+    return true
+end
+
+c.Load(6)
 c.Save(100)
 c.RngCacheClear()
 client.speedmode(3200)
 client.unpause()
 while not c.done do
 	c.Load(100)
-    local result = c.Cap(_turn, 250)
+    --local result = c.Cap(_turn, 250)
+    --local result = c.Cap(_expelAndMouthCover, 250)
+    local result = c.ProgressiveSearch(_buildPower, 250, 20)
     if c.Success(result) then
         c.Log('delay: ' .. delay)
         c.Done()

@@ -35,14 +35,33 @@ local function _do()
 	return currHp == origHp
 end
 
+local function _buildPower()
+    --delay = c.DelayUpTo(c.maxDelay)
+    c.PushA()
+    c.WaitFor(55)
+
+    --c.AddToRngCache()
+	local actionNum = c.Read(c.Addr.P2Action)
+	c.Debug('actionNum ' .. actionNum)
+	local action = c.TaloonActions[actionNum]
+	c.Debug('Taloon action: ' .. action)
+    if c.Read(c.Addr.P2Action) ~= c.Actions.BuildingPower then
+        --return c.Bail('Taloon did not build power')
+    end
+
+    c.UntilNextInputFrame()
+    c.WaitFor(2)
+	return true
+end
+
 c.Load(0)
 c.Save(100)
 c.RngCacheClear()
 client.unpause()
-client.speedmode(3200)
+--client.speedmode(3200)
 while not c.done do
 	c.Load(100)
-	local result = c.RngSearch(_do)	
+	local result = c.RngSearch(_buildPower)	
 	--local result = c.FrameSearch(_do, 1000)	
 	if c.Success(result) then
 		c.Log('Attempts: ' .. c.attempts)
