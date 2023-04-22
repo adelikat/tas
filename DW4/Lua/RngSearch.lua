@@ -11,28 +11,17 @@ local function _tempSave(slot)
 end
 
 local function _do()
-    local origLuck = c.Read(c.Addr.TaloonLuck)
-	local origHp = c.Read(c.Addr.TaloonMaxHP)
-    c.Debug('orig luck: ' .. origLuck)
-	c.Debug('orig hp: ' .. origHp)
-    c.PushA()    
-    c.WaitFor(60)
-
-    local currLuck = c.Read(c.Addr.TaloonLuck)
-    c.Debug('curr luck: ' .. currLuck)
-    if currLuck > origLuck then
-        return c.Bail('Got luck')
+    c.PushA()
+    c.WaitFor(86)
+    c.PushA()
+    c.WaitFor(17)
+    c.PushA()
+    c.WaitFor(6)
+    local dmg = c.ReadDmg()
+    c.Debug('dmg: ' .. dmg)
+    if dmg < 240 then
+        return c.Bail('Did not do enough dmg')
     end
-
-	
-    local currHp = c.Read(c.Addr.TaloonMaxHP)
-    c.Debug('curr hp: ' .. currHp)
-    if currHp > origHp then
-        return c.Bail('Got Hp')
-    end
-
-	c.Log('orig HP: ' .. origHp)
-	c.Log('currHP: ' .. currHp)
     return true
 end
 
@@ -43,8 +32,8 @@ client.unpause()
 --client.speedmode(3200)
 while not c.done do
 	c.Load(100)
-	local result = c.RngSearch(_do)	
-	--local result = c.FrameSearch(_do, 1000)	
+	--local result = c.RngSearch(_do)	
+	local result = c.FrameSearch(_do, 1000)	
 	if c.Success(result) then
 		c.Log('Attempts: ' .. c.attempts)
 		c.Done()

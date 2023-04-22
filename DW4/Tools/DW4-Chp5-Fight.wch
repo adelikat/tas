@@ -6,8 +6,8 @@ SystemID NES
 0096	b	u	0	RAM	Turn
 00008B	b	u	0	System Bus	Battle
 00727E	w	u	0	System Bus	E1 HP
-128C	b	u	0	WRAM	E2 HP
-00729A	b	u	0	System Bus	E3 HP
+128C	w	u	0	WRAM	E2 HP
+00729A	w	u	0	System Bus	E3 HP
 0072A8	b	u	0	System Bus	E4 HP
 0062ED	b	u	0	System Bus	Step Counter
 006E45	b	h	0	System Bus	EG1 Type
@@ -22,19 +22,10 @@ SystemID NES
 00732A	b	u	0	System Bus	E3 Action
 00732B	b	u	0	System Bus	E4 Action
 00732C	b	u	0	System Bus	E5 Action
-007348	b	b	0	System Bus	BOr 1
-007349	b	b	0	System Bus	BOr 2
-00734A	b	b	0	System Bus	BOr 3
-00734B	b	b	0	System Bus	BOr 4
-00734C	b	b	0	System Bus	BOr 5
-00734D	b	b	0	System Bus	BOr 6
-00734E	b	b	0	System Bus	BOr 7
-00734F	b	b	0	System Bus	BOr 8
 0644	b	u	0	RAM	Menu stuff
 007325	b	u	0	System Bus	P2 Action
 007326	b	u	0	System Bus	P3 Action
 007327	b	u	0	System Bus	P4 Action
 007334	b	u	0	System Bus	E1 2nd action
 006098	b	u	0	System Bus	Taloon HP
-006002	b	u	0	System Bus	Hero HP
 
