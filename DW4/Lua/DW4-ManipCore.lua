@@ -1762,7 +1762,7 @@ c.PushAWithCheck = function()
 	c.PushA()
     if c.Read(0x0644) ~= 0xFF then
 		c.Log('Pressing A did not pick something')
-        return false
+        return falsev  
     end
 	return true
 end
@@ -1781,6 +1781,7 @@ c.ChargeUpWalking = function()
 	c.PushA()
 	c.RandomForNoA(13)
 	c.WaitFor(1)
+	return c.Read(c.Addr.MoveTimer) == 0
 end
 
 return c

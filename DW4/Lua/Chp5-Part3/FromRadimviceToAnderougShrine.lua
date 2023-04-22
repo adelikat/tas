@@ -14,35 +14,82 @@ end
 local function _leave()
     c.WaitFor(1)
     c.DismissDialog()
-    
-    _tempSave(4)
+    c.RandomFor(2)
+    c.UntilNextInputFrame()
+    c.AorBAdvance()
+    c.WaitFor(1)
+    c.DismissDialog()
+    local result = c.ChargeUpWalking()
+    if not result then return false end
+
+    if c.GenerateRndBool() then
+        result = c.WalkMap({
+            { ['Down'] = 2 },
+            { ['Right'] = 3 },
+            { ['Down'] = 1 },
+        })
+    else
+        result = c.WalkMap({
+            { ['Down'] = 2 },
+            { ['Left'] = 3 },
+            { ['Down'] = 1 },
+        })
+    end
+    if not result then return false end
+
+    c.WaitFor(10)
+    c.UntilNextInputFrame()
     return true
 end
 
-c.Load(4)
+local function _enterShrine()
+    c.RandomFor(5)
+    c.WaitFor(1)
+    local result = c.WalkMap({
+        { ['Down'] = 3 },
+        { ['Left'] = 2 },
+        { ['Down'] = 1 },
+        { ['Left'] = 1 },
+        { ['Down'] = 1 },
+        { ['Left'] = 3 },
+        { ['Down'] = 4 },
+        { ['Left'] = 1 },
+        { ['Down'] = 1 },
+        { ['Left'] = 1 },
+        { ['Down'] = 2 },
+        { ['Left'] = 1 },
+        { ['Down'] = 6 },
+        { ['Right'] = 3 },
+        { ['Down'] = 5 },
+    })
+    if not result then return false end
+    c.WaitFor(10)
+    c.UntilNextInputFrame()
+    return true
+end
+
+local function _do()
+    local result = c.Best(_leave, 12)
+    if c.Success(result) then
+        local result = c.Best(_enterShrine, 12)
+        if c.Success(result) then
+            return true
+        end
+    end
+    return false
+end
+
+c.Load(2)
 c.Save(100)
 c.RngCacheClear()
 client.speedmode(3200)
 client.unpause()
 while not c.done do
 	c.Load(100)
-    -- local result = c.Cap(_turn, 250)
-    -- if c.Success(result) then
-    --     c.Log('Turn Manipulated')
-    --     local result = c.ProgressiveSearch(_heroCrit, 200, 3)
-    --     if c.Success(result) then
-    --         c.Done()
-    --     else
-    --         c.Log('Failed to find critical')
-    --     end
-    -- end
-
-    local result = c.Cap(_taloonReinforcements, 250)
+    local result = c.Best(_do, 5)
     if c.Success(result) then
         c.Done()
     end
-
-    c.Log('RNG: ' .. c.RngCacheLength())
 end
 
 c.Finish()
