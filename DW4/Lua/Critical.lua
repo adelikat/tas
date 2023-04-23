@@ -1,10 +1,10 @@
-_odds = 48 --1 in x
+_odds = 24 --1 in x
 _minDmg = 235
 _idealDmg = 0 --Max critical
 _idealDelay = 0
 
 _wait3 = 0
-_wait2 = 86
+_wait2 = 87
 _wait1 = 17
 
 local c = require("DW4-ManipCore")
