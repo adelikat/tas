@@ -1,0 +1,27 @@
+v5 started with 149 hp
+v6 started with 165 hp
+
+Damage from Anderoug to Infernous shadow
+6 dmg
+or 
+2 dmg by sarcrificing 16 frames (32 for 2 squares, but save 4 frames of lag each swamp, 4x4)
+or
+0 dmg by sacracing 40 frames (8 from above and 2 more squares of walking)
+
+
+75 dmg barriers to Gigademon
+75 dmg barriers leaving Gigademon
+
+3 dmg walking to castle
+2 dmg by sacrificing 8 frames (see above)
+0 dmg by sacrificing 40 frames (see above)
+
+30 dmg barriers in castle
+2 dmg swamp from castle to mountain
+
+
+total (max):
+191 dmg
+
+total (min):
+182 dmg

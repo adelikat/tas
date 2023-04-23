@@ -17,4 +17,5 @@ SystemID NES
 0644	b	u	0	RAM	Menu Related
 006E49	b	u	0	System Bus	E1 Count
 006297	b	u	0	System Bus	Taloon Transform
+006098	b	u	0	System Bus	Taloon HP
 
