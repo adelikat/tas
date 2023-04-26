@@ -1124,6 +1124,7 @@ c.Addr = {
 	['E2Action'] = 0x7329,
 	['E3Action'] = 0x732A,
 	['E4Action'] = 0x732B,
+	['E1Action2'] = 0x7334,
 	['BattleOrder1'] = 0x7348,
 	['BattleOrder2'] = 0x7349,
 	['BattleOrder3'] = 0x734A,
@@ -1138,6 +1139,7 @@ c.Addr = {
 c.Actions = {
 	['Dazed'] = 61,
 	['BuildingPower'] = 62,
+	['OnGuard'] = 66,
 	['Attack'] = 67,
 	['Shouts'] = 120,
 	['Strange Dance'] = 121,
@@ -1770,7 +1772,7 @@ end
 c.PushDownWithCheck = function(menuY)
 	c.PushDown()
 	if c.ReadMenuPosY() ~= menuY then
-		return c.Bail(stringofrmat('Pressing Down did not go to expected value %s', menuY))
+		return c.Bail(string.format('Pressing Down did not go to expected value %s', menuY))
 	end
 
 	return true

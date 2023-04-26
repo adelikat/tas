@@ -11,28 +11,43 @@ local function _tempSave(slot)
 end
 
 local function _do()
-    c.WaitFor(2)
-    c.WaitFor(12)
     c.PushA()
-    c.WaitFor(23)
-    c.WaitFor(5)
-    if not c.PushAWithCheck() then return false end
-    c.WaitFor(32)
-
-    if c.ReadTurn() ~= 4 then
-        return c.Bail('Infernus did not go first')
-    end
-
-    c.WaitFor(2)
+    c.WaitFor(65)
+    
+    -- if c.ReadTurn() ~= 1 then
+    --     return c.Bail('Taloon did not go first')
+    -- end
 
     if c.Read(c.Addr.E1Action) ~= 67 then
-        return c.Bail('Infernus did not attack')
+        return c.Bail('Gigademon did not attack')
     end
+	-- c.Log(c.Read(c.Addr.E1Action2))
+    -- if c.Read(c.Addr.E1Action2) ~=  66 then
+    --     return true
+    -- end
 
-    c.UntilNextInputFrame()
-    c.WaitFor(2)
 
-    return true
+
+	-- local action2 = c.Read(c.Addr.E1Action2)
+	-- if action2 ~= c.Actions.OnGuard and action2 ~= 247 then
+    --     return c.Bail('Gigademon action 2 was not ideal')
+    -- end
+
+    --c.Log('Gigademon 2nd action was: ' .. c.Read(c.Addr.E1Action2))
+
+    -- local taloonAction = c.Read(c.Addr.P2Action)
+    -- if taloonAction == 247 then
+    --     c.Log('Taloon did not make up his mind yet')
+    --     return false
+    -- end
+
+    -- c.Debug('Taloon: ' .. c.TaloonActions[taloonAction])
+    -- if c.Read(c.Addr.P2Action) ~= c.Actions.BuildingPower then
+    --     return c.Bail('Taloon did not call for reinforcements')
+    -- end
+
+
+    return false
 end
 
 
@@ -40,7 +55,7 @@ c.Load(0)
 c.Save(100)
 c.RngCacheClear()
 client.unpause()
---client.speedmode(3200)
+client.speedmode(3200)
 while not c.done do
 	c.Load(100)
 	local result = c.RngSearch(_do)	

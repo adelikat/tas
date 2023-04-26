@@ -1,3 +1,11 @@
 Improvements
 
+General improvements
+The most embarrassing oversight of the previous TAS and the main motivation to redo the TAS, did not know that the day/night counter can randomly not advance when walking.  Due to this, some extra steps were done in key moments where waiting for night was necessary
+
+Transitions have a variable number of lag frames.  Another oversight that I did not discover until near the end of the previous TAS, by then I decided to leave as is, since it is just a few frames.  Those frames add up, however, and another big motivation to make this improvement
+
 Chapter 1
+Staying at the Inn at the beginning of the game sets the day/night counter to 40 instead of 0, saving about 3 seconds due to not having to walk around Izmut waiting for night time
+
+Insane manipulation on stats, knowing that Ragnar does not need any stats as he is killed off in chapter 5 without contributing with any attacks.  It doubly saves time to skip HP since it makes it faster when killing him off, as I only need a regular attack (citation needed)

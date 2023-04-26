@@ -1,4 +1,4 @@
-_odds = 24 --1 in x
+_odds = 12 --1 in x
 _minDmg = 238
 _idealDmg = 0 --Max critical
 _idealDelay = 0

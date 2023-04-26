@@ -19,23 +19,22 @@ local function _tempSave(slot)
 end
 
 local function _str()
+    local origStr = c.Read(c.Addr.TaloonStr)
     c.RndAtLeastOne()
     c.WaitFor(47)
     c.RndAtLeastOne()
-    c.WaitFor(22)
+    c.WaitFor(23)
     c.RndAtLeastOne()
     c.WaitFor(46)
     c.RndAtLeastOne()
     c.RandomFor(100)
-    c.WaitFor(200)
+    c.WaitFor(50)
     c.UntilNextInputFrame()
-
-     local origStr = c.Read(c.Addr.TaloonStr)
-
+    c.AorBAdvance()
+    c.AorBAdvance()
+    c.AorBAdvance()
     c.RandomFor(2)
     c.UntilNextInputFrame()
-
-    c.Debug('RNG: ' .. c.RngCacheLength())
 
     local currStr = c.Read(c.Addr.TaloonStr)
     local gain = currStr - origStr
@@ -83,15 +82,12 @@ end
 local function _luckSkip()
     c.AorBAdvance()
     c.AorBAdvance()
-    local origLuck = c.Read(c.Addr.TaloonLuck)
-    c.Debug('orig luck: ' .. origLuck)
-    c.Debug('orig HP: ' .. origHp)
     c.RndAorB()
     c.WaitFor(50)
 
     local currLuck = c.Read(c.Addr.TaloonLuck)
     c.Debug('curr luck: ' .. currLuck)
-    if currLuck > origLuck then
+    if currLuck > 3 then
         return c.Bail('Got luck')
     end
 
@@ -107,20 +103,22 @@ while not c.done do
     c.Load(100)
     local result = c.Cap(_str, 100)
     if c.Success(result) then
+        c.Log('Str found')
         result = c.Cap(_ag, 5)
         if c.Success(result) then
-        result = c.AddToRngCache()
-        if c.Success(result) then
-            result = c.ProgressiveSearchForLevels(_luckSkip, 20)
+            c.Log('Ag found')
+            result = c.AddToRngCache()
+            if c.Success(result) then
+                result = c.ProgressiveSearchForLevels(_luckSkip, 9)
                 if c.Success(result) then
                     c.Done()
                 end
+            else
+                c.Log('RNG already found')
             end
-        else
-            c.Log('RNG already found')
         end
     end
-    -- local result = c.ProgressiveSearchForLevels(_luckSkip, 25)
+    -- local result = c.ProgressiveSearchForLevels(_luckSkip, 20)
     -- if c.Success(result) then
     --     c.Done()
     -- end
