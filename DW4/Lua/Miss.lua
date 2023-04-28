@@ -5,7 +5,7 @@ c.maxDelay = 10
 
 local _wait3 = 0
 local _wait2 = 0
-local _wait1 = 43
+local _wait1 = 33
 
 local _hpAddr = c.Addr.TaloonHp
 local _attack = 76

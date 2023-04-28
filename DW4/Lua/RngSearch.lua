@@ -14,38 +14,13 @@ local function _do()
     c.PushA()
     c.WaitFor(65)
     
-    -- if c.ReadTurn() ~= 1 then
-    --     return c.Bail('Taloon did not go first')
-    -- end
-
-    if c.Read(c.Addr.E1Action) ~= 67 then
-        return c.Bail('Gigademon did not attack')
+    if c.ReadTurn() == 4 then
+        return false
     end
-	-- c.Log(c.Read(c.Addr.E1Action2))
-    -- if c.Read(c.Addr.E1Action2) ~=  66 then
-    --     return true
-    -- end
 
-
-
-	-- local action2 = c.Read(c.Addr.E1Action2)
-	-- if action2 ~= c.Actions.OnGuard and action2 ~= 247 then
-    --     return c.Bail('Gigademon action 2 was not ideal')
-    -- end
-
-    --c.Log('Gigademon 2nd action was: ' .. c.Read(c.Addr.E1Action2))
-
-    -- local taloonAction = c.Read(c.Addr.P2Action)
-    -- if taloonAction == 247 then
-    --     c.Log('Taloon did not make up his mind yet')
-    --     return false
-    -- end
-
-    -- c.Debug('Taloon: ' .. c.TaloonActions[taloonAction])
-    -- if c.Read(c.Addr.P2Action) ~= c.Actions.BuildingPower then
-    --     return c.Bail('Taloon did not call for reinforcements')
-    -- end
-
+    if c.Read(c.Addr.P2Action) ==  67 then
+        return true
+    end
 
     return false
 end

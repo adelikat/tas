@@ -1,10 +1,10 @@
-_odds = 12 --1 in x
-_minDmg = 238
+_odds = 64 --1 in x
+_minDmg = 220
 _idealDmg = 0 --Max critical
 _idealDelay = 0
 
 _wait3 = 0
-_wait2 = 87
+_wait2 = 88
 _wait1 = 17
 
 local c = require("DW4-ManipCore")
@@ -32,6 +32,7 @@ function _step(wait, noDelay)
 		if not noDelay then
 			delay = delay + c.DelayUpTo(c.maxDelay - delay)
 		end
+		c.Debug('Pushing button')
 		c.RndAtLeastOne()
 		c.RandomFor(wait - 2)
 		c.WaitFor(2)
@@ -61,8 +62,11 @@ while not c.done do
 	c.Load(100)
 	delay = 0
 
-	_step(_wait3, true)
+	c.Debug(string.format('Starting wait 3 for %s frames (%s)', _wait3, emu.framecount()))
+	_step(_wait3)
+	c.Debug(string.format('Starting wait 2 for %s frames (%s)', _wait2, emu.framecount()))
 	_step(_wait2)
+	c.Debug(string.format('Starting wait 1 for %s frames (%s)', _wait1, emu.framecount()))
 	_step(_wait1)
 
 	delay = delay + c.DelayUpTo(c.maxDelay - delay)
