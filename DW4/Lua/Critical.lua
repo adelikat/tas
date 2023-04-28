@@ -4,7 +4,7 @@ _idealDmg = 0 --Max critical
 _idealDelay = 0
 
 _wait3 = 0
-_wait2 = 88
+_wait2 = 47
 _wait1 = 17
 
 local c = require("DW4-ManipCore")

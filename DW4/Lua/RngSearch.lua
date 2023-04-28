@@ -14,15 +14,16 @@ local function _do()
     c.PushA()
     c.WaitFor(65)
     
-    if c.ReadTurn() == 4 then
+    -- if c.ReadTurn() ~= 4 then
+    --     return false
+    -- end
+
+    local e1Action = c.Read(c.Addr.E1Action)
+    if e1Action == 4 then
         return false
     end
 
-    if c.Read(c.Addr.P2Action) ==  67 then
-        return true
-    end
-
-    return false
+    return true
 end
 
 
