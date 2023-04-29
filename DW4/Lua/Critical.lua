@@ -5,7 +5,7 @@ _idealDelay = 0
 
 _wait3 = 0
 _wait2 = 47
-_wait1 = 17
+_wait1 = 704
 
 local c = require("DW4-ManipCore")
 c.InitSession()
@@ -32,7 +32,6 @@ function _step(wait, noDelay)
 		if not noDelay then
 			delay = delay + c.DelayUpTo(c.maxDelay - delay)
 		end
-		c.Debug('Pushing button')
 		c.RndAtLeastOne()
 		c.RandomFor(wait - 2)
 		c.WaitFor(2)

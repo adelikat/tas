@@ -18,12 +18,12 @@ local function _do()
     --     return false
     -- end
 
-    local e1Action = c.Read(c.Addr.E1Action)
-    if e1Action == 4 then
-        return false
+    local e1Action = c.Read(c.Addr.E1Action2)
+    if e1Action ~= 67 then
+        return true
     end
 
-    return true
+    return false
 end
 
 

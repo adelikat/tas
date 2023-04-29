@@ -23,7 +23,7 @@ local function _turn()
         return c.Bail('Taloon did not go first')
     end
 
-    c.WaitFor(10)
+    c.WaitFor(5)
 
     if c.Read(c.Addr.P2Action) ~= c.Actions.Reinforcements then
 		return c.Bail('Did not call for reinforcements')
