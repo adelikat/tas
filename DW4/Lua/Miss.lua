@@ -1,11 +1,11 @@
 local c = require("DW4-ManipCore")
 c.InitSession()
 c.reportFrequency = 100
-c.maxDelay = 10
+c.maxDelay = 48
 
 local _wait3 = 0
 local _wait2 = 0
-local _wait1 = 33
+local _wait1 = 24
 
 local _hpAddr = c.Addr.TaloonHp
 local _attack = 76
