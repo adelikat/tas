@@ -10,6 +10,9 @@ or
 
 
 75 dmg barriers to Gigademon
+
+----  after Gigademon
+
 75 dmg barriers leaving Gigademon
 
 3 dmg walking to castle

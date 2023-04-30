@@ -1,6 +1,104 @@
-Improvements
+This TAS is 5829 frames faster than the [3184M|published movie], and my 5th completed TAS of this game.  The journey to get here has been long and grinding but the results have been worth it.  My first attempt to TAS this game was in 2004 using famtasia (and was laughably a failure, famtasia was not up to the task of doing anything reasonable with this game).  It's been almost 20 years since then, and my TAS technqiues have matured, as well as my understanding of the game.  This might be my proudest TAS I've ever submitted, and this game is easily the most effort and hours I've put in, compared to any others.
 
-General improvements
+!! Botting Approach
+
+The programmers were clever on this one.  And to my knowledge, this is a unique situation, at least with this generation of consoles. The RNG is checked/advanced often.  And I mean often.  Thousands of times per frame.  So often that the number of CPU executions in the frame start to come into play as to what the RNG will be by the end of the frame.  Because of this, the RNG can not be predicted.  This means the only choice is brute force.  Honestly, I think this fact was not lost on the programmers. Inspired by their essential "real" RNG, so many things are random in this game.  Random screen transitions, random "criticals" during level ups, including very negative ones.  Day/night is random (because that's clearly how physics works).  The combination is insane for the TAS.  It is truely unique in how many unlikely events __could__ occur, combined with the fact that the TAS is generally in control of making them happen.
+
+!! Programming Approach
+
+The scripts written for this are worth a look, particularly the core library I wrote.  Everything is available [https://github.com/adelikat/tas/tree/master/DW4/Lua|here]
+
+What I found is, better programming equals better results.  This is true for many reasons.  With more precise scripting, I can hone in on outcomes with fewer attempts, and less trial and error.  Cleaner code allows accurate scripts with fewer mistakes.  Making increasingly higher level abstractions allows more of the TAS to be scripted instead of "TASed" in the human-sense.  Almost all of this TAS was done by script.  It became clear that I'll save frames by scripting the entire thing in a series of scripts.  This way I can optimize every screen transition better, but also redo big sections to try to get more favorable seeds to shave more frames.  I need to script everything, I need to write my code clean, and I need to get creative with abstractions.  All of this lead to the ability to write some reasonably short scripts that do lots of high level actions while maximizing the amount of RNG manipulation that happens during it.
+
+Walking around on the overworld can be broken down to something like this:
+%%SRC_EMBED lua
+result = c.WalkMap({
+	{ ['Left'] = 5 },
+	{ ['Up'] = 2 }
+})
+
+This will walk left 5 squares, and then up 2.  During this it will ensure that no encounters occur, nothing (like NPC's) obstructed the player's path, and pressed as many random buttons as possible to maximize RNG manipulations.
+
+Not quite abstract but a number of methods make sure it is easy to maximize randomization.
+c.RandomFor(20) will push as many buttons as possible
+
+But maybe only certain buttons are okay to press,
+RandomForLevels(20) will push only directional buttons during this time.  During levels, these are okay since only A or B will advance the menu
+
+Many menus need A or B to push so:
+c.RndAorB() will ensure A or B was pushed, as well as other random buttons since they will not affect the action
+
+Other menus allow any button to advance, so:
+RndAtLeastOne()
+
+Most frames in this game are lag frames, a cruel fact when you know that buttons can affect the RNG. As such, helper methods make it easy to set up the next manipulation:
+UntilNextInputFrame() will advance through lag and and stop on the last lag frame.  This is nice when there is variance in lag (which there usually is) to ensure consistent attempts.
+
+The approach I fell into is to express scripts in terms of returning a boolean value.  Where anytime something undesirable happens, it returns false.  True is only returned if it was considered a success.  Then I can write various algorithms to accept a delegate that returns a boolean, and act accordingly.
+
+For instance, if I know there is frame count to maximize, I just need a success I could do:
+c.Cap(boolFunc, 100)
+This will run the function until it returns true, or until 100 failures
+
+If I know I need to manipulate frames and want to try to use them sparingly, this will try pretty hard to get a good outcome with not so many delays:
+c.ProgressiveSearch(boolFunc, 100, 10)
+This will run cap, 100 time, then advance 1 frame, and do 100 more, and then another frame and a 100 more, etc
+
+If I know I need to minimize the number of frames:
+c.Best(boolFunc, 100) will run it 100 times, and return the fastest completed result out of the 100
+
+Rarely what you want to do in a finished TAS but great for just exploring:
+c.FrameSearch(boolFunc, 1000)
+This will do the function 1 time, advance 1 frame, and do it again, until successful or until 1000 frames
+
+You can't do this one while recording but great to see if something is even possible:
+c.RndSearch(boolFunc)
+
+This will run the function 65535 times (or until it returns true), poking the RNG with 1, 2, 3 etc before each attempt.  If this fails to find something, you can be assured it isn't possible.
+
+This allows me to easily chain actions together
+function do
+  result = c.Best(floor1, 25)
+  if c.Success(result) then
+    result = c.Best(floor2, 25)
+    if c.Success(result) then
+      return true
+    end
+  end
+  return false
+end
+
+But wait, there's more!
+
+Now that I have a function that does multiple actions with a Best() on each one, I can do a Best() on that!
+result = c.Best(do, 25) and get the best of the best result.
+
+This approach is quite powerful and with clever enough programming I can easily try different approaches.  What might be notable here is how expoential it gets quite quickly.  I could easily just chain every method written for the whole TAS and run a best.  And in a few short eons, I'd have the optimal TAS.
+
+!! RAM Addresses and Innovations in understanding
+
+I big innovation with this TAS is that I finally figured out initiative.  In the previous TAS I had some vague idea of what addresses controlled this, but generally got the most out of who goes first (since that is much easier to "see") and hope for the best, redoing big chunks if necessary.  [addresses go here] is the address range for initiative, but only the first 4 bits.  Once you realize this, it's a simple range of numbers where the lower the number, the higher the player/enemy is in the move order
+
+I understood enemy actions a lot better in this one and also studied what was possible better.  Several fights were improved by analyzing what move combinations are possible, finding the ram addresses that will tell me what the enemies will do in later parts of the round, so I cna precisely bot without trial an error.  No matter how unlikely the move actions, as long as I know it is possible, I was able to find the outcome.
+
+The RNG is 2 bytes, but no this is not a 16-bit RNG.  It's 2 8-bit ones.  This is critical to understand when it comes to scripting.  The 2nd byte only changes under certain conditions (the biggest ones are NPC movements and overworld).  Many times, the TAS is "only" working with 256 seeds.  Even with both, it's only 655535, which starts to sound low when we are talking so many unlikely outcomes chained togther.  In reality though it is never 655535 as the 2nd byte only can change to so many values, and usually only the "starting seed", by scripting the lead up to the battle/whatever needs manipulation.
+
+The RNG manip highlights
+
+Note necessarily an RNG highlight but the ending is Swag.  An underleveled Merchant, naked, solo, with 4 HP, no healing items, and even cursed, takes on the final boss.  What an awesome ending, that is the culmination of a crazy amount of planning and RNG manipulation.  Note, I really wanted it to be 1 HP.  I manipulated the min healing from the medical herb but unforutnately it left me with 3 unncessary HP.  I could maybe manip less HP in level ups, but by getting high HP rolls I was able to trigger the stat-balancer several times and skip HP in many levels (each time, this saves about 80 frames).  Even 1 less HP might not be possible and still get as many skips.
+
+Most of this TAS includes some kind of humanly unlikely scenarios, so many it's easy to forget.  Like, there are supposed to be random encounters, remember those? Opponents missing is 1/64. Criticals are 1/64, but most are max-damage/high damage, making them even more unlikely.  But these odds are trivial compared to these moments. These moments are so unlikely, the odds do not express much, so I'll express it in terms of botting time instead.
+
+Chapter 1 Level ups. More details in the potential improvements section, but these are insanely unlikely.  Worse yet, there is very little RNG manipulation that can be done during level ups.  You can only press A or B to advance the menu, and all the frames between actions are lag frames.  Most of the botting must be done leading into the levels ups.  If you can find a magic seed, that will last you through a level up or 2.  At least 2.5 million bot rerecords were spent total, on the level-ups in this chapter, over the course of about 3-4 weeks, many script revisions, and a lot of frustration
+
+Chapter 2 Chameleon Fight.  Fights get really complicated with more participants.  This is a 3 against 3 battle.  Furthermore, Alena is level 1, so her critical hit odds are 1/256.  The battle order and enemy actions are particularly unlikely. While I shaved a lot of frames, the actual outcome as the same as the previous TAS.  But like the previous TAS, a huge amount of time was spent on this fight.  To get the Round 1 battle order/initiative, for instance, will get a positive outcome once every 8-16 hours (at a script speed of about 1000fps).  I actually had to manipualte several of these, to get better seeds to get fewer delay frames.  And it doesn't get much easier for round 2 either.
+
+Chapter 3, the amor offers.  Described better below.  The odds here might be the most unlikely ones in the entire TAS.  To get the expected outcome, at all, let alone with few delay frames, you should expect to run the script for several days non-stop.  And then you want to try to optimize to reduce frames, fun stuff.
+
+Chapter 5, the Radimvice fight. This is a 2 on 4 fight. Again, the more participants, the more unlikely.  Also, all the enemies have very high agility compared to the hero.  For the hero to go first and expel 3 enemies, plus Taloon doing some unlikely antics, and Radimvice behaving with 2 actions, is quite unlikely.  A lot of script revisions here, and a ton of raw hours.
+
+!! Notable Improvements
+
 The most embarrassing oversight of the previous TAS and the main motivation to redo the TAS, did not know that the day/night counter can randomly not advance when walking.  Due to this, some extra steps were done in key moments where waiting for night was necessary
 
 Transitions have a variable number of lag frames.  Another oversight that I did not discover until near the end of the previous TAS, by then I decided to leave as is, since it is just a few frames.  Those frames add up, however, and another big motivation to make this improvement
@@ -9,3 +107,29 @@ Chapter 1
 Staying at the Inn at the beginning of the game sets the day/night counter to 40 instead of 0, saving about 3 seconds due to not having to walk around Izmut waiting for night time
 
 Insane manipulation on stats, knowing that Ragnar does not need any stats as he is killed off in chapter 5 without contributing with any attacks.  It doubly saves time to skip HP since it makes it faster when killing him off, as I only need a regular attack (citation needed)
+
+Chapter 2
+Another motivator for this improvement.  Too late into the TAS, I realized the Skeleton encounter could be done in 2 rounds instead of 3.  It required Alena to get 1 more strength in the previous level ups, a min roll on the Skeleton HP (to get down to 42) and 2 max-damage crits from Alena (21 each).
+
+Chapter 3
+The armor offers. I hated that I had to get 1 bad offer and decline it, to get the desired RNG.  The odds however, are tremendously unlikely.  A max offer requires a "critical" of 1/64 with the max value of one of 16 values, and it has to be done 3 times.  Delay frames are possible.  Because we are in a town, the 2nd RNG byte is manipulatable here too but only periodically as NPC's deside there next direction.  This is one of the most unlikely outcomes in the TAS.  It required weeks of manipulations to chain 3 of these together with crazy few delay frames.  I can't express how much I never want to TAS this section of the game again.
+
+!! Is this TAS Improvable?
+
+Yes. And even an improvement is improvable.  There is no perfect here.  Delay frames in addition to buttons, to manipulate unlikely events.  Theoretically these could always be shaved, with more botting.  Particularly by chaining larger parts of the run together.  But doing so results in exponentially longer bot attempts.
+
+In addition, all screen transitions are a random number of frames. This means it is always theoretically possible to shave a frame here and there.
+
+There is variance in the number of frames between actions in battle.  In general, I did not optimize this, when the odds of the actions are so low.  Forgive me, when it takes a script takes 8 hours to get the desired battle order/actions, I did then run it multiple times to try to shave a frame :D
+
+Chapter 1 level ups will always be potentially improvable.  It's possible (but about a 1/256 chance) to avoid Ragnar getting strength (why would they program this??).  So, in theory, Ragnar could get no stats in any level. This would be visually hilarious but the odds would be 1/256 * 1/2 * 1/256 * 1/2 * 1/2 * 1/2, and that is for each level.  3 level ups are chained after the boss fight, and 7 more at the king.  At these odds, a 16 bit RNG doesn't look very large.  In all my botting, I did look for these kinds of "jackpot" scernarios but none every happened.
+
+In Chapter 2, it is theoretically possible to avoid staying at the Inn. It would take an insane amount of step counter manipulation. The step counter does not reset between chapters.  So, about half of the steps from the Bazaar to Endor, plus a lot of steps in chapter 3 would have to be manipulated to skip the day/night counter advance.  Given the number of "dice rolls" that are possible on each step, the best "skip rate" I could reasonably achieve seemed to be about 75%, well above what is needed.  But with enough crazy botting, and patience, or a new technique for getting more RNG seeds "dice rolls", this might be feasible and save about 10 seconds.
+
+In Chapter 3, when I get encounters to manipulate treasure drops, I obviously walk 2 squares sometimes.  In theory it could always be 1 square.  But these are plains tiles, with a very low encounter rate, and very few dice rolls between the treasure drop and the encounter.  I always looked for the 1 square encounter, but the odds of getting a single square with less than 16 delay frames (the number of frames it takes to walk a square) were rare.
+
+When the screen changes from day to evening to night, etc, there is 1 lag frame.  In Chapter 5, several frame could theoretically be saved with insane enough step counter manipulation.  It would mean potentially days of botting sections that otherwise would take hours, if it is even possible.  As mentioned above, there is only so many skips you cna reasonably expect.
+
+!! Special Thanks
+
+The BizHawk team responsible for the 2.9 release.  Lua speed imrovements were significant.  Had I done this TAS in 2.8, probably several months worth of botting hours would have been necessary. So HUGE thanks to all the effort involved.
