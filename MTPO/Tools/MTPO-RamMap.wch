@@ -15,6 +15,7 @@ SystemID NES
 0324	b	u	0	RAM	Hearts Digit
 0342	b	u	0	RAM	Starts
 0347	b	u	0	RAM	Star Countdown
+0348	b	u	0	RAM	Uppercuts Until Opp Dodges
 0391	b	u	0	RAM	Mac Health
 0393	b	u	0	RAM	Mac Health Gradual
 0398	b	u	0	RAM	Opponent Next Health

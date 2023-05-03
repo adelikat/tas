@@ -1,3 +1,8 @@
+--TODO
+--Indicate that an opponent is TKO or KO'ed when they get knocked down, instead of showing next health
+--Where am I still has issues, bike scene is "between rounds", knocked down is knocked down for a bit but then something else
+--Opp move timer and action
+--Make damage animation last longer
 dofile('MTPO-Core.lua')
 
 function _numberToImage(twoDigitNumber, x, y, color)
@@ -9,6 +14,7 @@ function _numberToImage(twoDigitNumber, x, y, color)
 		x = x + 8
 		twoDigitNumber = math.abs(twoDigitNumber)
 	end
+
 	local first = math.floor(twoDigitNumber / 10)
 	local firstImage = string.format('./icons/%s-%s.png', color, first)
 	gui.drawImage(firstImage, x, y)	
@@ -165,10 +171,19 @@ hud = {
 	Mode = function()
 		local mode = c.Mode()
 		gui.drawText(256, 226, mode, 'white', nil, nil, nil, nil, 'right', 'bottom')
+	end,
+	UppercutsUntilDodge = function()
+		if not c.IsInFight() then
+			return
+		end
+
+		local count = c.Read(c.Addr.UppercutsUntilOppDodge)
+		gui.drawRectangle(0, 22, 7, 9, 'Black', 'Black')
+		_numberToImage(count, -6, 24)
+		gui.drawRectangle(9, 28, 62, 2, 'Black', 'Black')
+		local width = count * 2
+		gui.drawRectangle(9, 28, width, 2, 'White', 'White')
 	end
-	--TODO
-	--Uppercuts until opp dodges
-	--Opp move timer and action
 }
 
 hud.Display = function()
@@ -177,6 +192,7 @@ hud.Display = function()
 	hud.Health()
 	hud.StarCountdown()
 	hud.Mode()
+	hud.UppercutsUntilDodge()
 end
 ------------------------------------------------------------------------------------------------
 

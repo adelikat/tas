@@ -1,8 +1,3 @@
---TODOs
---Indicate that an opponent is TKO or KO'ed when they get knocked down, instead of showing next health
---Where am I still has issues, bike scene is "between rounds", knocked down is knocked down for a bit but then something else
---Make damage animation last longer
---draw image - make period and pace only take 4 chars, calculate backdrop accordingly
 local _lastOppHealth = -1
 local _currOppHealth = -1
 local _oppHp = 0x0398
@@ -104,6 +99,7 @@ c = {
 		['HeartsSingle'] = 0x0324,
 		['Stars'] = 0x0342,
 		['StarCountdown'] = 0x0347,
+		['UppercutsUntilOppDodge'] = 0x0348,
 		['MacHealth'] = 0x0391,
 		['MacHealthGraudal'] = 0x0393,
 		['MacNextHealth'] = 0x0397,
