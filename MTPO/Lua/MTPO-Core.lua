@@ -1,3 +1,8 @@
+--TODOs
+--Indicate that an opponent is TKO or KO'ed when they get knocked down, instead of showing next health
+--Where am I still has issues, bike scene is "between rounds", knocked down is knocked down for a bit but then something else
+--Make damage animation last longer
+--draw image - make period and pace only take 4 chars, calculate backdrop accordingly
 local _lastOppHealth = -1
 local _currOppHealth = -1
 local _oppHp = 0x0398
@@ -19,7 +24,7 @@ local function _trackOppHealth()
 	end
 end
 
-local c = {
+c = {
 	InitSession = function()
 		_done = false
 		_trackOppHealth()
@@ -85,7 +90,10 @@ local c = {
 		['IsInFight'] = 0x0000,
 		['OppNumber'] = 0x0001,
 		['WhoIsKnockedDown'] = 0x0005,
+		['Round'] = 0x0006,
+		['IsInFightMode'] = 0x022, -- If 1, then opponent is doing intro moves or is being knocked down
 		['OpponentTimer'] = 0x0039,
+		['GameMode'] = 0x00A9, -- Bad name, but will change if between rounds, intro screen, fight, etc
 		['WinsTensDigit'] = 0x0170,
 		['WinsDigit'] = 0x0171,
 		['LossesTensDigit'] = 0x0172,
@@ -121,7 +129,17 @@ local c = {
 		[10] = 'Don Flamenco 2',
 		[11] = 'Mr. Sandman',
 		[12] = 'Super Macho Man',
-		[13] = 'Mike Tyson'
+		[13] = 'Mike Tyson',
+		[19] = 'Demo Bald Bull',
+		[20] = 'King Hippo',
+		[21] = 'Great Tiger',
+		[22] = 'Piston Honda 2',
+		[23] = 'Soda Popinski',
+		[24] = 'Bald Bull 2',
+		[25] = 'Don Flamenco 2',
+		[26] = 'Mr. Sandman',
+		[27] = 'Super Macho Man',
+		[28] = 'Mike Tyson'
 	}
 }
 
@@ -163,127 +181,43 @@ c.IsOpponentKnockedOut = function()
 
 	return false
 end
-------------------------------------------------------------------------------------------------
--- Drawing functions
-
--- Some rings are offset by 1 pixel for some reason
-local function _isRngOffSet()
-	local opp = c.Read(c.Addr.OppNumber)
-	if opp == 2 or opp == 6 or opp == 7 or opp == 8 or opp == 9 or opp == 11 or opp == 12 or opp == 13 then
-		return true
+c.Mode = function()
+	if c.Read(0x22) == 1 then		
+		return 'Fight is starting'
 	end
-end
 
-local function _drawHealthBar(x1, y1, hp, dmg, color)
-	local opp = c.Read(c.Addr.OppNumber)
-	if _isRngOffSet() then
-		x1 = x1 + 1
-	end
-	local y2 = 22
-	gui.drawBox(x1, y1, x1 + 47, y2, 'black', 'black')
-	if hp > 0 then
-		if color == nil then
-			color = 'ForestGreen'
-			if hp < 24 then
-				color = 'pink'
-			elseif hp < 48 then
-				color = 'Gold'
-			end
-		end
-
-		local x2 = math.ceil(x1 + hp / 2) - 1
-		gui.drawBox(x1, y1, x2, y2, color, color)
-
-		if dmg > 0 then
-			gui.drawBox(x2, y1, x2 + math.ceil((dmg / 2)), y2, 'Crimson', 'Crimson')
-			gui.drawBox(x1 + 16, y1 - 12, x1 + 40 , y1 - 1, 'black', 'black')
-			gui.drawText(x1 + 16, y1 - 14, '-' .. dmg, 'Crimson')
-		end
-		gui.drawBox(x1, y1 - 12, x1 + 16, y1 - 1, 'black', 'black')
-		gui.drawText(x1 - 1, y1 - 14, hp, color)
-	end
-end
-hud = {
-	Opp = function()
-		if not c.IsInFight() then
-			return
-		end
-
-		local txt = c.CurrentOpponent()
-		local w = string.len(txt) * 8
-		gui.drawRectangle(256 - w, 0, w, 9, 'Black', 'Black')
-		 gui.drawText(256, -3, txt, 'white', nil, nil, nil, nil, 'right')
-	end,
-	Health = function()
-		if not c.IsInFight() then
-			return
-		end
-
-		local hp, dmg, color
+	if c.IsInFight() then
 		if c.IsOppKnockedDown() then
-			if c.IsOpponentKnockedOut() then
-				hp = 0
-			else
-				hp = c.Read(c.Addr.OppNextHealth)
-			end			
-			dmg = 0
-			color = 'darkgray'
-		elseif c.IsOppBeingHit() then
-			hp = c.Read(c.Addr.OppHp)
-			dmg = c.LastDamage()
-			color = nil
-		else
-			hp = c.Read(c.Addr.OppHp)
-			dmg = c.Read(c.Addr.OppHpGradual) - hp
-			color = nil
+			return 'Opponent knocked down'
 		end
-		
-		_drawHealthBar(144, 16, hp, dmg, color)
-		
+	
 		if c.IsMacKnockedDown() then
-			hp = c.Read(c.Addr.MacNextHealth)			
-			dmg = 0
-			color = 'darkgray'
-		else
-			hp = c.Read(c.Addr.MacHealth)
-			dmg = c.Read(c.Addr.MacHealthGraudal) - hp
-			color = nil	
+			return 'Mac is knocked down'
 		end
-
-		-- Mac
-		_drawHealthBar(88, 16, hp, dmg, color)
-	end,
-	StarCountdown = function()	
-		if not c.IsInFight() then
-			return
-		end
-			
-		totalPunchesToGetStar = c.Read(c.Addr.TotalStarCountdown)
-		if totalPunchesToGetStar <= 1 then
-			return
-		end
-		punchesLeftToGetStar = c.Read(c.Addr.StarCountdown)
-		local totalWidth = 26
-		local percent = punchesLeftToGetStar / totalPunchesToGetStar
-		local width = totalWidth * percent
-		gui.drawLine(13, totalWidth, 13 + totalWidth, 26, 'darkGray')
-		gui.drawLine(13, 26, 13 + width, 26, 'blue')
+		
+		return 'Fighting'
 	end
-}
-hud.Display = function()
-	gui.clearGraphics()
-	hud.Opp()
-	hud.Health()
-	hud.StarCountdown()
-end
-------------------------------------------------------------------------------------------------
 
-c.InitSession()
---client.unpause()
---c.Load(0)
-while not c.Processing() do
-	hud.Display()
-	emu.frameadvance();
+	local mode = c.Read(c.Addr.GameMode)
+	if mode == 0 then
+		return 'Black Screen'
+	end
+	if mode == 4 then
+		return 'Title Screen'
+	end
+	if mode == 5 then		
+		return 'Between rounds'
+	end
+	if mode == 6 then
+		return 'Between rounds'
+	end
+	if mode == 7 then
+		return 'Round Number screen'
+	end
+	if mode == 8 then
+		return 'Mike Tyson Intro'
+	end
+	return tostring(mode)
 end
 
-c.Finish()
+
