@@ -1,9 +1,11 @@
 SystemID NES
 0000	b	u	0	RAM	Is in Fight
-0022	b	u	0	RAM	Is In Fight Mode
 0001	b	u	0	RAM	Opponent Number
 0005	b	u	0	RAM	Who Is Knocked Down
+0022	b	u	0	RAM	Is In Fight Mode
 0039	b	u	0	RAM	Opponent Timer
+003A	b	h	0	RAM	Opp Next Move ??
+0090	b	u	0	RAM	OppCurrentMove
 00A9	b	u	0	RAM	Game Mode
 0170	b	u	0	RAM	Wins Tens Digit
 0171	b	u	0	RAM	Wins Digit

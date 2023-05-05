@@ -1,8 +1,6 @@
 --TODO
---Indicate that an opponent is TKO or KO'ed when they get knocked down, instead of showing next health
---Where am I still has issues, bike scene is "between rounds", knocked down is knocked down for a bit but then something else
---Opp move timer and action
---Make damage animation last longer
+--Indicate that an opponent is KO'ed when they get knocked down, instead of showing next health
+--"Where am I" still has issues, bike scene is "between rounds", knocked down is knocked down for a bit but then something else
 dofile('MTPO-Core.lua')
 
 function _numberToImage(twoDigitNumber, x, y, color)
@@ -50,6 +48,9 @@ function _textToImage(str, x, y)
 		if c == '.' then
 			gui.drawImage('./icons/white-period.png', x, y)
 			x = x + 4
+		elseif c == '-' then
+			gui.drawImage('./icons/white-dash.png', x, y)
+			x = x + 8
 		elseif c == ' ' then
 			x = x + 4
 		else
@@ -110,7 +111,7 @@ hud = {
 
 		local txt = c.CurrentOpponent()
 		local backdropWidth = _strWidth(txt) + 2
-		gui.drawRectangle(0, 0, backdropWidth, 8, 'Black', 'Black')
+		gui.drawRectangle(0, 0, backdropWidth, 9, 'Black', 'Black')
 		_textToImage(txt, 0, 0)
 	end,
 	Health = function()
@@ -183,16 +184,51 @@ hud = {
 		gui.drawRectangle(9, 28, 62, 2, 'Black', 'Black')
 		local width = count * 2
 		gui.drawRectangle(9, 28, width, 2, 'White', 'White')
+	end,
+	Phase = function()
+		if not c.IsInFight() then
+			return
+		end
+
+		gui.drawRectangle(201, 0, 54, 9, 'Black', 'Black')
+		local phase = c.Read(c.Addr.KnockdownsRound)
+		local text	
+		if phase == 3 then
+			text = 'TKO'
+		else
+			text = string.format('Phase %s', phase + 1)
+		end
+		_textToImage(text, 202, 1)
+	end,
+	OppMoves = function()
+		if not c.IsInFight() then
+			return
+		end
+
+		if c.Read(0x22) == 1 then
+			return
+		end
+
+		_textToImage(c.GetMove(), 168, 98)		
+		--_textToImage('Current', 168, 90)
+		timer = c.Read(c.Addr.OpponentTimer)
+		gui.drawRectangle(168, 108, timer, 4, 'gray', 'White')
+	end,
+	TrackValues = function()
+
 	end
 }
 
 hud.Display = function()
-	gui.clearGraphics()
+	c.TrackHealth()
+	gui.clearGraphics()	
 	hud.Opp()
 	hud.Health()
 	hud.StarCountdown()
 	hud.Mode()
 	hud.UppercutsUntilDodge()
+	hud.Phase()
+	hud.OppMoves()
 end
 ------------------------------------------------------------------------------------------------
 

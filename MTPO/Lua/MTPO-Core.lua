@@ -3,26 +3,24 @@ local _currOppHealth = -1
 local _oppHp = 0x0398
 local _done = false
 local function _isDebug()
-	return client.getconfig().SpeedPercent < 800
 end
-local function _trackOppHealth()
-	local newHealth = memory.readbyte(_oppHp) 
-	if _lastOppHealth < 0 then
-		_lastOppHealth = newHealth
-	end
-	if _currOppHealth < 0 then
-		_currOppHealth = newHealth
-	end
-	if newHealth ~= _currOppHealth then
-		_lastOppHealth = _currOppHealth
-		_currOppHealth = newHealth
-	end
-end
-
 c = {
+	TrackHealth = function()
+		local newHealth = memory.readbyte(_oppHp) 
+		if _lastOppHealth < 0 then
+			_lastOppHealth = newHealth
+		end
+		if _currOppHealth < 0 then
+			_currOppHealth = newHealth
+		end
+		if newHealth ~= _currOppHealth then
+			_lastOppHealth = _currOppHealth
+			_currOppHealth = newHealth
+		end
+	end,
 	InitSession = function()
 		_done = false
-		_trackOppHealth()
+		TrackHealth()
 	end,
 	Done = function()
 		_done = true
@@ -88,6 +86,8 @@ c = {
 		['Round'] = 0x0006,
 		['IsInFightMode'] = 0x022, -- If 1, then opponent is doing intro moves or is being knocked down
 		['OpponentTimer'] = 0x0039,
+		['OpponentNextMove'] = 0x003A, -- Don't understand this one yet
+		['OpponentCurrentMove'] = 0x0090,
 		['GameMode'] = 0x00A9, -- Bad name, but will change if between rounds, intro screen, fight, etc
 		['WinsTensDigit'] = 0x0170,
 		['WinsDigit'] = 0x0171,
@@ -143,8 +143,22 @@ c.Processing = function()
 	_trackOppHealth()	
 	return _done
 end
+
+local __hitValues = {
+	[02] = 02,
+	[13] = 13,
+	[14] = 14,
+	[15] = 15,
+	[16] = 16,
+	[17] = 17,
+	[18] = 18,
+	[19] = 19,
+	[20] = 20,
+}
+
 c.IsOppBeingHit = function()
-	return c.Read(c.Addr.IsOppBeingHit) > 0 or c.Read(c.Addr.OppHpGradual) > c.Read(c.Addr.OppHp)
+	local currMoveNum = c.Read(c.Addr.OpponentCurrentMove)
+	return __hitValues[currMoveNum] ~= nil
 end
 c.IsOppKnockedDown = function()
 	return c.Read(c.Addr.WhoIsKnockedDown) == 1
@@ -179,6 +193,10 @@ c.IsOpponentKnockedOut = function()
 end
 c.Mode = function()
 	if c.Read(0x22) == 1 then		
+		if c.Read(c.Addr.KnockdownsRound) == 3 then
+			return 'TKO'
+		end
+
 		return 'Fight is starting'
 	end
 
@@ -216,4 +234,174 @@ c.Mode = function()
 	return tostring(mode)
 end
 
+c.Moves = {
+	-- Generic
+	[0xFF] = {
+		[01] = 'Waiting',
+		[02] = 'Hit Uppercut',
+		[03] = 'Dodge Upper',
+		[04] = 'Ducking',
+		[05] = 'Block R. Face',
+		[06] = 'Block L. Face',
+		[07] = 'Block R. Gut',
+		[08] = 'Block L. Gut',
+		[13] = 'Hit R. Face',
+		[14] = 'Hit L. Face',
+		[15] = 'Hit R. Gut',
+		[16] = 'Hit L. Gut',
+		[17] = 'Stun R. Face',
+		[18] = 'Stun L. Face',
+		[19] = 'Stun R. Gut',
+		[20] = 'Stun L. Gut',
+		[21] = 'R. Hook',
+		[22] = 'L. Jab',
+		[23] = 'R. Uppercut',		
+		[24] = 'L. Uppercut',
+		[25] = 'Special 1',
+		[26] = 'Special 2',
+		[27] = 'Special 3',
+		[64] = 'Walk To Mac',
+	},
+	[00] = {
+		[25] = 'Taunt'
+	},
+	[02] = {
+		[24] = 'R. Bonzai',
+		[25] = 'Bonzai Attack',
+		[26] = 'L. Bonzai',
+	},
+	[03] = {
+		[24] = 'Taunt',
+	},
+	[04] = {
+		[23] = 'R. Open Mouth',
+		[24] = 'L. Open Mouth',
+		[26] = 'Dancing'
+	},
+	[05] = {
+		[25] = 'Tiger Punch',
+	},
+	[06] = {
+		[22] = 'Rolling Jab',
+		[25] = 'Bull Charge',
+	},
+	[07] = {
+		[24] = 'R. Bonzai',
+		[25] = 'Bonzai Attack',
+		[26] = 'L. Bonzai',
+		[28] = 'Eye Roll',
+		[29] = 'Jiving Upper',
+	},
+	[08] = { -- Soda Popinski
+		[22] = 'R. Jab',
+		[26] = 'Dancing',
+		[65] = 'Walking To Mac',
+	},
+	[09] = {
+		[22] = 'Rolling Jab',
+		[25] = 'Eye Rub',
+		[26] = 'Bull Charge'
+	},
+	[10] = {
+		[24] = 'Taunt',
+	},
+	[11] = { -- Mr. Sandman
+		[03] = 'Dodge L.',
+		[04] = 'Dodge R.',
+		[24] = 'R. Jab',
+		[26] = 'Dreamland E',
+		[27] = 'Dreamland E',
+		[28] = 'L. Hook-Jab',
+		[29] = 'Dreamland E',
+		[31] = 'Dreamland E',
+	},
+	[12] = {
+		[25] = 'Reg. Spin',
+		[26] = 'Super Spin',
+		[27] = 'Jiving Upper',
+	},
+	[13] = { -- Tyson
+		[24] = 'R. Hook',
+		[25] = 'Eye Blink',
+		[26] = 'L. Hook',
+		[28] = 'L. Hook',
+		[29] = 'L. Uppercut',
+		[65] = 'Walking To Mac',
+	},
+	[19] = {
+		[22] = 'Rolling Jab',
+		[25] = 'Bull Charge',
+	},	
+	[20] = {
+		[23] = 'R. Open Mouth',
+		[24] = 'L. Open Mouth',
+		[26] = 'Dancing',
+	},
+	[21] = {
+		[25] = 'Tiger Punch',
+	},
+	[22] = {
+		[24] = 'R. Bonzai',
+		[25] = 'Bonzai Attack',
+		[26] = 'L. Bonzai',
+		[28] = 'Eye Roll',
+		[29] = 'Jiving Upper',
+	},
+	[23] = { -- Soda Popinski
+		[22] = 'R. Jab',
+		[26] = 'Dancing',
+		[65] = 'Walking To Mac',
+	},
+	[24] = {
+		[22] = 'Rolling Jab',
+		[25] = 'Eye Rub',
+		[26] = 'Bull Charge'
+	},
+	[25] = {
+		[24] = 'Taunt'
+	},
+	[26] = { -- Mr. Sandman
+		[03] = 'Dodge L.',
+		[04] = 'Dodge R.',
+		[24] = 'R. Jab',
+		[26] = 'Dreamland E',
+		[27] = 'Dreamland E',
+		[28] = 'L. Hook-Jab',
+		[29] = 'Dreamland E',
+		[31] = 'Dreamland E',
+	},
+	[28] = { -- Tyson
+		[24] = 'R. Hook',
+		[25] = 'Eye Blink',
+		[26] = 'L. Hook',
+		[28] = 'L. Hook',
+		[29] = 'L. Uppercut',
+		[65] = 'Walking To Mac',
+	},	
+}
+
+c.GetMove = function()
+	local oppMoveStr = nil
+
+	local currOpp = c.Read(c.Addr.OppNumber)
+	local currMoveNum = c.Read(c.Addr.OpponentCurrentMove)
+
+	-- Look for the opp table move
+	local oppTable = c.Moves[currOpp]
+	if oppTable ~= nil then
+		oppMoveStr = oppTable[currMoveNum]
+	end
+
+	-- Fall back to generic
+	if oppMoveStr == nil then
+		oppMoveStr = c.Moves[0xFF][currMoveNum]
+	end
+	
+	if oppMoveStr ~= nil then
+		return oppMoveStr
+	end
+
+	-- Last resort, just return number
+	return tostring(currMoveNum)
+end
 
