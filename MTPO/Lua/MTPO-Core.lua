@@ -1,3 +1,7 @@
+-- TODO
+-- Scrambler ram address
+-- guard stuff
+-- mapping opponent ai script
 local _lastOppHealth = -1
 local _currOppHealth = -1
 local _oppHp = 0x0398
@@ -84,6 +88,7 @@ c = {
 		['OppNumber'] = 0x0001,
 		['WhoIsKnockedDown'] = 0x0005,
 		['Round'] = 0x0006,
+		['RNG'] = 0x0018,
 		['IsInFightMode'] = 0x022, -- If 1, then opponent is doing intro moves or is being knocked down
 		['OpponentTimer'] = 0x0039,
 		['OpponentNextMove'] = 0x003A, -- Don't understand this one yet
@@ -193,8 +198,11 @@ c.IsOpponentKnockedOut = function()
 end
 c.Mode = function()
 	if c.Read(0x22) == 1 then		
-		if c.Read(c.Addr.KnockdownsRound) == 3 then
+		local kosThisRound = c.Read(c.Addr.KnockdownsRound)
+		if kosThisRound == 3 then
 			return 'TKO'
+		elseif kosThisRound > 0 then
+			return 'Opponent knocked down'
 		end
 
 		return 'Fight is starting'
@@ -384,7 +392,8 @@ c.GetMove = function()
 	local oppMoveStr = nil
 
 	local currOpp = c.Read(c.Addr.OppNumber)
-	local currMoveNum = c.Read(c.Addr.OpponentCurrentMove)
+	--last bit indicates something else, seems to be indicating the opponent got hit?
+	local currMoveNum = c.Read(c.Addr.OpponentCurrentMove) & 0x7F
 
 	-- Look for the opp table move
 	local oppTable = c.Moves[currOpp]

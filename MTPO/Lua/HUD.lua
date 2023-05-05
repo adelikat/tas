@@ -1,6 +1,7 @@
 --TODO
 --Indicate that an opponent is KO'ed when they get knocked down, instead of showing next health
 --"Where am I" still has issues, bike scene is "between rounds", knocked down is knocked down for a bit but then something else
+--Guard values
 dofile('MTPO-Core.lua')
 
 function _numberToImage(twoDigitNumber, x, y, color)
