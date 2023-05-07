@@ -2,6 +2,7 @@
 --Indicate that an opponent is KO'ed when they get knocked down, instead of showing next health
 --"Where am I" still has issues, bike scene is "between rounds", knocked down is knocked down for a bit but then something else
 --Guard values
+-- show rng and scrambler?
 dofile('MTPO-Core.lua')
 
 function _numberToImage(twoDigitNumber, x, y, color)
@@ -194,7 +195,9 @@ hud = {
 		gui.drawRectangle(201, 0, 54, 9, 'Black', 'Black')
 		local phase = c.Read(c.Addr.KnockdownsRound)
 		local text	
-		if phase == 3 then
+		if c.IsOppKnockedDown() and c.OpponentWillGetUpOnCount() == 0 then
+			text = 'KO'		
+		elseif phase == 3 then
 			text = 'TKO'
 		else
 			text = string.format('Phase %s', phase + 1)
@@ -211,12 +214,14 @@ hud = {
 		end
 
 		_textToImage(c.GetMove(), 168, 98)		
-		--_textToImage('Current', 168, 90)
 		timer = c.Read(c.Addr.OpponentTimer)
 		gui.drawRectangle(168, 108, timer, 4, 'gray', 'White')
 	end,
-	TrackValues = function()
-
+	OppCount = function()
+		local oppCount = c.OpponentWillGetUpOnCount()
+		if oppCount > 0 then
+			_textToImage(oppCount .. ' count ', 162, 118)
+		end
 	end
 }
 
@@ -230,6 +235,7 @@ hud.Display = function()
 	hud.UppercutsUntilDodge()
 	hud.Phase()
 	hud.OppMoves()
+	hud.OppCount()
 end
 ------------------------------------------------------------------------------------------------
 

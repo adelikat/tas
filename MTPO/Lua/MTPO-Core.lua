@@ -86,14 +86,17 @@ c = {
 	Addr = {
 		['IsInFight'] = 0x0000,
 		['OppNumber'] = 0x0001,
+		['ModeStuff'] = 0x0004,
 		['WhoIsKnockedDown'] = 0x0005,
 		['Round'] = 0x0006,
 		['RNG'] = 0x0018,
+		['Scrambler'] = 0x0019,
 		['IsInFightMode'] = 0x022, -- If 1, then opponent is doing intro moves or is being knocked down
 		['OpponentTimer'] = 0x0039,
 		['OpponentNextMove'] = 0x003A, -- Don't understand this one yet
 		['OpponentCurrentMove'] = 0x0090,
 		['GameMode'] = 0x00A9, -- Bad name, but will change if between rounds, intro screen, fight, etc
+		['OppGetUpOnCount'] = 0x00C4, -- The number the opponent will get up on, 0 = KO'ed, 154 = 1, 155 = 2, etc
 		['WinsTensDigit'] = 0x0170,
 		['WinsDigit'] = 0x0171,
 		['LossesTensDigit'] = 0x0172,
@@ -189,15 +192,49 @@ c.IsInFight = function()
 	return c.Read(c.Addr.IsInFight) == 1
 end
 c.IsOpponentKnockedOut = function()
-	-- TODO: Ko's
 	if c.Read(c.Addr.KnockdownsRound) >= 3 then
+		return true
+	end
+
+	if c.IsOppKnockedDown() and c.OpponentWillGetUpOnCount() == 0 then
 		return true
 	end
 
 	return false
 end
+c.OpponentWillGetUpOnCount = function()
+	if not c.IsOppKnockedDown() then
+		return -1
+	end
+
+	local count = c.Read(c.Addr.OppGetUpOnCount)
+	if count == 0 then
+		return 0
+	end
+
+	-- TODO: probably only certain bits are used
+	return c.Read(c.Addr.OppGetUpOnCount) - 153
+end
 c.Mode = function()
-	if c.Read(0x22) == 1 then		
+	if c.Read(0x03C9) == 16 then -- Don't understand this value yet
+		return 'Training for next circuit'
+	end
+	local isInFight = c.Read(c.Addr.IsInFight)
+	local modeStuff = c.Read(c.Addr.ModeStuff)
+	local mode = c.Read(c.Addr.GameMode)
+	if modeStuff == 0 then
+		return 'Opening Black Screen'
+	elseif modeStuff == 1 and isInFight == 0 and mode == 4 then
+		return 'Menu Screen'
+	elseif modeStuff == 2 then
+		return 'Mike Tyson Intro'
+	end
+
+	if c.Read(c.Addr.IsInFightMode) == 1 then
+		local nextCount = c.OpponentWillGetUpOnCount()
+		if nextCount == 0 then
+			return 'KOed'
+		end		
 		local kosThisRound = c.Read(c.Addr.KnockdownsRound)
 		if kosThisRound == 3 then
 			return 'TKO'
@@ -220,26 +257,20 @@ c.Mode = function()
 		return 'Fighting'
 	end
 
-	local mode = c.Read(c.Addr.GameMode)
+	
 	if mode == 0 then
-		return 'Black Screen'
+		return 'Black Screen Between Fights'
 	end
-	if mode == 4 then
-		return 'Title Screen'
+	if mode == 4 or mode == 7 then
+		return 'Post Fight Screen'
 	end
-	if mode == 5 then		
-		return 'Between rounds'
+	if mode == 5 or mode == 6 then
+		local round = c.Read(c.Addr.Round)		
+		local opp = c.CurrentOpponent()
+		return string.format('Before %s Rnd %s', opp, round)
 	end
-	if mode == 6 then
-		return 'Between rounds'
-	end
-	if mode == 7 then
-		return 'Round Number screen'
-	end
-	if mode == 8 then
-		return 'Mike Tyson Intro'
-	end
-	return tostring(mode)
+
+	return 'Unknown'
 end
 
 c.Moves = {
