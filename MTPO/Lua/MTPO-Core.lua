@@ -22,12 +22,20 @@ c = {
 			_currOppHealth = newHealth
 		end
 	end,
+	FastMode = function()
+		client.speedmode(3200)
+		client.unpause()
+		client.displaymessages(false)
+	end,
 	InitSession = function()
 		_done = false
-		TrackHealth()
+		c.TrackHealth()
 	end,
 	Done = function()
 		_done = true
+	end,
+	IsDone = function()
+		return _done
 	end,
 	Finish = function()
 		console.log('---------------')
@@ -119,32 +127,50 @@ c = {
 		['IsOppBeingHit'] = 0x03E0,
 		['TotalStarCountdown'] = 0x05B0,		
 	},
-	Opponents = {
-		[0] = 'Glass Joe',
-		[1] = 'Von Kaiser',
-		[2] = 'Piston Honda 1',
-		[3] = 'Don Flamenco 1',
-		[4] = 'King Hippo',
-		[5] = 'Great Tiger',
-		[6] = 'Bald Bull 1',
-		[7] = 'Piston Honda 2',
-		[8] = 'Soda Popinski',
-		[9] = 'Bald Bull 2',
-		[10] = 'Don Flamenco 2',
-		[11] = 'Mr. Sandman',
-		[12] = 'Super Macho Man',
-		[13] = 'Mike Tyson',
-		[19] = 'Demo Bald Bull',
-		[20] = 'King Hippo',
-		[21] = 'Great Tiger',
-		[22] = 'Piston Honda 2',
-		[23] = 'Soda Popinski',
-		[24] = 'Bald Bull 2',
-		[25] = 'Don Flamenco 2',
-		[26] = 'Mr. Sandman',
-		[27] = 'Super Macho Man',
-		[28] = 'Mike Tyson'
-	}
+	OpponentNames = {
+		['GlassJoe'] = 'Glass Joe',
+		['VonKaiser'] = 'Von Kaiser',
+		['PistonHonda1'] = 'Piston Honda 1',
+		['DonFlamenco1'] = 'Don Flamenco 1',
+		['KingHippo'] = 'King Hippo',
+		['GreatTiger'] = 'Great Tiger',
+		['BaldBull1'] = 'Bald Bull 1',
+		['PistonHonda2'] = 'Piston Honda 2',
+		['SodaPopinski'] = 'Soda Popinski',
+		['BaldBull2'] = 'Bald Bull 2',
+		['DonFlamenco2'] = 'Don Flamenco 2',
+		['MrSandman'] = 'Mr. Sandman',
+		['SuperMachoMan'] = 'Super Macho Man',
+		['Mike Tyson'] = 'Mike Tyson',
+		['Demo'] = 'Demo Bald Bull',
+	},
+}
+
+c.Opponents = {
+	[0] = c.OpponentNames.GlassJoe,
+	[1] = c.OpponentNames.VonKaiser,
+	[2] = c.OpponentNames.PistonHonda1,
+	[3] = c.OpponentNames.DonFlamenco1,
+	[4] = c.OpponentNames.KingHippo,
+	[5] = c.OpponentNames.GreatTiger,
+	[6] = c.OpponentNames.BaldBull1,
+	[7] = c.OpponentNames.PistonHonda2,
+	[8] = c.OpponentNames.SodaPopinski,
+	[9] = c.OpponentNames.BaldBull2,
+	[10] = c.OpponentNames.DonFlamenco2,
+	[11] = c.OpponentNames.MrSandman,
+	[12] = c.OpponentNames.SuperMachoMan,
+	[13] = c.OpponentNames.MikeTyson,
+	[19] = c.OpponentNames.Demo,
+	[20] = c.OpponentNames.KingHippo,
+	[21] = c.OpponentNames.GreatTiger,
+	[22] = c.OpponentNames.PistonHonda2,
+	[23] = c.OpponentNames.SodaPopinski,
+	[24] = c.OpponentNames.BaldBull2,
+	[25] = c.OpponentNames.DonFlamenco2,
+	[26] = c.OpponentNames.MrSandman,
+	[27] = c.OpponentNames.SuperMachoMan,
+	[28] = c.OpponentNames.MikeTyson
 }
 
 c.Processing = function()
@@ -188,6 +214,9 @@ c.CurrentOpponent = function()
 
 	return 'Unknown'
 end
+c.CurrentRound = function()
+	return c.Read(c.Addr.Round)
+end
 c.IsInFight = function()
 	return c.Read(c.Addr.IsInFight) == 1
 end
@@ -215,17 +244,27 @@ c.OpponentWillGetUpOnCount = function()
 	-- TODO: probably only certain bits are used
 	return c.Read(c.Addr.OppGetUpOnCount) - 153
 end
+
+c.Modes = {
+	['OpeningBlackScreen'] = 'Opening Black Screen',
+	['MenuScreen'] = 'Menu Screen',
+	['PreRound'] = 'Before Round',
+	['FightIsStarting'] = 'Fight is starting',
+	['Fighting'] = 'Fighting',
+}
+
 c.Mode = function()
-	if c.Read(0x03C9) == 16 then -- Don't understand this value yet
-		return 'Training for next circuit'
+	-- Hack, first frame, nothing is set yet
+	if emu.framecount() < 10 then
+		return c.Modes.OpeningBlackScreen
 	end
 	local isInFight = c.Read(c.Addr.IsInFight)
 	local modeStuff = c.Read(c.Addr.ModeStuff)
 	local mode = c.Read(c.Addr.GameMode)
 	if modeStuff == 0 then
-		return 'Opening Black Screen'
+		return c.Modes.OpeningBlackScreen
 	elseif modeStuff == 1 and isInFight == 0 and mode == 4 then
-		return 'Menu Screen'
+		return c.Modes.MenuScreen
 	elseif modeStuff == 2 then
 		return 'Mike Tyson Intro'
 	end
@@ -233,16 +272,16 @@ c.Mode = function()
 	if c.Read(c.Addr.IsInFightMode) == 1 then
 		local nextCount = c.OpponentWillGetUpOnCount()
 		if nextCount == 0 then
-			return 'KOed'
-		end		
-		local kosThisRound = c.Read(c.Addr.KnockdownsRound)
-		if kosThisRound == 3 then
-			return 'TKO'
-		elseif kosThisRound > 0 then
+			local kosThisRound = c.Read(c.Addr.KnockdownsRound)
+			if kosThisRound == 3 then
+				return 'TKO'
+			end
+			return 'KOed'	
+		elseif c.IsOppKnockedDown() then
 			return 'Opponent knocked down'
 		end
 
-		return 'Fight is starting'
+		return c.Modes.FightIsStarting
 	end
 
 	if c.IsInFight() then
@@ -254,7 +293,7 @@ c.Mode = function()
 			return 'Mac is knocked down'
 		end
 		
-		return 'Fighting'
+		return c.Modes.Fighting
 	end
 
 	
@@ -264,11 +303,16 @@ c.Mode = function()
 	if mode == 4 or mode == 7 then
 		return 'Post Fight Screen'
 	end
-	if mode == 5 or mode == 6 then
-		local round = c.Read(c.Addr.Round)		
-		local opp = c.CurrentOpponent()
-		return string.format('Before %s Rnd %s', opp, round)
+	if mode == 1 and c.Read(0x03C9) == 16 then
+		return 'Newspaper'
 	end
+	if mode == 5 or mode == 6 or mode == 8 then
+		if c.Read(0x03C9) == 16 then -- Don't understand this value yet
+			return 'Training for next circuit'
+		end
+
+		return c.Modes.PreRound
+	end	
 
 	return 'Unknown'
 end
@@ -444,4 +488,152 @@ c.GetMove = function()
 	-- Last resort, just return number
 	return tostring(currMoveNum)
 end
+
+---------------------------------------
+-- TAS functions
+---------------------------------------
+local function _doFrame(keys)
+	if (keys ~= nil) then
+		joypad.set(keys)
+	end
+
+	emu.frameadvance()
+end
+
+local function _push(name)
+	key1 = {}	
+	key1['P1 Up'] = false
+	key1['P1 Down'] = false
+	key1['P1 Left'] = false
+	key1['P1 Right'] = false
+	key1['P1 B'] = false
+	key1['P1 A'] = false
+	key1['P1 Select'] = false
+	key1['P1 Start'] = false
+	key1[name] = true
+  	return key1
+end
+
+local function _rndBool()
+	x = math.random(0, 1)
+	if (x == 1) then
+		return true
+	end
+
+	return false
+end
+
+local function _rndButtons()
+	key1 = {}
+	key1['P1 Up'] = _rndBool()
+	key1['P1 Down'] = _rndBool()
+	key1['P1 Left'] = _rndBool()
+	key1['P1 Right'] = _rndBool()
+	key1['P1 B'] = _rndBool()
+	key1['P1 A'] = _rndBool()
+	key1['P1 Select'] = _rndBool()
+	key1['P1 Start'] = _rndBool()
+
+ 	return key1
+end
+
+c.WaitFor = function(frames)
+	if (frames > 0) then
+		for i = 1, frames, 1 do
+			emu.frameadvance()
+		end
+	end
+end
+
+-- Ensures you will be on the lag frame before the input frame
+c.UntilNextInputFrame = function ()
+	c.Save("CoreTemp")
+	local startFrameCount = emu.framecount()
+
+	while emu.islagged() == true do
+		c.WaitFor(1)
+	end
+
+	local endFrameCount = emu.framecount()
+	local targetFrames = endFrameCount - startFrameCount - 1
+
+	c.Load("CoreTemp")
+	if targetFrames > 0 then		
+		c.WaitFor(targetFrames)
+	end
+end
+
+--Waits frames until the given mode, assumes no input is needed
+c.UntilMode = function (mode)
+	c.Save("CoreTemp")
+	local startFrameCount = emu.framecount()
+
+	while c.Mode() ~= mode do
+		c.WaitFor(1)
+	end
+
+	local endFrameCount = emu.framecount()
+	local targetFrames = endFrameCount - startFrameCount - 1
+
+	c.Load("CoreTemp")
+	if targetFrames > 0 then		
+		c.WaitFor(targetFrames)
+	end
+end
+
+--During the 'Fight is Starting' Mode, pushes random buttons until the Fighting mode and then to the first frame that punches can be thrown
+c.RandomUntilMacCanFight = function()
+	if c.Mode() ~= c.Modes.FightIsStarting then
+		error('This function must only be called while the fight is starting!')
+	end
+
+	c.Save("CoreTemp")
+	local startFrameCount = emu.framecount()
+
+	while c.Mode() ~= c.Modes.Fighting do
+		c.WaitFor(1)
+	end
+
+	local currMove = c.Read(c.Addr.OpponentCurrentMove)
+	console.log('Opponent is walking to mac')
+	if currMove ~= 64 then
+		error('Something went wrong, opponent is not walking to mac')
+	end
+	while currMove == 64 do
+		c.WaitFor(1)
+		currMove = c.Read(c.Addr.OpponentCurrentMove)
+	end
+
+	c.WaitFor(1) -- We want to be one the exact frame that punches can be thrown
+
+
+	local endFrameCount = emu.framecount()
+	local targetFrames = endFrameCount - startFrameCount - 1
+
+	c.Load("CoreTemp")
+	if targetFrames > 0 then		
+		c.RandomFor(targetFrames)
+	end
+end
+
+
+
+c.RandomFor = function(frames)	
+	if (frames > 0) then
+		for i = 1, frames, 1 do
+			joypad.set(_rndButtons())
+			emu.frameadvance()
+		end
+	end
+end
+
+c.PushStart = function(numFrames)
+	if not numFrames then
+		numFrames = 1
+	end
+	for i = 1, numFrames do
+		_doFrame(_push('P1 Start'))
+	end
+end
+
 

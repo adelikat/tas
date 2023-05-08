@@ -194,11 +194,11 @@ hud = {
 
 		gui.drawRectangle(201, 0, 54, 9, 'Black', 'Black')
 		local phase = c.Read(c.Addr.KnockdownsRound)
-		local text	
-		if c.IsOppKnockedDown() and c.OpponentWillGetUpOnCount() == 0 then
-			text = 'KO'		
-		elseif phase == 3 then
-			text = 'TKO'
+		local text
+		if phase == 3 then
+			text = 'TKO'	
+		elseif c.IsOppKnockedDown() and c.OpponentWillGetUpOnCount() == 0 then
+			text = 'KO'
 		else
 			text = string.format('Phase %s', phase + 1)
 		end
