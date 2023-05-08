@@ -91,6 +91,14 @@ c = {
 			console.log(msg)
 		end
 	end,
+	Flip = function()
+		x = math.random(0, 1)
+		if (x == 1) then
+			return true
+		end
+	
+		return false
+	end,
 	Addr = {
 		['IsInFight'] = 0x0000,
 		['OppNumber'] = 0x0001,
@@ -102,8 +110,11 @@ c = {
 		['IsInFightMode'] = 0x022, -- If 1, then opponent is doing intro moves or is being knocked down
 		['OpponentTimer'] = 0x0039,
 		['OpponentNextMove'] = 0x003A, -- Don't understand this one yet
+		['FightEndFlag'] = 0x0044, -- Don't understand fully yet, but 26 while Mario is declaring Mac the winner
+		['MacCurrentMove'] = 0x0050,
 		['OpponentCurrentMove'] = 0x0090,
 		['GameMode'] = 0x00A9, -- Bad name, but will change if between rounds, intro screen, fight, etc
+		['OppMode'] = 0x00BB, -- 0 in fight, 1 when knocked down, 2 when trying to get up
 		['OppGetUpOnCount'] = 0x00C4, -- The number the opponent will get up on, 0 = KO'ed, 154 = 1, 155 = 2, etc
 		['WinsTensDigit'] = 0x0170,
 		['WinsDigit'] = 0x0171,
@@ -251,6 +262,7 @@ c.Modes = {
 	['PreRound'] = 'Before Round',
 	['FightIsStarting'] = 'Fight is starting',
 	['Fighting'] = 'Fighting',
+	['BlackScreenBetweenFights'] = 'Black Screen Between Fights'
 }
 
 c.Mode = function()
@@ -296,9 +308,8 @@ c.Mode = function()
 		return c.Modes.Fighting
 	end
 
-	
 	if mode == 0 then
-		return 'Black Screen Between Fights'
+		return c.Modes.BlackScreenBetweenFights
 	end
 	if mode == 4 or mode == 7 then
 		return 'Post Fight Screen'
@@ -463,6 +474,10 @@ c.Moves = {
 	},	
 }
 
+c.CurrentMacMove = function()
+	return c.Read(c.Addr.MacCurrentMove) & 0x7F
+end
+
 c.GetMove = function()
 	local oppMoveStr = nil
 
@@ -490,8 +505,38 @@ c.GetMove = function()
 end
 
 ---------------------------------------
+-- Bool Algorithms
+---------------------------------------
+c.Cap = function(func, limit)
+	local tempFile = 'Cap-'.. emu.framecount()
+	c.Save(tempFile)
+	local i
+	for i = 1, limit do
+		c.Debug('Cap Attempt: ' .. i)
+		result = func()
+		if result then
+			return true
+		else
+			c.Load(tempFile)
+		end
+	end
+	
+	c.Log('Cap limit reached')
+	return false
+end
+
+---------------------------------------
 -- TAS functions
 ---------------------------------------
+
+function _addP(str)
+	if (not bizstring.startswith(str, 'P1')) then
+		return 'P1 ' .. str
+	end
+
+	return str
+end
+
 local function _doFrame(keys)
 	if (keys ~= nil) then
 		joypad.set(keys)
@@ -500,40 +545,68 @@ local function _doFrame(keys)
 	emu.frameadvance()
 end
 
-local function _push(name)
-	key1 = {}	
-	key1['P1 Up'] = false
-	key1['P1 Down'] = false
-	key1['P1 Left'] = false
-	key1['P1 Right'] = false
-	key1['P1 B'] = false
-	key1['P1 A'] = false
-	key1['P1 Select'] = false
-	key1['P1 Start'] = false
-	key1[name] = true
-  	return key1
+local function _keys()
+	return {
+		['P1 Up'] = false,
+		['P1 Down'] = false,
+		['P1 Left'] = false,
+		['P1 Right'] = false,
+		['P1 B'] = false,
+		['P1 A'] = false,
+		['P1 Select'] = false,
+		['P1 Start'] = false,
+	}
 end
 
-local function _rndBool()
-	x = math.random(0, 1)
-	if (x == 1) then
-		return true
+local function _push(b1, b2, b3, b4, b5, b6, b7, b8)
+	if b1 == nil then
+		error('b1 cannot be nil')
+	end	
+	keys = _keys()
+
+	keys[_addP(b1)] = true
+	if b2 ~= nil then
+		keys[_addP(b2)] = true
+	end
+	if b3 ~= nil then
+		keys[_addP(b3)] = true
+	end
+	if b4 ~= nil then
+		keys[_addP(b4)] = true
+	end
+	if b5 ~= nil then
+		keys[_addP(b5)] = true
+	end
+	if b6 ~= nil then
+		keys[_addP(b6)] = true
+	end
+	if b7 ~= nil then
+		keys[_addP(b7)] = true
+	end
+	if b8 ~= nil then
+		keys[_addP(b8)] = true
 	end
 
-	return false
+  	return keys
 end
 
 local function _rndButtons()
-	key1 = {}
-	key1['P1 Up'] = _rndBool()
-	key1['P1 Down'] = _rndBool()
-	key1['P1 Left'] = _rndBool()
-	key1['P1 Right'] = _rndBool()
-	key1['P1 B'] = _rndBool()
-	key1['P1 A'] = _rndBool()
-	key1['P1 Select'] = _rndBool()
-	key1['P1 Start'] = _rndBool()
+	return {
+		['P1 Up'] = c.Flip(),
+		['P1 Down'] = c.Flip(),
+		['P1 Left'] = c.Flip(),
+		['P1 Right'] = c.Flip(),
+		['P1 B'] = c.Flip(),
+		['P1 A'] = c.Flip(),
+		['P1 Select'] =c.Flip(),
+		['P1 Start'] = c.Flip(),
+	}
+end
 
+local function _rndButtonsAtLeast(name)
+	name = _addP(name)
+	key1 = _rndButtons()
+	key1[name] = true
  	return key1
 end
 
@@ -595,7 +668,6 @@ c.RandomUntilMacCanFight = function()
 	end
 
 	local currMove = c.Read(c.Addr.OpponentCurrentMove)
-	console.log('Opponent is walking to mac')
 	if currMove ~= 64 then
 		error('Something went wrong, opponent is not walking to mac')
 	end
@@ -604,19 +676,16 @@ c.RandomUntilMacCanFight = function()
 		currMove = c.Read(c.Addr.OpponentCurrentMove)
 	end
 
-	c.WaitFor(1) -- We want to be one the exact frame that punches can be thrown
-
-
 	local endFrameCount = emu.framecount()
-	local targetFrames = endFrameCount - startFrameCount - 1
+	local targetFrames = endFrameCount - startFrameCount - 2 -- Minus 2 to ensure we can dodge on the first frame if needed
 
 	c.Load("CoreTemp")
 	if targetFrames > 0 then		
 		c.RandomFor(targetFrames)
 	end
+
+	c.WaitFor(2) -- We want to be one the exact frame that punches can be thrown
 end
-
-
 
 c.RandomFor = function(frames)	
 	if (frames > 0) then
@@ -627,13 +696,207 @@ c.RandomFor = function(frames)
 	end
 end
 
-c.PushStart = function(numFrames)
-	if not numFrames then
-		numFrames = 1
+c.PushFor = function(directionButton, frames)
+	if not frames then
+		frames = 1
 	end
-	for i = 1, numFrames do
-		_doFrame(_push('P1 Start'))
+	if (not bizstring.startswith(directionButton, 'P1')) then
+		directionButton = 'P1 ' .. directionButton
+	end
+	for i = 1, frames, 1 do
+		_doFrame(_push(_addP(directionButton)))
 	end
 end
 
+c.PushStart = function(numFrames)
+	c.PushFor('Start', numFrames)
+end
 
+c.PushB = function(numFrames)
+	c.PushFor('B', numFrames)
+end
+
+c.PushA = function(numFrames)
+	c.PushFor('A', numFrames)
+end
+
+c.PushUpAndB = function(numFrames)
+	if not frames then
+		frames = 1
+	end
+	for i = 1, frames, 1 do
+		_doFrame(_push('Up', 'B'))
+	end
+end
+
+c.PushUpAndA = function(numFrames)
+	if not frames then
+		frames = 1
+	end
+	for i = 1, frames, 1 do
+		_doFrame(_push('Up', 'A'))
+	end
+end
+
+--Does a left quick dodge in the fewest frames possible and with as many random buttons as possible
+c.QuickDodge = function()
+	c.PushFor('Left', 2)
+	if c.CurrentMacMove() ~= 5 then
+		c.Log('Mac did not start dodging')
+		return false
+	end
+
+	c.RandomFor(3)
+	c.WaitFor(2)
+	local direction = 'Up'
+	if c.Flip() then
+		direction = 'Right'
+	end
+	c.PushFor(direction, 10)
+	c.RandomFor(3)
+	c.WaitFor(2)
+
+	if c.CurrentMacMove() ~= 1 then
+		c.Log('Mac did not finish dodge')
+		return false
+	end
+
+	return true
+end
+
+--Does a left quick dodge in the fewest frames possible and with as many random buttons as possible
+c.QuickRightDodge = function()
+	c.PushFor('Right', 2)
+	if c.CurrentMacMove() ~= 3 then
+		c.Log('Mac did not start dodging')
+		return false
+	end
+
+	c.RandomFor(3)
+	c.WaitFor(2)
+	local direction = 'Up'
+	if c.Flip() then
+		direction = 'Left'
+	end
+	c.PushFor(direction, 10)
+
+	c.RandomFor(5)
+	c.WaitFor(2)
+
+	if c.CurrentMacMove() ~= 1 then
+		c.Log('Mac did not finish dodge')
+		return false
+	end
+
+	return true
+end
+
+-- Peforms a duck in the fewest frames possible with as many random buttons as possible
+c.Duck = function()
+	c.PushFor('Down', 2)
+	if c.CurrentMacMove() ~= 7 then
+		c.Log('Mac did not start blocking')
+		return false
+	end
+	c.WaitFor(3)
+	c.PushFor('Down', 2)
+	if c.CurrentMacMove() ~= 14 then
+		c.Log('Mac did not start ducking')
+		return false
+	end
+
+	c.RandomFor(23)
+	c.WaitFor(2)
+	if c.CurrentMacMove() ~= 1 then
+		c.Log('Mac did not finish dodge')
+		return false
+	end
+
+	return true
+end
+
+local function __finishFacePunch(punchType)
+	if c.CurrentMacMove() ~= punchType then
+		c.Log('Mac did not start face punch')
+		return false
+	end
+
+	local orig = c.Read(c.Addr.OppHp)
+	c.Save("CoreTemp")
+	local startFrameCount = emu.framecount()
+
+	while c.CurrentMacMove() ~= 1 and not c.IsOppKnockedDown() do
+		c.WaitFor(1)
+	end
+
+	local endFrameCount = emu.framecount()
+	local targetFrames = endFrameCount - startFrameCount - 2 -- Minus 2 to ensure we can take the next action, regardless of button state
+
+	c.Load("CoreTemp")
+	if targetFrames > 0 then		
+		c.RandomFor(targetFrames)
+	end
+	c.WaitFor(2)
+
+	local curr = c.Read(c.Addr.OppHp)
+	local loss = orig - curr
+	c.Debug(string.format('Opponent lost %s hp', loss))
+	
+	return loss > 0
+end
+
+-- Performs a left punch to the face of the opponent, pressing up minimally, and pushing as many random buttons as possible
+c.LeftFacePunch = function()
+	c.PushB()
+	c.PushUpAndB()
+	return __finishFacePunch(12)
+end
+
+c.RightFacePunch = function()
+	c.PushA()
+	c.PushUpAndA()
+	return __finishFacePunch(11)
+end
+
+-- Advanced until opponent is KOed, and ensures they do not try and fail to get up
+c.UntilKoFinishes = function()
+	if not c.IsOppKnockedDown() then
+		c.Log('Opponent must be knocked down to run this method')
+		return false
+	end
+
+	if c.Read(c.Addr.OppMode) == 0 then
+		while c.Read(c.Addr.OppMode) ~= 1 do
+			c.RandomFor(1)
+		end
+	end
+
+	while c.Read(c.Addr.FightEndFlag) ~= 26 do
+		c.RandomFor(1)
+		if c.Read(c.Addr.OppMode) == 2 then
+			c.Log('Opponent tried to get up')
+			c.Save(5)
+			return false
+		end
+	end
+
+	return true
+end
+
+c.UntilPostFightBlackScreen = function(maxFrames)
+	if maxFrames == nil then
+		maxFrames = 2000
+	end
+
+	local count = 0
+	while c.Mode() ~= c.Modes.BlackScreenBetweenFights do
+		if count == maxFrames then
+			c.Log(string.format('Unable to get to black screen in %s frames, aborting'))
+			return false
+		end
+		c.RandomFor(1)
+		count = count + 1
+	end
+
+	return true
+end

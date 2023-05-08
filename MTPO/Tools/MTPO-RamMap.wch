@@ -6,9 +6,11 @@ SystemID NES
 0006	b	u	0	RAM	Round
 000D	b	u	0	RAM	More Mode Stuff
 0018	b	u	0	RAM	RNG
+0019	b	u	0	RAM	Scrambler
 0022	b	u	0	RAM	Is In Fight Mode
 0039	b	u	0	RAM	Opponent Timer
 003A	b	h	0	RAM	Opp Next Move ??
+0050	b	u	0	RAM	Mac Curr Move
 0090	b	u	0	RAM	OppCurrentMove
 00A9	b	u	0	RAM	Game Mode
 00C4	b	u	0	RAM	Count that Opp will get up on
