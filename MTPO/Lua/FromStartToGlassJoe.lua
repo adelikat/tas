@@ -4,7 +4,6 @@ dofile('MTPO-Core.lua')
 
 c.InitSession()
 
-
 c.FastMode()
 if c.Mode() ~= c.Modes.OpeningBlackScreen and emu.framecount() < 10 then
     error('This script must be run during the opening black screen')

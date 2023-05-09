@@ -4,7 +4,10 @@
 --Guard values
 -- show rng and scrambler?
 dofile('MTPO-Core.lua')
-event.onexit(gui.clearGraphics)
+function __clear()
+	gui.clearGraphics()
+end
+event.onexit(__clear)
 
 function _numberToImage(twoDigitNumber, x, y, color)
 	if color == nil then

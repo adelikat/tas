@@ -107,6 +107,8 @@ c = {
 		['Round'] = 0x0006,
 		['RNG'] = 0x0018,
 		['Scrambler'] = 0x0019,
+		['GlobalTimer'] = 0x001E,
+		['Timer1'] = 0x001F,
 		['IsInFightMode'] = 0x022, -- If 1, then opponent is doing intro moves or is being knocked down
 		['OpponentTimer'] = 0x0039,
 		['OpponentNextMove'] = 0x003A, -- Don't understand this one yet
@@ -262,7 +264,8 @@ c.Modes = {
 	['PreRound'] = 'Before Round',
 	['FightIsStarting'] = 'Fight is starting',
 	['Fighting'] = 'Fighting',
-	['BlackScreenBetweenFights'] = 'Black Screen Between Fights'
+	['BlackScreenBetweenFights'] = 'Black Screen Between Fights',
+	['PostFightScreen'] = 'Post Fight Screen',
 }
 
 c.Mode = function()
@@ -312,7 +315,7 @@ c.Mode = function()
 		return c.Modes.BlackScreenBetweenFights
 	end
 	if mode == 4 or mode == 7 then
-		return 'Post Fight Screen'
+		return c.Modes.PostFightScreen
 	end
 	if mode == 1 and c.Read(0x03C9) == 16 then
 		return 'Newspaper'
