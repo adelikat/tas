@@ -18,6 +18,16 @@ end
 
 c.FastMode()
 
+local function _hitAfterTaunt()
+    if not c.QuickRightDodge() then return false end
+    if not c.QuickRightDodge() then return false end
+    if not c.Duck() then return false end
+    if not c.QuickRightDodge() then return false end
+    c.WaitFor(3)
+    if not c.RightFacePunch() then return false end
+    return true
+end
+
 local function _do()
     c.RandomUntilMacCanFight()
     for i = 1, 18 do
@@ -32,13 +42,7 @@ local function _do()
         return false
     end
 
-    if not c.QuickRightDodge() then return false end
-    if not c.QuickRightDodge() then return false end
-    if not c.Duck() then return false end
-    if not c.QuickRightDodge() then return false end
-    c.WaitFor(3)
-    if not c.RightFacePunch() then return false end
-
+    if not c.Cap(_hitAfterTaunt, 100) then return false end
     if not c.Cap(c.UntilKoFinishes, 100) then return false end
     if not c.UntilPostFightBlackScreen() then return false end
     return true

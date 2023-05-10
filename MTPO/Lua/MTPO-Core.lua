@@ -542,14 +542,18 @@ end
 
 local function _doFrame(keys)
 	if (keys ~= nil) then
+		if (type(keys.ToTable) == 'function') then
+			keys = keys.ToTable()
+		end
+		
 		joypad.set(keys)
 	end
 
 	emu.frameadvance()
 end
 
-local function _keys()
-	return {
+local function _buttons()
+	local btns = {
 		['P1 Up'] = false,
 		['P1 Down'] = false,
 		['P1 Left'] = false,
@@ -557,66 +561,124 @@ local function _keys()
 		['P1 B'] = false,
 		['P1 A'] = false,
 		['P1 Select'] = false,
-		['P1 Start'] = false,
+		['P1 Start'] = false
 	}
-end
+	btns.AtRandom = function()
+		btns['P1 Up'] = c.Flip()
+		btns['P1 Down'] = c.Flip()
+		btns['P1 Left'] = c.Flip()
+		btns['P1 Right'] = c.Flip()
+		btns['P1 B'] = c.Flip()
+		btns['P1 A'] = c.Flip()
+		btns['P1 Select'] = c.Flip()
+		btns['P1 Start'] = c.Flip()
+		return btns
+	end
+	btns.With = function(b1, b2, b3, b4, b5, b6, b7, b8)
+		if b1 == nil then
+			error('b1 cannot be nil')
+		end
 
-local function _push(b1, b2, b3, b4, b5, b6, b7, b8)
-	if b1 == nil then
-		error('b1 cannot be nil')
-	end	
-	keys = _keys()
+		btns[_addP(b1)] = true
+		if b2 ~= nil then
+			btns[_addP(b2)] = true
+		end
+		if b3 ~= nil then
+			btns[_addP(b3)] = true
+		end
+		if b4 ~= nil then
+			btns[_addP(b4)] = true
+		end
+		if b5 ~= nil then
+			btns[_addP(b5)] = true
+		end
+		if b6 ~= nil then
+			btns[_addP(b6)] = true
+		end
+		if b7 ~= nil then
+			btns[_addP(b7)] = true
+		end
+		if b8 ~= nil then
+			btns[_addP(b8)] = true
+		end
 
-	keys[_addP(b1)] = true
-	if b2 ~= nil then
-		keys[_addP(b2)] = true
+		return btns
 	end
-	if b3 ~= nil then
-		keys[_addP(b3)] = true
+	btns.Without = function(b1, b2, b3, b4, b5, b6, b7, b8)
+		if b1 == nil then
+			error('b1 cannot be nil')
+		end
+
+		btns[_addP(b1)] = false
+		if b2 ~= nil then
+			btns[_addP(b2)] = false
+		end
+		if b3 ~= nil then
+			btns[_addP(b3)] = false
+		end
+		if b4 ~= nil then
+			btns[_addP(b4)] = false
+		end
+		if b5 ~= nil then
+			btns[_addP(b5)] = false
+		end
+		if b6 ~= nil then
+			btns[_addP(b6)] = false
+		end
+		if b7 ~= nil then
+			btns[_addP(b7)] = false
+		end
+		if b8 ~= nil then
+			btns[_addP(b8)] = false
+		end
+
+		return btns
 	end
-	if b4 ~= nil then
-		keys[_addP(b4)] = true
-	end
-	if b5 ~= nil then
-		keys[_addP(b5)] = true
-	end
-	if b6 ~= nil then
-		keys[_addP(b6)] = true
-	end
-	if b7 ~= nil then
-		keys[_addP(b7)] = true
-	end
-	if b8 ~= nil then
-		keys[_addP(b8)] = true
+	btns.ToTable = function()
+		return {
+			['P1 Up'] = btns['P1 Up'],
+			['P1 Down'] = btns['P1 Down'],
+			['P1 Left'] = btns['P1 Left'],
+			['P1 Right'] = btns['P1 Right'],
+			['P1 B'] = btns['P1 B'],
+			['P1 A'] = btns['P1 A'],
+			['P1 Select'] = btns['P1 Select'],
+			['P1 Start'] = btns['P1 Start']
+		}
 	end
 
-  	return keys
-end
-
-local function _rndButtons()
-	return {
-		['P1 Up'] = c.Flip(),
-		['P1 Down'] = c.Flip(),
-		['P1 Left'] = c.Flip(),
-		['P1 Right'] = c.Flip(),
-		['P1 B'] = c.Flip(),
-		['P1 A'] = c.Flip(),
-		['P1 Select'] =c.Flip(),
-		['P1 Start'] = c.Flip(),
-	}
-end
-
-local function _rndButtonsAtLeast(name)
-	name = _addP(name)
-	key1 = _rndButtons()
-	key1[name] = true
- 	return key1
+	return btns
 end
 
 c.WaitFor = function(frames)
 	if (frames > 0) then
 		for i = 1, frames, 1 do
 			emu.frameadvance()
+		end
+	end
+end
+
+c.RandomFor = function(frames)
+	if (frames > 0) then
+		for i = 1, frames, 1 do
+			local btns = _buttons()
+				.AtRandom()
+				.ToTable()
+			_doFrame(btns)
+		end
+	end
+end
+
+-- TODO: make this more fluent isntead of a separate method
+c.RandomForNoUD = function(frames)
+	if (frames > 0) then
+		for i = 1, frames, 1 do
+
+			local btns = _buttons()
+				.AtRandom()
+				.Without('Up')
+				.Without('Down')
+			_doFrame(btns)
 		end
 	end
 end
@@ -690,24 +752,12 @@ c.RandomUntilMacCanFight = function()
 	c.WaitFor(2) -- We want to be one the exact frame that punches can be thrown
 end
 
-c.RandomFor = function(frames)	
-	if (frames > 0) then
-		for i = 1, frames, 1 do
-			joypad.set(_rndButtons())
-			emu.frameadvance()
-		end
-	end
-end
-
 c.PushFor = function(directionButton, frames)
 	if not frames then
 		frames = 1
 	end
-	if (not bizstring.startswith(directionButton, 'P1')) then
-		directionButton = 'P1 ' .. directionButton
-	end
 	for i = 1, frames, 1 do
-		_doFrame(_push(_addP(directionButton)))
+		_doFrame(_buttons().With(directionButton))
 	end
 end
 
@@ -728,7 +778,7 @@ c.PushUpAndB = function(numFrames)
 		frames = 1
 	end
 	for i = 1, frames, 1 do
-		_doFrame(_push('Up', 'B'))
+		_doFrame(_buttons().With('Up', 'B'))
 	end
 end
 
@@ -737,7 +787,7 @@ c.PushUpAndA = function(numFrames)
 		frames = 1
 	end
 	for i = 1, frames, 1 do
-		_doFrame(_push('Up', 'A'))
+		_doFrame(_buttons().With('Up', 'A'))
 	end
 end
 
@@ -775,7 +825,7 @@ c.QuickRightDodge = function()
 		return false
 	end
 
-	c.RandomFor(3)
+	c.RandomForNoUD(3)
 	c.WaitFor(2)
 	local direction = 'Up'
 	if c.Flip() then
@@ -808,7 +858,7 @@ c.Duck = function()
 		return false
 	end
 
-	c.RandomFor(23)
+	c.RandomForNoUD(23)
 	c.WaitFor(2)
 	if c.CurrentMacMove() ~= 1 then
 		c.Log('Mac did not finish dodge')
@@ -837,7 +887,7 @@ local function __finishFacePunch(punchType)
 
 	c.Load("CoreTemp")
 	if targetFrames > 0 then		
-		c.RandomFor(targetFrames)
+		c.RandomForNoUD(targetFrames)
 	end
 	c.WaitFor(2)
 
@@ -859,6 +909,10 @@ c.RightFacePunch = function()
 	c.PushA()
 	c.PushUpAndA()
 	return __finishFacePunch(11)
+end
+
+-- Performs a left gut punch without pressing up, 
+c.LeftGutPunch = function()
 end
 
 -- Advanced until opponent is KOed, and ensures they do not try and fail to get up
