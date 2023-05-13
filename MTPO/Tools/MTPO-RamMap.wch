@@ -15,13 +15,27 @@ SystemID NES
 0050	b	u	0	RAM	Mac Curr Move
 0090	b	u	0	RAM	OppCurrentMove
 00A9	b	u	0	RAM	Game Mode
+00B6	b	u	0	RAM	Opp Rfp Defense
+00B7	b	u	0	RAM	Opp Lfp Defense
+00B8	b	u	0	RAM	Opp Rgp Defense
+00B9	b	u	0	RAM	Opp Lgp Defense
 00C4	b	u	0	RAM	Count that Opp will get up on
+00D0	b	u	0	RAM	Btns Pushed
+00D2	b	u	0	RAM	Btns Pushed - Direction pad only
+00D3	b	u	0	RAM	Is Directional Pad Pushed
 0170	b	u	0	RAM	Wins Tens Digit
 0171	b	u	0	RAM	Wins Digit
 0172	b	u	0	RAM	Losses Tens Digit
 0173	b	u	0	RAM	Losses Digit
 0174	b	u	0	RAM	KOs Tens Digit
 0175	b	u	0	RAM	KOs Digit
+0302	b	h	0	RAM	Clock Minute Digit
+0303	b	h	0	RAM	Clock Colon
+0304	b	h	0	RAM	Clock Tens Digit
+0305	b	h	0	RAM	Clock Seconds Digit
+0306	b	h	0	RAM	Clock Subsecond
+0321	b	h	0	RAM	Hearts Next Tens Digit
+0322	b	h	0	RAM	Hearts Next Digit
 0323	b	u	0	RAM	Hearts Tens Digit
 0324	b	u	0	RAM	Hearts Digit
 0342	b	u	0	RAM	Starts
@@ -36,4 +50,21 @@ SystemID NES
 03CA	b	u	0	RAM	Knockdowns this Round of Opponent
 03D1	b	u	0	RAM	Total Knockdowns of Opponent
 03E0	b	u	0	RAM	Is Opponent Being Hit
+03E8	b	u	0	RAM	Score Hundred Thousands Digit
+03E9	b	h	0	RAM	Score TenThousands Digit
+03EA	b	u	0	RAM	Score Thousands Digit
+03EB	b	u	0	RAM	Score Hundreds Digit
+03EC	b	u	0	RAM	Score Tens Digit
+03ED	b	u	0	RAM	Score Digit
+04FD	b	u	0	RAM	Guard Timer
+003B	b	u	0	RAM	Opponent Mode (what pattern routing they are in)
+05B8	b	u	0	RAM	Guard Speed 1
+05B9	b	u	0	RAM	Guard Speed 2
+05BA	b	u	0	RAM	Guard Speed 3
+05BB	b	u	0	RAM	Guard Speed 4
+05BC	b	u	0	RAM	Guard Speed 5
+06A0	b	u	0	RAM	Btns Pushed
+06A2	b	u	0	RAM	Btns Pushed
+06A4	b	u	0	RAM	Btns Pushed
+06A6	b	u	0	RAM	Btns Pushed
 

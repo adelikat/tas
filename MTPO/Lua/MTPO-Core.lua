@@ -111,19 +111,34 @@ c = {
 		['Timer1'] = 0x001F,
 		['IsInFightMode'] = 0x022, -- If 1, then opponent is doing intro moves or is being knocked down
 		['OpponentTimer'] = 0x0039,
+		 ['OpponentMode'] = 0x003B, -- Related to what routine they are currently in (BB1 rolling jabs, or Great Tiger is jabbing vs uppercuts, etc)
 		['OpponentNextMove'] = 0x003A, -- Don't understand this one yet
 		['FightEndFlag'] = 0x0044, -- Don't understand fully yet, but 26 while Mario is declaring Mac the winner
 		['MacCurrentMove'] = 0x0050,
 		['OpponentCurrentMove'] = 0x0090,
 		['GameMode'] = 0x00A9, -- Bad name, but will change if between rounds, intro screen, fight, etc
+		['OppRfpDefense'] = 0x00B6, -- How opp is defending against a right face punch 0 = will get hit, 4 hit but 1 dmg, 8 = block, 128 = miss and lose heart, default = miss and no heart loss
+		['OppLfpDefense'] = 0x00B7, -- How opp is defending against a left face punch
+		['OppRgpDefense'] = 0x00B8, -- How opp is defending against a right gut punch
+		['OppLgpDefense'] = 0x00B9, -- How opp is defending against a left gut punch
 		['OppMode'] = 0x00BB, -- 0 in fight, 1 when knocked down, 2 when trying to get up
 		['OppGetUpOnCount'] = 0x00C4, -- The number the opponent will get up on, 0 = KO'ed, 154 = 1, 155 = 2, etc
+		['BtnsPushed'] = 0x00D0,
+		['DirectionalBtnsPushed'] = 0x00D2, -- The buttons pushed but only directional buttons
+		['IsDirectionalBtnsPushed'] = 0x00D3, -- 1 if any direction is pushed, in fight it has another use, pushing up = 129, seems other bits indicated something as well
 		['WinsTensDigit'] = 0x0170,
 		['WinsDigit'] = 0x0171,
 		['LossesTensDigit'] = 0x0172,
 		['LossesDigit'] = 0x0173,
 		['KOsTensDigit'] = 0x0174,
 		['KOsDigit'] = 0x0175,
+		['ClockMinuteDigit'] = 0x0302,
+		['ClockColon'] = 0x0303,
+		['ClockSecondsTensDigit'] = 0x0304,
+		['ClockSecondsDigit'] = 0x0305,
+		['ClockSubseconds'] = 0x0306,
+		['HeartsNextTens'] = 0x0321,
+		['HeartsNextSingle'] = 0x0322,
 		['HeartsTens'] = 0x0323,
 		['HeartsSingle'] = 0x0324,
 		['Stars'] = 0x0342,
@@ -138,6 +153,13 @@ c = {
 		['KnockdownsRound'] = 0x03CA,
 		['TotalKnockdowns'] = 0x03D1,
 		['IsOppBeingHit'] = 0x03E0,
+		['ScoreHundredThousandsDigit'] = 0x03E8,
+		['ScoreTenThousandsDigit'] = 0x03E9,
+		['ScoreThousandsDigit'] = 0x03EA,
+		['ScoreHundredsDigit'] = 0x03EB,
+		['ScoreTensDigit'] = 0x03EC,
+		['ScoreDigit'] = 0x03ED,
+		['GuardTimer'] = 0x04FD,
 		['TotalStarCountdown'] = 0x05B0,		
 	},
 	OpponentNames = {
@@ -868,9 +890,9 @@ c.Duck = function()
 	return true
 end
 
-local function __finishFacePunch(punchType)
+local function __finishPunch(punchType)
 	if c.CurrentMacMove() ~= punchType then
-		c.Log('Mac did not start face punch')
+		c.Log('Mac did not start punch')
 		return false
 	end
 
@@ -902,17 +924,25 @@ end
 c.LeftFacePunch = function()
 	c.PushB()
 	c.PushUpAndB()
-	return __finishFacePunch(12)
+	return __finishPunch(12)
 end
 
 c.RightFacePunch = function()
 	c.PushA()
 	c.PushUpAndA()
-	return __finishFacePunch(11)
+	return __finishPunch(11)
 end
 
--- Performs a left gut punch without pressing up, 
+-- Performs a left gut punch without pressing up or down
 c.LeftGutPunch = function()
+	c.PushB(2)
+	return __finishPunch(10)
+end
+
+-- Performs a left gut punch without pressing up or down
+c.RightGutPunch = function()
+	c.PushA(2)
+	return __finishPunch(9)
 end
 
 -- Advanced until opponent is KOed, and ensures they do not try and fail to get up

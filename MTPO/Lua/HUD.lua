@@ -109,6 +109,28 @@ local function _drawHealthBar(x1, y1, hp, dmg, color)
 	end
 end
 
+local function _guardSymbol(val)
+	if val == 0 then
+		return 'O'
+	end
+	if val == 4 then
+		return '1'
+	end
+
+	return 'X'
+end
+
+local function _guardSymbolColor(val)
+	if val == 0 then
+		return 'Green'
+	end
+	if val == 4 then
+		return 'GreenYellow'
+	end
+
+	return 'Gray'
+end
+
 hud = {
 	Opp = function()
 		if not c.IsInFight() then
@@ -226,6 +248,29 @@ hud = {
 		if oppCount > 0 then
 			_textToImage(oppCount .. ' count ', 162, 118)
 		end
+	end,
+	Guard = function()
+		if not c.IsInFight() or c.IsOppKnockedDown() then
+			return
+		end
+
+		rfp = c.Read(c.Addr.OppRfpDefense)
+		lfp = c.Read(c.Addr.OppLfpDefense)
+		rgp = c.Read(c.Addr.OppRgpDefense)
+		lgp = c.Read(c.Addr.OppLgpDefense)
+
+		gui.drawRectangle(64, 90, 9, 8, 'Gray', _guardSymbolColor(lfp))
+		gui.drawRectangle(73, 90, 9, 8, 'Gray', _guardSymbolColor(rfp))
+		gui.drawRectangle(64, 98, 9, 8, 'Gray', _guardSymbolColor(lgp))
+		gui.drawRectangle(73, 98, 9, 8, 'Gray', _guardSymbolColor(rgp))
+		_textToImage(_guardSymbol(lfp), 66, 91)
+		_textToImage(_guardSymbol(rfp), 75, 91)
+		_textToImage(_guardSymbol(lgp), 66, 99)
+		_textToImage(_guardSymbol(rgp), 75, 99)
+
+
+		
+		
 	end
 }
 
@@ -240,6 +285,7 @@ hud.Display = function()
 	hud.Phase()
 	hud.OppMoves()
 	hud.OppCount()
+	hud.Guard()
 end
 ------------------------------------------------------------------------------------------------
 

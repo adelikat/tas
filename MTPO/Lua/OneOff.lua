@@ -5,7 +5,9 @@ c.InitSession()
 c.FastMode()
 
 local function _do()
-    c.RandomFor(100)
+    if not c.LeftGutPunch() then return false end
+    if not c.LeftGutPunch() then return false end
+    if not c.RightGutPunch() then return false end
     return true
 end
 
