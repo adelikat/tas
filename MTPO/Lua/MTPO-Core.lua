@@ -1,11 +1,10 @@
 -- TODO
--- Scrambler ram address
--- guard stuff
 -- mapping opponent ai script
 local _lastOppHealth = -1
 local _currOppHealth = -1
 local _oppHp = 0x0398
 local _done = false
+local _enableHud = true
 local function _isDebug()
 end
 c = {
@@ -26,6 +25,7 @@ c = {
 		client.speedmode(3200)
 		client.unpause()
 		client.displaymessages(false)
+		_enableHud = false
 	end,
 	InitSession = function()
 		_done = false
@@ -42,10 +42,13 @@ c = {
 		client.displaymessages(true)
 		client.pause()
 		client.speedmode(100)
-
+		_enableHud = true
 		console.log('Success!')
-		--c.Save(99)
-		--c.Save(9)
+		c.Save('Success' .. emu.framecount())
+		c.Save(9)
+	end,
+	IsHudEnabled = function()
+		return _enableHud
 	end,
 	Save = function(slot)
 		if slot == nil then
@@ -148,6 +151,7 @@ c = {
 		['MacHealthGraudal'] = 0x0393,
 		['MacNextHealth'] = 0x0397,
 		['OppHp'] = _oppHp,
+		['OppHpPrev'] = 0x0399,
 		['OppHpGradual'] = 0x039A,
 		['OppNextHealth'] = 0x039E,
 		['KnockdownsRound'] = 0x03CA,
@@ -160,7 +164,8 @@ c = {
 		['ScoreTensDigit'] = 0x03EC,
 		['ScoreDigit'] = 0x03ED,
 		['GuardTimer'] = 0x04FD,
-		['TotalStarCountdown'] = 0x05B0,		
+		['TotalStarCountdown'] = 0x05B0,
+		['GuardSpeed1'] = 0x05B8
 	},
 	OpponentNames = {
 		['GlassJoe'] = 'Glass Joe',
@@ -225,6 +230,11 @@ local __hitValues = {
 	[20] = 20,
 }
 
+
+c.IsGettingStar = function()
+	-- Seems to indicate star animation is happening
+	return c.Read(0x00F5) == 3
+end
 c.IsOppBeingHit = function()
 	local currMoveNum = c.Read(c.Addr.OpponentCurrentMove)
 	return __hitValues[currMoveNum] ~= nil
@@ -288,6 +298,8 @@ c.Modes = {
 	['Fighting'] = 'Fighting',
 	['BlackScreenBetweenFights'] = 'Black Screen Between Fights',
 	['PostFightScreen'] = 'Post Fight Screen',
+	['OpponentKnockedDown'] = 'Opponent knocked down',
+	['TKO'] = 'TKO',
 }
 
 c.Mode = function()
@@ -315,7 +327,7 @@ c.Mode = function()
 			end
 			return 'KOed'	
 		elseif c.IsOppKnockedDown() then
-			return 'Opponent knocked down'
+			return c.Modes.OpponentKnockedDown
 		end
 
 		return c.Modes.FightIsStarting
@@ -323,7 +335,7 @@ c.Mode = function()
 
 	if c.IsInFight() then
 		if c.IsOppKnockedDown() then
-			return 'Opponent knocked down'
+			return c.Modes.OpponentKnockedDown
 		end
 	
 		if c.IsMacKnockedDown() then
@@ -337,6 +349,10 @@ c.Mode = function()
 		return c.Modes.BlackScreenBetweenFights
 	end
 	if mode == 4 or mode == 7 then
+		-- Hack, don't know what this addr does, but this makes the piston honda 1 prefight work
+		if c.Read(0x0002) == 5 then
+			return c.Modes.PreRound
+		end
 		return c.Modes.PostFightScreen
 	end
 	if mode == 1 and c.Read(0x03C9) == 16 then
@@ -501,6 +517,14 @@ c.Moves = {
 
 c.CurrentMacMove = function()
 	return c.Read(c.Addr.MacCurrentMove) & 0x7F
+end
+
+c.MacIsSetForNextMove = function()
+	return bit.check(c.Read(c.Addr.MacCurrentMove), 7)
+end
+
+c.OppIsSetForNextMove = function()
+	return bit.check(c.Read(c.Addr.OpponentCurrentMove), 7)
 end
 
 c.GetMove = function()
@@ -739,6 +763,14 @@ c.UntilMode = function (mode)
 	if targetFrames > 0 then		
 		c.WaitFor(targetFrames)
 	end
+	return true
+end
+
+c.UntilMacCanFight = function()
+	while not c.MacIsSetForNextMove() do
+		c.WaitFor(1)
+	end
+	return true
 end
 
 --During the 'Fight is Starting' Mode, pushes random buttons until the Fighting mode and then to the first frame that punches can be thrown
@@ -793,6 +825,10 @@ end
 
 c.PushA = function(numFrames)
 	c.PushFor('A', numFrames)
+end
+
+c.PushUp = function(numFrames)
+	c.PushFor('Up', numFrames)
 end
 
 c.PushUpAndB = function(numFrames)
@@ -895,12 +931,27 @@ local function __finishPunch(punchType)
 		c.Log('Mac did not start punch')
 		return false
 	end
-
 	local orig = c.Read(c.Addr.OppHp)
+
+	-- We know for a punch will last for a certain number of frames before making contact
+	c.RandomFor(14)
+	if c.IsOppKnockedDown() then
+		return true
+	end
+	local curr = c.Read(c.Addr.OppHp)
+	local loss = orig - curr
+	c.Debug(string.format('Opponent lost %s hp', loss))
+	if loss == 0 then
+		return false
+	end
+	-- It's important to check and bail right after contact should be made otherwise the below
+	-- logic will not work since the outcomes can be different (opp duck vs being hit) and the counts won't match
+	---------------------
+
 	c.Save("CoreTemp")
 	local startFrameCount = emu.framecount()
 
-	while c.CurrentMacMove() ~= 1 and not c.IsOppKnockedDown() do
+	while not c.MacIsSetForNextMove() and not c.IsOppKnockedDown() do
 		c.WaitFor(1)
 	end
 
@@ -913,11 +964,7 @@ local function __finishPunch(punchType)
 	end
 	c.WaitFor(2)
 
-	local curr = c.Read(c.Addr.OppHp)
-	local loss = orig - curr
-	c.Debug(string.format('Opponent lost %s hp', loss))
-	
-	return loss > 0
+	return c.MacIsSetForNextMove()
 end
 
 -- Performs a left punch to the face of the opponent, pressing up minimally, and pushing as many random buttons as possible
@@ -939,10 +986,56 @@ c.LeftGutPunch = function()
 	return __finishPunch(10)
 end
 
+-- Presses up on the first frame of pressing b, to manipulate the opponents guard
+c.MisdirectedLeftGutPunch = function()
+	c.PushUpAndB()
+	c.PushB()
+	return __finishPunch(10)
+end
+
 -- Performs a left gut punch without pressing up or down
 c.RightGutPunch = function()
 	c.PushA(2)
 	return __finishPunch(9)
+end
+
+-- Performs an uppercut (star punch), and checks that it landed, if it does not knock the opponent down, it will set up for the next action
+c.Uppercut = function()
+	if c.Read(c.Addr.Stars) == 0 then
+		c.Log('No stars, cannot uppercut')
+		return false
+	end
+	local orig = c.Read(c.Addr.OppHp)
+	c.PushStart(2)
+
+	if c.CurrentMacMove() ~= 13 then
+		c.Log('Mac did not start punch')
+		return false
+	end
+
+	c.RandomFor(5)
+
+	-- 0712 is some kind of timer, don't understand fully yet, but seems to be for macs moves
+	while c.Read(0x0712) > 1 do
+		c.RandomFor(1)
+	end
+
+	if c.IsOppKnockedDown() then
+		return true
+	end
+
+	local curr = c.Read(c.Addr.OppHp)
+	local loss = orig - curr
+	c.Debug(string.format('Opponent lost %s hp', loss))
+	if loss == 0 then
+		return false
+	end
+
+	while not c.MacIsSetForNextMove() do
+		c.WaitFor(1)
+	end
+
+	return true
 end
 
 -- Advanced until opponent is KOed, and ensures they do not try and fail to get up

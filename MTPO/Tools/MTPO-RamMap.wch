@@ -23,6 +23,8 @@ SystemID NES
 00D0	b	u	0	RAM	Btns Pushed
 00D2	b	u	0	RAM	Btns Pushed - Direction pad only
 00D3	b	u	0	RAM	Is Directional Pad Pushed
+00E6	b	h	0	RAM	B1 Pointer To Next Health
+00E7	b	h	0	RAM	B2 Pointer To Next Health
 0170	b	u	0	RAM	Wins Tens Digit
 0171	b	u	0	RAM	Wins Digit
 0172	b	u	0	RAM	Losses Tens Digit
@@ -38,12 +40,13 @@ SystemID NES
 0322	b	h	0	RAM	Hearts Next Digit
 0323	b	u	0	RAM	Hearts Tens Digit
 0324	b	u	0	RAM	Hearts Digit
-0342	b	u	0	RAM	Starts
+0342	b	u	0	RAM	Stars
 0347	b	u	0	RAM	Star Countdown
 0348	b	u	0	RAM	Uppercuts Until Opp Dodges
 0391	b	u	0	RAM	Mac Health
 0393	b	u	0	RAM	Mac Health Gradual
 0398	b	u	0	RAM	Opponent Next Health
+0399	b	u	0	RAM	Opp Health Prev
 039A	b	u	0	RAM	Opp Health Gradual
 039E	b	u	0	RAM	Opponent Next Health
 03C9	b	u	0	RAM	Training related

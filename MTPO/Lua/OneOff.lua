@@ -5,9 +5,7 @@ c.InitSession()
 c.FastMode()
 
 local function _do()
-    if not c.LeftGutPunch() then return false end
-    if not c.LeftGutPunch() then return false end
-    if not c.RightGutPunch() then return false end
+    c.Uppercut()
     return true
 end
 

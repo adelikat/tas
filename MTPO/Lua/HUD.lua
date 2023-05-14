@@ -268,15 +268,24 @@ hud = {
 		_textToImage(_guardSymbol(lgp), 66, 99)
 		_textToImage(_guardSymbol(rgp), 75, 99)
 
-
-		
-		
+		local oppSpeed = c.Read(c.Addr.GuardSpeed1)
+		if oppSpeed > 1 then
+			gui.drawRectangle(64, 110, oppSpeed + 2, 2, 'Gray', 'Black')
+			local timer = c.Read(c.Addr.GuardTimer)
+			if timer > 0 then
+				gui.drawLine(65, 111, 65 + timer, 111, 'Red')
+			end
+		end
 	end
 }
 
 hud.Display = function()
 	c.TrackHealth()
-	gui.clearGraphics()	
+	gui.clearGraphics()
+	if not c.IsHudEnabled()	then
+		return
+	end
+
 	hud.Opp()
 	hud.Health()
 	hud.StarCountdown()
