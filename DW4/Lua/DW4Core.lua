@@ -1,3 +1,5 @@
+dofile('../DW4CoreRam.lua')
+dofile('../DW4CoreRngCache.lua')
 local _done = false
 local _startTime
 
@@ -33,7 +35,7 @@ local function _buttons()
 		btns['P1 Right'] = c.Flip()
 		btns['P1 B'] = c.Flip()
 		btns['P1 A'] = c.Flip()
-		btns['P1 Select'] = c.Flip()
+		btns['P1 Select'] = false
 		btns['P1 Start'] = c.Flip()
 		return btns
 	end
@@ -130,14 +132,31 @@ local function _isDebug()
 	return config.SpeedPercent < 800
 end
 
+local function _mapDirectionToWalk(directionStr)
+    if directionStr == 'Up' then
+        return c.WalkUp
+    elseif directionStr == 'Down' then
+        return c.WalkDown
+    elseif directionStr == 'Left' then
+        return c.WalkLeft
+    elseif directionStr == 'Right' then
+        return c.WalkRight
+    end
+
+    error('Unknown direction: ' .. tostring(directionStr))
+end
+
 c = {
     Flip = function()
         x = math.random(0, 1)
         return x == 1
     end,
     InitSession = function()
+        c.EnsureDayNight = false
+        math.randomseed(os.time())
         _startTime = os.clock()
         _done = false
+        memory.usememorydomain('System Bus')
     end,
     Done = function()
 		_done = true
@@ -208,6 +227,12 @@ c = {
 			console.log(msg)
 		end
 	end,
+    Bail = function(msg)
+        if _isDebug() then
+			console.log(msg)
+		end
+        return false
+    end,
     WaitFor = function(frames)
         if (frames > 0) then
             for i = 1, frames, 1 do
@@ -215,11 +240,19 @@ c = {
             end
         end
     end,
-    UntilNextInputFrame = function ()
+    UntilNextInputFrame = function()
+        if not emu.islagged() then
+            c.WaitFor(1)
+            if not emu.islagged() then
+                c.Save(7)
+                error('This function must be run during lag, or one frame before it')
+            end
+        end
+
         c.Save("CoreTemp")
         local startFrameCount = emu.framecount()
     
-        while emu.islagged() == true do
+        while emu.islagged() do
             c.WaitFor(1)
         end
     
@@ -229,6 +262,18 @@ c = {
         c.Load("CoreTemp")
         if targetFrames > 0 then		
             c.WaitFor(targetFrames)
+        end
+    end,
+    -- Use this whenver you need to wait for an additonal frame, avoids the need for savestating and is much faster
+    UntilNextInputFrameThenOne = function()   
+        if not emu.islagged() then
+            c.WaitFor(1)
+            if not emu.islagged() then
+                error('This function must be run during lag, or one frame before it')
+            end
+        end
+        while emu.islagged() do
+            c.WaitFor(1)
         end
     end,
     Push = function(directionButton, frames)
@@ -242,16 +287,22 @@ c = {
     PushA = function(directionButton, frames)
         c.Push('A')
     end,
+    PushB = function(directionButton, frames)
+        c.Push('B')
+    end,
     PushUp = function(directionButton, frames)
         c.Push('Up')
     end,
     PushDown = function(directionButton, frames)
         c.Push('Down')
     end,
+    PushLeft = function(directionButton, frames)
+        c.Push('Left')
+    end,
     PushRight = function(directionButton, frames)
         c.Push('Right')
     end,
-    RndAtLeastOne = function()
+    RandomAtLeastOne = function()
         local btns = _buttons().AtRandom()
         local btnMap = {
             [1] = 'P1 Up',
@@ -268,7 +319,7 @@ c = {
         btns[btnMap[r]] = true
         _doFrame(btns)
     end,
-    RndAorB = function()
+    RandomAorB = function()
         local btns = _buttons().AtRandom()
         local pushB = c.Flip()
         btns['P1 B'] = pushB
@@ -280,11 +331,15 @@ c = {
 
         _doFrame(btns)
     end,
-    RndWithout = function(b1, b2, b3, b4, b5, b6, b7, b8)
-        local btns = _buttons()
-            .AtRandom()
-            .Without(b1, b2, b3, b4, b5, b6, b7, b8)
-        _doFrame(btns)
+    RandomWithoutA = function(frames)
+        frames = frames or 1
+        for i = 1, frames, 1 do
+            local btns = _buttons()
+                .AtRandom()
+                .Without('A')
+                .ToTable()
+            _doFrame(btns)
+        end
     end,
     RandomFor = function(frames)
         if (frames > 0) then
@@ -296,12 +351,14 @@ c = {
             end
         end
     end,
-    AorBAdvance = function(count)
-        for i = 1, count do
-            c.RndAorB()
-            c.WaitFor(1)
-            c.UntilNextInputFrame()
+    IsEncounter = function()
+        if addr.EGroup2Type:Read() ~= 0xFF then
+            return true
         end
+    
+        -- Special hack because Keeleon value is not cleared after boss fight of Chp 4
+        -- Stays until the next encounter in Chp 5, and Keeleon is never a random encounter
+        return addr.EGroup1Type:Read() ~= 0xFF and addr.EGroup1Type:Read() ~= 0xBB
     end,
     ------- Alorithms
     Success = function(val)
@@ -376,5 +433,173 @@ c = {
             c.Load('Best-End-' .. best)
             return best
         end	
-    end
+    end,
+
+    ------------------------
+    -- Macros
+    ------------------------
+    AorBAdvance = function(count)
+        count = count or 1
+        for i = 1, count do
+            c.RandomAorB()
+            c.UntilNextInputFrame()
+        end
+    end,
+    AorBAdvanceThenOne = function()
+        c.RandomAorB()
+        c.UntilNextInputFrameThenOne()
+    end,
+    DismissDialog = function()
+        c.RandomAtLeastOne()
+        c.WaitFor(1)
+        c.UntilNextInputFrame()
+    end,
+    EnsureDayNight = false, -- If true, all walking will check and ensure the day/night cycle advances
+    WalkOneSquare = function(direction, cap)
+        local dayNight = addr.StepCounter:Read()
+        if addr.MoveTimer:Read() ~= 0 then
+            c.Log(string.format('Move timer must be zero to call this method! %s', c.Read(c.Addr.MoveTimer)))
+            return false
+        end
+    
+        if cap == nil or cap <= 0 then
+            cap = 100
+        end
+        
+        c.Save('WalkStart')
+    
+        local attempts = 0
+        while attempts < cap do
+            if attempts > 0 then
+                c.Load('WalkStart')
+            end
+            
+            c.Push(direction, 1)
+            if addr.MoveTimer:Read() == 0 then
+                c.Log('Move timer did not increase')
+                return false
+            end        
+    
+            while addr.MoveTimer:Read() > 1 do
+                c.RandomWithoutA()
+            end
+           
+            c.WaitFor(1)
+            if c.IsEncounter() then
+                attempts = attempts + 1
+            else
+                if c.EnsureDayNight and dayNight == addr.StepCounter:Read() then
+                    attempts = attempts + 1
+                else
+                    return true
+                end
+            end
+        end
+        
+        c.Debug('Could not avoid encounter')
+        return false
+    end,
+    Walk = function(direction, squares)
+        if squares == nil then
+            squares = 1
+        end
+        for i = 1, squares do
+            if not c.WalkOneSquare(direction) then
+                return false
+            end
+        end
+    
+        return true
+    end,
+    WalkUp = function(squares)
+        return c.Walk('Up', squares)
+    end,
+    WalkDown = function(squares)
+        return c.Walk('Down', squares)
+    end,
+    WalkLeft = function(squares)
+        return c.Walk('Left', squares)
+    end,
+    WalkRight = function(squares)
+        return c.Walk('Right', squares)
+    end,
+    WalkMap = function(dirTable)
+        if dirTable == nil then
+            error('Must have a table!')
+        end
+    
+        local result
+        for i = 1, #dirTable do
+            for k, v in pairs(dirTable[i]) do
+                c.Debug(string.format('walking %s for %s squares', k, v))
+                local func = _mapDirectionToWalk(k)
+                result = func(v)
+                if not result then
+                    return false
+                end
+            end
+        end
+    
+        return true
+    end,
+    WalkToCaveTransition = function(direction)
+        c.WalkOneSquare(direction)
+        c.WaitFor(1)
+        if not emu.islagged() then
+            return c.Bail('Did not arrive at a transition!')
+        end
+    
+        c.WaitFor(2)
+        c.UntilNextInputFrame() -- Super inefficient on encounters, but encounter happens on exactly the last lag frame
+        if c.IsEncounter() then
+            return false
+        end
+    
+        return true
+    end,
+    WalkUpToCaveTransition = function()
+        return c.WalkToCaveTransition('Up')
+    end,
+    WalkDownToCaveTransition = function()
+        return c.WalkToCaveTransition('Down')
+    end,
+    WalkRightToCaveTransition = function()
+        return c.WalkToCaveTransition('Right')
+    end,
+    WalkLeftToCaveTransition = function()
+        return c.WalkToCaveTransition('Left')
+    end,
+    ChargeUpWalking = function()
+        c.RandomWithoutA(14)
+        if addr.MoveTimer:Read() ~= 0 then
+            c.Log('Walking charged up too soon')
+            return false
+        end
+        c.WaitFor(1)
+        return addr.MoveTimer:Read() == 0
+    end,
+    BringUpMenu = function()   
+        c.PushA()
+        if addr.MenuPosY:Read() == 16 then
+            error('Menu is already 16, this function will not work')
+            return false
+        end
+        
+        advance = true
+        while advance do
+            c.WaitFor(1)
+            advance = addr.MenuPosY:Read() ~= 16
+        end
+    
+        c.UntilNextInputFrame()
+        return true
+    end,
+    PushAWithCheck = function()
+        c.PushA()
+        if addr.MenuCheck:Read() ~= 0xFF then
+            c.Log('Pressing A did not pick something')
+            return false
+        end
+        return true
+    end,
 }

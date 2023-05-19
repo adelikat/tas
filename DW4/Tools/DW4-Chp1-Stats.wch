@@ -1,0 +1,13 @@
+SystemID NES
+0012	b	u	0	RAM	RNG 1
+0013	b	u	0	RAM	RNG 2
+0000FD	b	u	0	System Bus	Next Stat
+00C1	b	u	0	WRAM	Ragnar Max HP
+00BC	b	u	0	WRAM	Ragnar Agility
+00BF	b	u	0	WRAM	Ragnar Luck
+00BD	b	u	0	WRAM	Ragnar Vitality
+00BA	b	u	0	WRAM	Ragnar Level
+00BE	b	u	0	WRAM	Ragnar Int
+0059	b	u	0	RAM	MenuPos
+00B6	b	u	0	WRAM	Ragnar Current HP
+
