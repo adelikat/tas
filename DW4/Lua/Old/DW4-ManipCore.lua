@@ -1634,10 +1634,15 @@ c.BringUpMenu = function()
     return true
 end
 
-c.AorBAdvance = function()
-    c.RndAorB()
-    c.WaitFor(1)
-    c.UntilNextInputFrame()
+c.AorBAdvance = function(count)
+	if count == nil then
+		count = 1
+	end
+	for 1 = 1, count do
+    	c.RndAorB()
+    	c.WaitFor(1)
+    	c.UntilNextInputFrame()
+	end
 end
 
 c.DismissDialog = function()
