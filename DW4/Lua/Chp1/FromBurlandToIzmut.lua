@@ -110,5 +110,3 @@ while not c.IsDone() do
         c.Done()
     end
 end
-
-c.Finish()

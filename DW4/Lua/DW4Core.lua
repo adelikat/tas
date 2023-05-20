@@ -1,5 +1,9 @@
-dofile('../DW4CoreRam.lua')
-dofile('../DW4CoreRngCache.lua')
+-- TODO:
+-- break buttons up into a class
+-- add a flag for checking for encounters when walking, then it can easily be toggled for huge speedups in areas with no encounters
+
+dofile('../Address.lua')
+dofile('../RngCache.lua')
 local _done = false
 local _startTime
 
@@ -147,12 +151,14 @@ local function _mapDirectionToWalk(directionStr)
 end
 
 c = {
+    RngCache = RngCache:new(addr),
     Flip = function()
         x = math.random(0, 1)
         return x == 1
     end,
     InitSession = function()
         c.EnsureDayNight = false
+        c.RngCache:Clear()
         math.randomseed(os.time())
         _startTime = os.clock()
         _done = false
@@ -165,7 +171,7 @@ c = {
 		return _done
 	end,
     Finish = function()
-        local endTime = os.clock()
+        local endTime = os.clock() 
         local timeTaken = endTime - _startTime
 		console.log('---------------')
         console.log(string.format('Total time: %s seconds', _round(timeTaken, 2)))
@@ -174,9 +180,11 @@ c = {
 		client.speedmode(100)
         client.getconfig().DispSpeedupFeatures = 2
 		_enableHud = true
-		console.log('Success!')
-		c.Save('Success' .. emu.framecount())
-		c.Save(9)
+        if _done then
+		    console.log('Success!')
+            c.Save('Success' .. emu.framecount())
+		    c.Save(9)
+        end
 	end,
     FastMode = function()
 		client.speedmode(6400)
@@ -232,6 +240,13 @@ c = {
 			console.log(msg)
 		end
         return false
+    end,
+    GenerateRndDirection = function()	
+        x = math.random(0, 3)
+        if x == 0 then return 'P1 Left' end
+        if x == 1 then return 'P1 Right' end
+        if x == 2 then return 'P1 Up' end
+        return 'P1 Down'
     end,
     WaitFor = function(frames)
         if (frames > 0) then
@@ -603,3 +618,5 @@ c = {
         return true
     end,
 }
+
+event.onexit(c.Finish)
