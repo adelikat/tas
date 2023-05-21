@@ -4,7 +4,6 @@ SystemID NES
 00727E	b	u	0	System Bus	E1 HP
 128C	b	u	0	WRAM	E2 HP
 007361	b	u	0	System Bus	Dmg
-00735F	b	u	0	System Bus	Dmg
 0000FD	b	u	0	System Bus	Next Stat
 00C1	b	u	0	WRAM	Ragnar Max HP
 006E45	b	u	0	System Bus	eg1Type

@@ -230,6 +230,9 @@ c = {
     Log = function(msg)
 		console.log(msg)
 	end,
+    LogRng = function()
+        console.log(string.format('RNG: %s', c.RngCache:Length()))
+    end,
 	Debug = function(msg)
 		if _isDebug() then
 			console.log(msg)
@@ -316,6 +319,15 @@ c = {
     end,
     PushRight = function(directionButton, frames)
         c.Push('Right')
+    end,
+    PushUpWithCheck = function(menuPosy)
+        c.Push('Up')
+        if addr.MenuPosY:Read() ~= menuPosy then
+            c.Log(string.format('Push Up failed to result in menu y pos %s', menuPosy))
+            return false
+        end
+
+        return true
     end,
     RandomAtLeastOne = function()
         local btns = _buttons().AtRandom()

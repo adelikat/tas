@@ -1,6 +1,6 @@
 --Starts right before talking to the kid at night in Izmut
 --Specifally the move timer must be 4, with the kid directly above at x,y = 6,19
---Manipulates talking to the kid, leaving and getting in an optimal death warp encounter
+--Manipulates talking to the kid, leaving and getting in an optimal death warp encounter, and scoring a max damage self critical hit
 dofile('../DW4Core.lua')
 c.InitSession()
 c.FastMode()
@@ -70,13 +70,51 @@ local function _encounter()
     return true
 end
 
+local function _crit()
+    c.RandomFor(1)
+    c.UntilNextInputFrameThenOne()
+    c.WaitFor(1)
+    c.RandomAtLeastOne()
+    c.RandomFor(20)
+    c.WaitFor(5)
+    if not c.PushAWithCheck() then return false end
+    c.WaitFor(4)
+    if not c.PushUpWithCheck(31) then return false end
+    if not c.PushAWithCheck() then return false end -- Pick Arrow
+    c.WaitFor(2)
+    if not c.PushAWithCheck() then return false end -- Pick Ragnar
+    c.RandomFor(23)
+    if addr.Turn:Read() ~= 0 then
+        return c.Bail('Ragnar did not go first')
+    end
+
+    c.UntilNextInputFrameThenOne()
+    c.WaitFor(1)
+
+    c.RandomAtLeastOne()
+    c.WaitFor(5)
+    c.RngCache:Add()
+    if addr.Dmg:Read() < 21 then
+        return c.Bail('Ragnar did not do enough damage')
+    end
+
+    c.UntilNextInputFrameThenOne()
+    c.WaitFor(1)
+
+    return true
+end
+
 local function _do()
     local result = c.Best(_leave, 12)
     if c.Success(result) then
         c.RngCache:Add()
         result = c.Cap(_encounter, 250)
         if c.Success(result) then
-            return true
+            c.Log('Successfully manipulated a demon stump')
+            result = c.Cap(_crit, 1500)
+            if c.Success(result) then
+                return true
+            end
         end
     end
 
