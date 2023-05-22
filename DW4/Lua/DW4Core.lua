@@ -158,6 +158,7 @@ c = {
     end,
     InitSession = function()
         c.EnsureDayNight = false
+        c.NoEncountersPossible = false
         c.RngCache:Clear()
         math.randomseed(os.time())
         _startTime = os.clock()
@@ -230,9 +231,6 @@ c = {
     Log = function(msg)
 		console.log(msg)
 	end,
-    LogRng = function()
-        console.log(string.format('RNG: %s', c.RngCache:Length()))
-    end,
 	Debug = function(msg)
 		if _isDebug() then
 			console.log(msg)
@@ -378,6 +376,16 @@ c = {
             end
         end
     end,
+    RandomWithout = function(frames, b1, b2, b3, b4, b5, b6, b7, b8)
+        frames = frames or 1
+        for i = 1, frames, 1 do
+            local btns = _buttons()
+                .AtRandom()
+                .Without(b1, b2, b3, b4, b5, b6, b7, b8)
+                .ToTable()
+            _doFrame(btns)
+        end
+    end,
     IsEncounter = function()
         if addr.EGroup2Type:Read() ~= 0xFF then
             return true
@@ -476,16 +484,31 @@ c = {
         c.RandomAorB()
         c.UntilNextInputFrameThenOne()
     end,
+    BattleAdvance = function()
+        c.RandomAtLeastOne()
+        c.UntilNextInputFrameThenOne()
+        c.WaitFor(1)
+    end,
     DismissDialog = function()
         c.RandomAtLeastOne()
         c.WaitFor(1)
         c.UntilNextInputFrame()
     end,
+    MinDmg = function(minDmg)
+        if minDmg == nil then
+            error('minDmg cannot be nil')
+        end
+        if addr.Dmg:Read() < minDmg then
+            return c.Bail(string.format('Did not do 6 damage', minDmg))
+        end
+        return true
+    end,
     EnsureDayNight = false, -- If true, all walking will check and ensure the day/night cycle advances
+    NoEncountersPossible = false, -- If true, WalkOneSquare will check for encounters, which requires savestates so is a lot slower
     WalkOneSquare = function(direction, cap)
         local dayNight = addr.StepCounter:Read()
         if addr.MoveTimer:Read() ~= 0 then
-            c.Log(string.format('Move timer must be zero to call this method! %s', c.Read(c.Addr.MoveTimer)))
+            c.Log(string.format('Move timer must be zero to call this method! %s', addr.MoveTimer:Read()))
             return false
         end
     
@@ -493,6 +516,24 @@ c = {
             cap = 100
         end
         
+        --
+        if c.NoEncountersPossible then
+            c.Push(direction)
+            if addr.MoveTimer:Read() == 0 then
+                return c.Bail('Move timer was unexpected value after pushing direction')
+            end
+
+            c.RandomWithoutA(14)
+            c.WaitFor(1)
+                
+            if addr.MoveTimer:Read() ~= 0 then
+                return c.Bail('Move timer is an unexpected value at end')
+            end
+
+            return true
+        end
+        --
+
         c.Save('WalkStart')
     
         local attempts = 0
@@ -629,6 +670,29 @@ c = {
         end
         return true
     end,
+    Search = function()
+        c.PushDown()
+        if addr.MenuPosY:Read() ~= 17 then
+            return c.Bail('Unable to navigate to status')
+        end
+        c.PushRight()
+        if addr.MenuPosY:Read() ~= 33 then
+            return c.Bail('Unable to navigate to item')
+        end
+        c.PushDown()
+        if addr.MenuPosY:Read() ~= 34 then
+            return c.Bail('Unable to navigate to tactics')
+        end
+        c.WaitFor(1)
+        c.PushDown()
+        if addr.MenuPosY:Read() ~= 35 then
+            return c.Bail('Unable to navigate to search')
+        end
+        if not c.PushAWithCheck() then return false end -- Pick Search
+        c.RandomFor(3) -- Input frame that can be used for RNG
+        c.UntilNextInputFrame()
+        return true
+    end
 }
 
 event.onexit(c.Finish)

@@ -24,4 +24,5 @@ SystemID NES
 003E	b	u	0	RAM	MoveTimer
 0052	b	u	0	RAM	NPC X
 0053	b	u	0	RAM	NPC Y
+007328	b	u	0	System Bus	E1 Action
 

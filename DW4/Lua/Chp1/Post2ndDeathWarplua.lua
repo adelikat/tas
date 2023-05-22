@@ -1,23 +1,14 @@
---Starts at the first frame to dimiss the "terrific blow" message from Ragnar's max damage critical, manipulates until Burland appears
+--Starts during Lethal Gopher fight (2nd death warp) at the first frame to dimiss the "terrific blow" message from Ragnar's max damage critical, manipulates until Burland appears
 -- Manipulates Burland appearing
 dofile('../DW4Core.lua')
 c.InitSession()
 c.FastMode()
 --c.BlackscreenMode()
-c.Load(3)
+c.Load(5)
+
 
 local function _do()
     c.BattleAdvance()
-    c.RandomAtLeastOne()
-    c.RandomFor(1)
-    c.UntilNextInputFrameThenOne()
-    c.WaitFor(1)
-    c.BattleAdvance()
-    c.RandomAtLeastOne()
-    c.WaitFor(6)
-    if not c.MinDmg(6) then return false end
-    c.UntilNextInputFrameThenOne()
-    c.WaitFor(1)
     c.BattleAdvance()
     c.RandomAtLeastOne()
     c.RandomFor(40)
@@ -38,3 +29,4 @@ while not c.IsDone() do
 
     c.RngCache:Log()
 end
+

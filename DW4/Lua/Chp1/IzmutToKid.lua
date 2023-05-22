@@ -75,6 +75,6 @@ while not c.IsDone() do
         c.Done()
     end
 
-    c.Log(string.format('RNG: %s', c.RngCache:Length()))
+    c.RngCache:Log()
 end
 
