@@ -327,6 +327,15 @@ c = {
 
         return true
     end,
+    PushDownWithCheck = function(menuPosy)
+        c.Push('Down')
+        if addr.MenuPosY:Read() ~= menuPosy then
+            c.Log(string.format('Push Up failed to result in menu y pos %s', menuPosy))
+            return false
+        end
+
+        return true
+    end,
     RandomAtLeastOne = function()
         local btns = _buttons().AtRandom()
         local btnMap = {
@@ -692,7 +701,40 @@ c = {
         c.RandomFor(3) -- Input frame that can be used for RNG
         c.UntilNextInputFrame()
         return true
-    end
+    end,
+    Item = function()
+        c.PushDown()
+        if addr.MenuPosY:Read() ~= 17 then
+            return c.Bail('Unable to navigate to status')
+        end
+        c.PushRight()
+        if addr.MenuPosY:Read() ~= 33 then
+            return c.Bail('Unable to navigate to item')
+        end
+    
+        return true
+    end,
+    Door = function()
+        c.PushDown()
+        if addr.MenuPosY:Read() ~= 17 then
+            return c.Bail('Unable to navigate to status')
+        end
+        c.WaitFor(1)
+        c.PushDown()
+        if addr.MenuPosY:Read() ~= 18 then
+            return c.Bail('Unable to navigate to equip')
+        end
+        c.WaitFor(1)
+        c.PushDown()
+        if addr.MenuPosY:Read() ~= 19 then
+            return c.Bail('Unable to navigate to door')
+        end
+    
+        if not c.PushAWithCheck() then return false end -- Pick Door
+        c.RandomFor(2) -- Input frame that can be used for RNG
+        c.UntilNextInputFrame()
+        return true
+    end,
 }
 
 event.onexit(c.Finish)
