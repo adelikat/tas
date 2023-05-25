@@ -6,4 +6,3 @@ Config -> Rewind & States ->
 	MovieCompressionLevel 1 (set only in config), this was tested at 16k input frames, likely this needs to be changed as the movie size increases?
 Sounds -> enable
 		  volume down
-Config -> speed/skip -> audio throttle

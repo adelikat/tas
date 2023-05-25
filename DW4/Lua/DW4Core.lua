@@ -6,6 +6,7 @@ dofile('../Address.lua')
 dofile('../RngCache.lua')
 local _done = false
 local _startTime
+local _config = client.getconfig()
 
 function _round(num, numDecimalPlaces)
     local mult = 10^(numDecimalPlaces or 0)
@@ -132,8 +133,7 @@ local function _doFrame(keys)
 end
 
 local function _isDebug()
-	config = client.getconfig()
-	return config.SpeedPercent < 800
+	return _config.SpeedPercent < 800
 end
 
 local function _mapDirectionToWalk(directionStr)
@@ -164,6 +164,7 @@ c = {
         _startTime = os.clock()
         _done = false
         memory.usememorydomain('System Bus')
+        _config.Savestates.SaveScreenshot = false
     end,
     Done = function()
 		_done = true
@@ -179,7 +180,8 @@ c = {
 		client.displaymessages(true)
 		client.pause()
 		client.speedmode(100)
-        client.getconfig().DispSpeedupFeatures = 2
+        _config.DispSpeedupFeatures = 2
+        _config.Savestates.SaveScreenshot = true
 		_enableHud = true
         if _done then
 		    console.log('Success!')
@@ -193,7 +195,7 @@ c = {
 		client.displaymessages(false)
 	end,
     BlackscreenMode = function()
-        client.getconfig().DispSpeedupFeatures = 0
+        _config.DispSpeedupFeatures = 0
     end,
     Save = function(slot)
 		if slot == nil then
@@ -206,13 +208,12 @@ c = {
 		end
 	
 		if slotNum ~= nill and slotNum > 0 and slotNum <= 10 then
+            local orig = _config.Savestates.SaveScreenshot
+            _config.Savestates.SaveScreenshot = true
 			savestate.saveslot(slot)
+            _config.Savestates.SaveScreenshot = false
 		else
-            local config = client.getconfig()
-            local orig = config.Savestates.SaveScreenshot
-            config.Savestates.SaveScreenshot = false
 			savestate.save(string.format('state-archive/%s.State', slot))
-            config.Savestates.SaveScreenshot = orig
 		end
 	end,
 	Load = function(slot)
