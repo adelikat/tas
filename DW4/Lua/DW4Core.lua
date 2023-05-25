@@ -537,7 +537,10 @@ c = {
                 return c.Bail('Move timer was unexpected value after pushing direction')
             end
 
-            c.RandomWithoutA(14)
+            while addr.MoveTimer:Read() > 1 do
+                c.RandomWithoutA()
+            end
+
             c.WaitFor(1)
                 
             if addr.MoveTimer:Read() ~= 0 then

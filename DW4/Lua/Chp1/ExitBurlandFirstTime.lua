@@ -57,7 +57,6 @@ local function _leaveBurland()
     c.WaitFor(1)
     c.DismissDialog()
     if not c.ChargeUpWalking() then return false end
-
     result = c.WalkMap({
         { ['Left'] = 3 },
         { ['Down'] = 8 },
@@ -80,8 +79,10 @@ local function _do()
 end
 
 while not c.IsDone() do
+    c.NoEncountersPossible = true
     local result = c.Best(_do, 2)
     if c.Success(result) then
         c.Done()
     end
+    c.NoEncountersPossible = false
 end
