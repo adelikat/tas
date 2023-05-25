@@ -68,9 +68,9 @@ local function _leaveBurland()
 end
 
 local function _do()
-    local result = c.Best(_leaveChambers, 25)
+    local result = c.Best(_leaveChambers, 10)
     if c.Success(result) then
-        result = c.Best(_leaveBurland, 25)
+        result = c.Best(_leaveBurland, 10)
         if c.Success(result) then
             return true
         end
