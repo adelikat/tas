@@ -208,7 +208,10 @@ c = {
 		if slotNum ~= nill and slotNum > 0 and slotNum <= 10 then
 			savestate.saveslot(slot)
 		else
+            local orig = client.getconfig().Savestates.SaveScreenshot
+            config.Savestates.SaveScreenshot = false
 			savestate.save(string.format('state-archive/%s.State', slot))
+            config.Savestates.SaveScreenshot = orig
 		end
 	end,
 	Load = function(slot)

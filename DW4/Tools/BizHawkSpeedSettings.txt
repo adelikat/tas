@@ -4,3 +4,6 @@ File -> Movie -> Backup movies -> false (maybe not that helpful)
 Config -> Rewind & States ->
 	Backups savestates -> false (lua api uses this, if we do a saved numbered state)
 	MovieCompressionLevel 1 (set only in config), this was tested at 16k input frames, likely this needs to be changed as the movie size increases?
+Sounds -> enable
+		  volume down
+Config -> speed/skip -> audio throttle
