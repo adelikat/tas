@@ -1,3 +1,6 @@
+0 C:\Repos\adelikat-tas\DW4\Lua\Common\BattleHud.lua
+0 C:\Repos\adelikat-tas\DW4\Lua\Common\Critical.lua
+0 C:\Repos\adelikat-tas\DW4\Lua\Common\RngSearch.lua
 0 .\FromStartToKing.lua
 0 .\ExitBurlandFirstTime.lua
 0 .\FromBurlandToIzmut.lua
@@ -12,3 +15,4 @@
 0 .\Post2ndDeathWarplua.lua
 0 .\ToBoss.lua
 0 .\BossRnd1.lua
+0 .\BossRnd2.lua

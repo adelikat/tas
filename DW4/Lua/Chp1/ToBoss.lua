@@ -4,7 +4,7 @@ dofile('../DW4Core.lua')
 c.InitSession()
 c.FastMode()
 c.BlackscreenMode()
-c.Load(2)
+c.Load(1)
 
 local function __f1path1()
     local result = c.WalkMap({
@@ -275,13 +275,15 @@ end
 
 
 local function _do()
-    local result = c.Best(_floor1, 40)
+    local result = c.Best(_floor1, 50)
+    --local result = true
     if c.Success(result) then
-        local result = c.Best(_floor2, 40)
+        local result = c.Best(_floor2, 25)
+        --result = true
         if c.Success(result) then
-            local result = c.Best(_floor3, 40)
+            local result = c.Best(_floor3, 12)
             if c.Success(result) then
-                local result = c.Best(_floor4, 40)
+                local result = c.Best(_floor4, 12)
                 if c.Success(result) then
                     return true
                 end
@@ -291,7 +293,7 @@ local function _do()
 end
 
 while not c.IsDone() do
-    local result = c.Best(_do, 4)
+    local result = c.Best(_do, 5)
     if c.Success(result) then
         c.Done()
     end    

@@ -18,6 +18,7 @@ end
 addr = {
 	['Rng1'] = Address:new(0x0012),
 	['Rng2'] = Address:new(0x0013),
+	['BattleAdvanceFlag'] = Address:new(0x0014),
 	['MoveTimer'] = Address:new(0x003E),
 	['XSquare'] = Address:new(0x0044),
 	['YSquare'] = Address:new(0x0045),

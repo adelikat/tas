@@ -211,7 +211,8 @@ c = {
             local orig = _config.Savestates.SaveScreenshot
             _config.Savestates.SaveScreenshot = true
 			savestate.saveslot(slot)
-            _config.Savestates.SaveScreenshot = false
+            c.Log('Saved to slot ' .. slot)
+            _config.Savestates.SaveScreenshot = orig
 		else
 			savestate.save(string.format('state-archive/%s.State', slot))
 		end
@@ -260,6 +261,17 @@ c = {
                 emu.frameadvance()
             end
         end
+    end,
+    DelayUpTo = function(frames)
+        frames = frames or 0
+        if (frames <= 0) then return 0 end
+        delay = math.random(0, frames)
+        if (delay > 0) then
+            for i = 1, delay, 1 do
+                emu.frameadvance()
+            end
+        end
+        return delay
     end,
     UntilNextInputFrame = function()
         if not emu.islagged() then
@@ -335,7 +347,7 @@ c = {
     PushDownWithCheck = function(menuPosy)
         c.Push('Down')
         if addr.MenuPosY:Read() ~= menuPosy then
-            c.Log(string.format('Push Up failed to result in menu y pos %s', menuPosy))
+            c.Log(string.format('Push Down failed to result in menu y pos %s', menuPosy))
             return false
         end
 
@@ -482,6 +494,81 @@ c = {
             c.Load('Best-End-' .. best)
             return best
         end	
+    end,
+    --[[
+        Not safe for recording!
+        Takes a function that returns a boolean value and
+        Pokes the RNG incrementally by 1 until the function returns true
+        returns true if an RNG seed is found, else false
+    ]]
+    RngSearch = function(func)
+        if movie.mode() ~= 'INACTIVE' then
+            error('Cannot run Rng Search with a movie active')
+        end
+
+        local temp = memorysavestate.savecorestate()
+        local result = false
+        for i = 0, 65535, 1 do
+            memorysavestate.loadcorestate(temp)
+            c.Debug('Attempting rng seed: ' .. i)
+            memory.write_u16_be(0x0012, i)
+            result = func()
+            if result then
+                return true
+            end
+
+            if i % 1000 == 0 then
+                c.Log('RNG attempt ' .. i)
+            end
+        end
+
+        c.Log('Unable to find an RNG seed')
+	    return false
+    end,
+    ------------------------
+    -- Battle Helpers
+    ------------------------
+    Actions = {
+        Attacks = 67
+    },
+    IsE1Turn = function()
+        return addr.Turn:Read() == 4
+    end,
+    E1Action = function()
+        return addr.E1Action:Read()
+    end,
+    E2Action = function()
+        return addr.E2Action:Read()
+    end,
+    IsE1Attacking = function()
+        return addr.E1Action:Read() == c.Actions.Attacks
+    end,
+    IsE2Attacking = function()
+        return addr.E2Action:Read() == c.Actions.Attacks
+    end,
+    BattleOrder1 = function()
+        return addr.BattleOrder1:Read() & 0xF
+    end,
+    BattleOrder2 = function()
+        return addr.BattleOrder2:Read() & 0xF
+    end,
+    BattleOrder3 = function()
+        return addr.BattleOrder3:Read() & 0xF
+    end,
+    BattleOrder4 = function()
+        return addr.BattleOrder4:Read() & 0xF
+    end,
+    BattleOrder5 = function()
+        return addr.BattleOrder5:Read() & 0xF
+    end,
+    BattleOrder6 = function()
+        return addr.BattleOrder6:Read() & 0xF
+    end,
+    BattleOrder7 = function()
+        return addr.BattleOrder7:Read() & 0xF
+    end,
+    BattleOrder8 = function()
+        return addr.BattleOrder8:Read() & 0xF
     end,
 
     ------------------------

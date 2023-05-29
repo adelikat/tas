@@ -1390,7 +1390,7 @@ c.UseFirstMenuItem = function()
     c.PushA() -- Use
     c.WaitFor(2)
     c.UntilNextInputFrame()
-
+	if not c.UseFirstMenuItem()
     return true
 end
 
