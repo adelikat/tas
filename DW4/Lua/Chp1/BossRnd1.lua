@@ -7,11 +7,6 @@ c.BlackscreenMode()
 c.Load(4)
 local ragnarStartHp = addr.RagnarHp:Read()
 
-
-local function _miss1()
-
-end
-
 local function _turnAndMiss()
     c.RandomFor(2)
     c.UntilNextInputFrameThenOne()

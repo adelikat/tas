@@ -8,7 +8,7 @@ c.BlackscreenMode()
 c.Load(0)
 
 local _maxDelay = 64
-local _minDmg = 56
+local _minDmg = 57
 
 -- Should account for the max possible input frames during segment
 -- Will push random buttons for this many frames
@@ -32,7 +32,7 @@ local function _evaluate()
     return dmg >= _minDmg
 end
 
-local delay = 0
+local delay
 local function _do()
     if _expectedInputFrames[1] == nil then error('at step 1 is needed!') end    
     local eif = _expectedInputFrames[2]
