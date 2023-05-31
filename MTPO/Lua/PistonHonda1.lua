@@ -6,11 +6,11 @@ if c.Mode() ~= c.Modes.FightIsStarting then
     error('This script must start while the fight is starting')
 end
 
-if c.CurrentOpponent() ~= c.OpponentNames.PistonHonda1 then
+if c.CurrentOpponent() ~= opponents.PistonHonda1 then
     error('Script only works on Piston Honda 1!')
 end
 
-if c.CurrentRound() ~= 1 then
+if addr.Round:Read() ~= 1 then
     error('Script only works on round 1')
 end
 

@@ -8,11 +8,11 @@ if c.Mode() ~= c.Modes.FightIsStarting then
     error('This script must start while the fight is starting')
 end
 
-if c.CurrentOpponent() ~= c.OpponentNames.GlassJoe then
+if c.CurrentOpponent() ~= opponents.GlassJoe then
     error('Script only works on Glass Joe!')
 end
 
-if c.CurrentRound() ~= 1 then
+if addr.Round:Read() ~= 1 then
     error('Script only works on round 1')
 end
 

@@ -1,0 +1,60 @@
+-- TODO: OOP
+-- opponentNames = {
+--     ['GlassJoe'] = 'Glass Joe',
+--     ['VonKaiser'] = 'Von Kaiser',
+--     ['PistonHonda1'] = 'Piston Honda 1',
+--     ['DonFlamenco1'] = 'Don Flamenco 1',
+--     ['KingHippo'] = 'King Hippo',
+--     ['GreatTiger'] = 'Great Tiger',
+--     ['BaldBull1'] = 'Bald Bull 1',
+--     ['PistonHonda2'] = 'Piston Honda 2',
+--     ['SodaPopinski'] = 'Soda Popinski',
+--     ['BaldBull2'] = 'Bald Bull 2',
+--     ['DonFlamenco2'] = 'Don Flamenco 2',
+--     ['MrSandman'] = 'Mr. Sandman',
+--     ['SuperMachoMan'] = 'Super Macho Man',
+--     ['Mike Tyson'] = 'Mike Tyson',
+--     ['Demo'] = 'Demo Bald Bull',
+-- }
+
+opponents = {
+    ['GlassJoe'] = 'Glass Joe',
+    ['VonKaiser'] = 'Von Kaiser',
+    ['PistonHonda1'] = 'Piston Honda 1',
+    ['DonFlamenco1'] = 'Don Flamenco 1',
+    ['KingHippo'] = 'King Hippo',
+    ['GreatTiger'] = 'Great Tiger',
+    ['BaldBull1'] = 'Bald Bull 1',
+    ['PistonHonda2'] = 'Piston Honda 2',
+    ['SodaPopinski'] = 'Soda Popinski',
+    ['BaldBull2'] = 'Bald Bull 2',
+    ['DonFlamenco2'] = 'Don Flamenco 2',
+    ['MrSandman'] = 'Mr. Sandman',
+    ['SuperMachoMan'] = 'Super Macho Man',
+    ['Mike Tyson'] = 'Mike Tyson',
+    ['Demo'] = 'Demo Bald Bull',
+}
+
+opponents[0] = opponents.GlassJoe
+opponents[1] = opponents.VonKaiser
+opponents[2] = opponents.PistonHonda1
+opponents[3] = opponents.DonFlamenco1
+opponents[4] = opponents.KingHippo
+opponents[5] = opponents.GreatTiger
+opponents[6] = opponents.BaldBull1
+opponents[7] = opponents.PistonHonda2
+opponents[8] = opponents.BaldBull2
+opponents[10] = opponents.DonFlamenco2
+opponents[11] = opponents.MrSandman
+opponents[12] = opponents.SuperMachoMan
+opponents[13] = opponents.MikeTyson
+opponents[19] = opponents.Demo
+opponents[20] = opponents.KingHippo
+opponents[21] = opponents.GreatTiger
+opponents[22] = opponents.PistonHonda2
+opponents[23] = opponents.SodaPopinski
+opponents[24] = opponents.BaldBull2
+opponents[25] = opponents.DonFlamenco2
+opponents[26] = opponents.MrSandman
+opponents[27] = opponents.SuperMachoMan
+opponents[28] = opponents.MikeTyson

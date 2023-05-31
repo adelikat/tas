@@ -3,11 +3,12 @@
 dofile('MTPO-Core.lua')
 
 c.InitSession()
-
-c.FastMode()
 if c.Mode() ~= c.Modes.OpeningBlackScreen and emu.framecount() < 10 then
     error('This script must be run during the opening black screen')
 end
+
+c.FastMode()
+c.BlackscreenMode()
 
 while not c.IsDone() do
     -- There is a not lag frame on frame 3
@@ -22,12 +23,12 @@ while not c.IsDone() do
     c.UntilMode(c.Modes.PreRound)
     c.UntilNextInputFrame()
 
-    if c.CurrentOpponent() ~= c.OpponentNames.GlassJoe then
+    if c.CurrentOpponent() ~= opponents.GlassJoe then
         c.Log('Something went wrong! Did not arrive at Glass Joe')
         return false
     end
 
-    if c.CurrentRound() ~= 1 then
+    if addr.Round:Read() ~= 1 then
         c.Log('Something went wrong! Not on Round 1')
         return false
     end
@@ -38,5 +39,3 @@ while not c.IsDone() do
     c.WaitFor(1) -- We want to actually be in this mode for the next scipt
     c.Done()
 end
-
-c.Finish()

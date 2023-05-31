@@ -69,14 +69,14 @@ end
 
 -- Some rings are offset by 1 pixel for some reason
 local function _isRngOffSet()
-	local opp = c.Read(c.Addr.OppNumber)
+	local opp = addr.OppNumber:Read()
 	if opp == 2 or opp == 6 or opp == 7 or opp == 8 or opp == 9 or opp == 11 or opp == 12 or opp == 13 or opp == 19 or opp == 22 or opp == 23 or opp == 24 or opp == 26 or opp == 27 or opp == 28 then
 		return true
 	end
 end
 
 local function _drawHealthBar(x1, y1, hp, dmg, color)
-	local opp = c.Read(c.Addr.OppNumber)
+	local opp = addr.OppNumber:Read()
 	if _isRngOffSet() then
 		x1 = x1 + 1
 	end
@@ -157,24 +157,25 @@ hud = {
 			dmg = 0
 			color = 'darkgray'
 		elseif c.IsOppBeingHit() then
-			hp = c.Read(c.Addr.OppHp)
+			hp = addr.OppHp:Read()
 			dmg = c.LastDamage()
 			color = nil
 		else
-			hp = c.Read(c.Addr.OppHp)
-			dmg = c.Read(c.Addr.OppHpGradual) - hp
+			
+			hp = addr.OppHp:Read()
+			dmg = addr.OppHpGradual:Read() - hp
 			color = nil
 		end
 		
 		_drawHealthBar(144, 16, hp, dmg, color)
 		
 		if c.IsMacKnockedDown() then
-			hp = c.Read(c.Addr.MacNextHealth)			
+			hp = addr.MacNextHealth:Read()
 			dmg = 0
 			color = 'darkgray'
 		else
-			hp = c.Read(c.Addr.MacHealth)
-			dmg = c.Read(c.Addr.MacHealthGraudal) - hp
+			hp = addr.MacHealth:Read()
+			dmg = addr.MacHealthGraudal:Read() - hp
 			color = nil	
 		end
 
@@ -186,11 +187,11 @@ hud = {
 			return
 		end
 			
-		totalPunchesToGetStar = c.Read(c.Addr.TotalStarCountdown)
+		totalPunchesToGetStar = addr.TotalStarCountdown:Read()
 		if totalPunchesToGetStar <= 1 then
 			return
 		end
-		punchesLeftToGetStar = c.Read(c.Addr.StarCountdown)
+		punchesLeftToGetStar = addr.StarCountdown:Read()
 		local totalWidth = 26
 		local percent = punchesLeftToGetStar / totalPunchesToGetStar
 		local width = totalWidth * percent
@@ -206,7 +207,7 @@ hud = {
 			return
 		end
 
-		local count = c.Read(c.Addr.UppercutsUntilOppDodge)
+		local count = addr.UppercutsUntilOppDodge:Read()
 		gui.drawRectangle(0, 22, 7, 9, 'Black', 'Black')
 		_numberToImage(count, -6, 24)
 		gui.drawRectangle(9, 28, 62, 2, 'Black', 'Black')
@@ -219,7 +220,7 @@ hud = {
 		end
 
 		gui.drawRectangle(201, 0, 54, 9, 'Black', 'Black')
-		local phase = c.Read(c.Addr.KnockdownsRound)
+		local phase = addr.KnockdownsRound:Read()
 		local text
 		if phase == 3 then
 			text = 'TKO'	
@@ -240,7 +241,7 @@ hud = {
 		end
 
 		_textToImage(c.GetMove(), 168, 98)		
-		timer = c.Read(c.Addr.OpponentTimer)
+		timer = addr.OpponentTimer:Read()
 		gui.drawRectangle(168, 108, timer, 4, 'gray', 'White')
 	end,
 	OppCount = function()
@@ -254,10 +255,10 @@ hud = {
 			return
 		end
 
-		rfp = c.Read(c.Addr.OppRfpDefense)
-		lfp = c.Read(c.Addr.OppLfpDefense)
-		rgp = c.Read(c.Addr.OppRgpDefense)
-		lgp = c.Read(c.Addr.OppLgpDefense)
+		rfp = addr.OppRfpDefense:Read()
+		lfp = addr.OppLfpDefense:Read()
+		rgp = addr.OppRgpDefense:Read()
+		lgp = addr.OppLgpDefense:Read()
 
 		gui.drawRectangle(64, 90, 9, 8, 'Gray', _guardSymbolColor(lfp))
 		gui.drawRectangle(73, 90, 9, 8, 'Gray', _guardSymbolColor(rfp))
@@ -268,10 +269,12 @@ hud = {
 		_textToImage(_guardSymbol(lgp), 66, 99)
 		_textToImage(_guardSymbol(rgp), 75, 99)
 
-		local oppSpeed = c.Read(c.Addr.GuardSpeed1)
+		local oppSpeed = addr.GuardSpeed1:Read()
 		if oppSpeed > 1 then
 			gui.drawRectangle(64, 110, oppSpeed + 2, 2, 'Gray', 'Black')
-			local timer = c.Read(c.Addr.GuardTimer)
+
+			-- TODO: I think the 7th bit indicates guard up/down ?
+			local timer = addr.GuardTimer:Read() & 0x7F
 			if timer > 0 then
 				gui.drawLine(65, 111, 65 + timer, 111, 'Red')
 			end

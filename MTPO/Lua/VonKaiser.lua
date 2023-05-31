@@ -8,24 +8,24 @@ if c.Mode() ~= c.Modes.FightIsStarting then
     error('This script must start while the fight is starting')
 end
 
-if c.CurrentOpponent() ~= c.OpponentNames.VonKaiser then
+if c.CurrentOpponent() ~= opponents.VonKaiser then
     error('Script only works on Von Kaiser!')
 end
 
-if c.CurrentRound() ~= 1 then
+if addr.Round:Read() ~= 1 then
     error('Script only works on round 1')
 end
 
 c.FastMode()
 
 local function _punch2or4()
-    local orig = c.Read(c.Addr.OppHp)
+    local orig = addr.OppHp:Read()
     c.WaitFor(1)
     c.PushB(2)
     c.WaitFor(5)
     c.PushUp()
     c.WaitFor(3)
-    local curr = c.Read(c.Addr.OppHp)
+    local curr = addr.OppHp:Read()
     local gain = orig - curr
     if gain ~= 4 then
         c.Debug('Did not successfully hit gutter')
@@ -68,7 +68,7 @@ local function __phase2punches()
     if not c.MisdirectedLeftGutPunch() then return false end
     if not c.LeftGutPunch() then return false end
     if not c.Uppercut() then return false end
-    if c.Read(c.Stars) ~= 1 then
+    if addr.Stars:Read() ~= 1 then
         c.Debug('Did not get random star')
         return false
     end

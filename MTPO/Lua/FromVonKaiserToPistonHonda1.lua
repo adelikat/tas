@@ -13,11 +13,11 @@ c.FastMode()
 local function _do()
     c.UntilMode(c.Modes.PostFightScreen)
     c.WaitFor(2)
-    if c.Read(c.Addr.Timer1) == 0 then
+    if addr.Timer1:Read() == 0 then
         c.Log('Timer has not started yet')
         return false
     end
-    while c.Read(c.Addr.Timer1) > 1 do
+    while addr.Timer1:Read() > 1 do
         c.WaitFor(1)        
     end
     c.PushStart(2)

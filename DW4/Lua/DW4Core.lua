@@ -277,7 +277,6 @@ c = {
         if not emu.islagged() then
             c.WaitFor(1)
             if not emu.islagged() then
-                c.Save(7)
                 error('This function must be run during lag, or one frame before it')
             end
         end
