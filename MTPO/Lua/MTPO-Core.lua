@@ -180,6 +180,7 @@ c = {
         _startTime = os.clock()
 		_done = false
 		c.TrackHealth()
+		event.onexit(c.Finish)
 	end,
 	Done = function()
 		_done = true
@@ -188,10 +189,14 @@ c = {
 		return _done
 	end,
 	Finish = function()
-		local endTime = os.clock() 
-        local timeTaken = endTime - _startTime
 		console.log('---------------')
-        console.log(string.format('Total time: %s seconds', _round(timeTaken, 2)))
+
+		if _startTime ~= nil then
+			local endTime = os.clock()
+        	local timeTaken = endTime - _startTime
+        	console.log(string.format('Total time: %s seconds', _round(timeTaken, 2)))
+		end
+		
 		client.displaymessages(true)
 		client.pause()
 		client.speedmode(100)
@@ -847,5 +852,3 @@ c.RightGutPunch = function()
 	c.PushA(2)
 	return __finishPunch(9)
 end
-
-event.onexit(c.Finish)

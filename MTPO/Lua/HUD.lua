@@ -152,7 +152,7 @@ hud = {
 			if c.IsOpponentKnockedOut() then
 				hp = 0
 			else
-				hp = c.Read(c.Addr.OppNextHealth)
+				hp = addr.OppNextHealth:Read()
 			end			
 			dmg = 0
 			color = 'darkgray'
@@ -236,7 +236,7 @@ hud = {
 			return
 		end
 
-		if c.Read(0x22) == 1 then
+		if addr.IsInFightMode:Read() == 1 then
 			return
 		end
 
@@ -255,6 +255,8 @@ hud = {
 			return
 		end
 
+		local guardTimer = addr.GuardTimer:Read() & 0x7F
+
 		rfp = addr.OppRfpDefense:Read()
 		lfp = addr.OppLfpDefense:Read()
 		rgp = addr.OppRgpDefense:Read()
@@ -269,15 +271,9 @@ hud = {
 		_textToImage(_guardSymbol(lgp), 66, 99)
 		_textToImage(_guardSymbol(rgp), 75, 99)
 
-		local oppSpeed = addr.GuardSpeed1:Read()
-		if oppSpeed > 1 then
-			gui.drawRectangle(64, 110, oppSpeed + 2, 2, 'Gray', 'Black')
-
-			-- TODO: I think the 7th bit indicates guard up/down ?
-			local timer = addr.GuardTimer:Read() & 0x7F
-			if timer > 0 then
-				gui.drawLine(65, 111, 65 + timer, 111, 'Red')
-			end
+		if guardTimer > 1 then
+			gui.drawRectangle(64, 110, guardTimer + 2, 2, 'Gray', 'Black')
+			gui.drawLine(65, 111, 65 + guardTimer, 111, 'Red')
 		end
 	end
 }
