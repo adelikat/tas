@@ -1,12 +1,8 @@
---Starts anytime during the 'Fight is starting' mode before Von Kaiser
---Manipulates the Von Kaiser Fight
+--Starts at the first frame to press start to advance the 'Time' screen (Great fighting, you won, Time x:xx.xx)
 dofile('MTPO-Core.lua')
 
 c.InitSession()
-
-if c.Mode() ~= c.Modes.FightIsStarting then
-    error('This script must start while the fight is starting')
-end
+c.Load(2)
 
 if c.CurrentOpponent() ~= opponents.VonKaiser then
     error('Script only works on Von Kaiser!')
@@ -17,6 +13,7 @@ if addr.Round:Read() ~= 1 then
 end
 
 c.FastMode()
+c.BlackscreenMode()
 
 local function _punch2or4()
     local orig = addr.OppHp:Read()
@@ -93,10 +90,16 @@ local function _phase3()
     c.WaitFor(30)
     if not c.Duck() then return false end
     if not c.Uppercut() then return false end
+    if not c.UntilPostFightTimeScreen() then return false end
+
     return true
 end
 
 while not c.IsDone() do
+    c.PushStart(2)
+    c.UntilMode(c.Modes.PreRound)
+    c.PushStart(2)
+    c.UntilMode(c.Modes.FightIsStarting)    
     local result = c.Cap(_phase1, 100)
     if result then
         local result = c.Cap(_phase2, 100)

@@ -10,14 +10,12 @@ end
 c.FastMode()
 c.BlackscreenMode()
 
-while not c.IsDone() do
+local function _do()
     -- There is a not lag frame on frame 3
     while emu.framecount() < 50 do
         c.WaitFor(1)
     end
-    c.UntilNextInputFrame()
     c.UntilMode(c.Modes.MenuScreen)
-    c.WaitFor(2)
     c.UntilNextInputFrame()
     c.PushStart(2)
     c.UntilMode(c.Modes.PreRound)
@@ -28,14 +26,24 @@ while not c.IsDone() do
         return false
     end
 
-    if addr.Round:Read() ~= 1 then
+    if c.Round() ~= 1 then
         c.Log('Something went wrong! Not on Round 1')
         return false
     end
 
-    c.UntilNextInputFrame()
     c.PushStart(2)
     c.UntilMode(c.Modes.FightIsStarting)
-    c.WaitFor(1) -- We want to actually be in this mode for the next scipt
-    c.Done()
+    return true
+end
+
+
+while not c.IsDone() do
+    local result = c.Cap(_do, 100)
+    console.log('done: ' .. tostring(result)) 
+    if c.Success(result) then
+        console.log('success')
+        c.Done()
+    else
+        console.log('fail')
+    end
 end

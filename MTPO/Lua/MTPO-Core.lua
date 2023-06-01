@@ -188,6 +188,21 @@ c = {
 	IsDone = function()
 		return _done
 	end,
+	Success = function(val)
+		if val == nil then
+            return false
+        end
+    
+        if type(val) == 'number' then
+            return val > 0
+        end
+    
+        if type(val) == 'boolean' then
+            return val
+        end
+    
+        error('Unsupported type in Success call: ' .. tostring(val))
+	end,
 	Finish = function()
 		console.log('---------------')
 
@@ -300,6 +315,9 @@ c = {
 		end
 	
 		return 'Unknown'
+	end,
+	Round = function()
+		return addr.Round:Read() 
 	end,
 	IsInFight = function()
 		return addr.IsInFight:Read() == 1
@@ -531,20 +549,30 @@ c = {
     end,
 	--Waits frames until the given mode, assumes no input is needed
 	UntilMode = function (mode)
-		c.Save("CoreTemp")
-		local startFrameCount = emu.framecount()
-
-		while c.Mode() ~= mode do
+		local bail = 2000
+		local frames = 0
+		while c.Mode() ~= mode and frames < bail do
 			c.WaitFor(1)
+			frames = frames + 1
 		end
 
-		local endFrameCount = emu.framecount()
-		local targetFrames = endFrameCount - startFrameCount - 1
+		return c.Mode() == mode
+	end,
+	-- Advances from the end of a fight to the screen that shows the time, ends on the first frame where start can be pressed
+	UntilPostFightTimeScreen = function()
+		if not c.UntilPostFightBlackScreen() then return false end
 
-		c.Load("CoreTemp")
-		if targetFrames > 0 then		
-			c.WaitFor(targetFrames)
+		-- Advance to time screen
+		c.UntilMode(c.Modes.PostFightScreen)
+		c.WaitFor(2)
+		if addr.Timer1:Read() == 0 then
+			c.Log('Timer has not started yet')
+			return false
 		end
+		while addr.Timer1:Read() > 1 do
+			c.WaitFor(1)        
+		end
+
 		return true
 	end,	
 	UntilMacCanFight = function()

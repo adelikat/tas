@@ -3,7 +3,7 @@
 dofile('MTPO-Core.lua')
 
 c.InitSession()
-
+c.Load(1)
 if c.Mode() ~= c.Modes.FightIsStarting then
     error('This script must start while the fight is starting')
 end
@@ -17,7 +17,7 @@ if addr.Round:Read() ~= 1 then
 end
 
 c.FastMode()
-
+c.BlackscreenMode()
 local function _hitAfterTaunt()
     if not c.QuickRightDodge() then return false end
     if not c.QuickRightDodge() then return false end
@@ -44,7 +44,8 @@ local function _do()
 
     if not c.Cap(_hitAfterTaunt, 100) then return false end
     if not c.Cap(c.UntilKoFinishes, 100) then return false end
-    if not c.UntilPostFightBlackScreen() then return false end
+    if not c.UntilPostFightTimeScreen() then return false end
+
     return true
 end
 
