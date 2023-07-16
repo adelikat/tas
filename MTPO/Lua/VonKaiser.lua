@@ -70,7 +70,7 @@ local function __phase2punches()
         return false
     end
     if c.OpponentWillGetUpOnCount() ~= 2 then
-        c.Debug('Von will not get up on 2')
+        c.Debug('Opponent will not get up on 2')
         return false
     end
     return true

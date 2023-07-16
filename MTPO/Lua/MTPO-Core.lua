@@ -650,6 +650,14 @@ c = {
 			_doFrame(_buttons().With('Up', 'A'))
 		end
 	end,
+	PushUpAndStart = function(numFrames)
+		if not frames then
+			frames = 1
+		end
+		for i = 1, frames, 1 do
+			_doFrame(_buttons().With('Up', 'Start'))
+		end
+	end,
 	------------------------
 	-- Macros
 	------------------------
@@ -729,13 +737,21 @@ c = {
 		return true
 	end,
 	-- Performs an uppercut (star punch), and checks that it landed, if it does not knock the opponent down, it will set up for the next action
-	Uppercut = function()
+	Uppercut = function(isMisdirected)
 		if addr.Stars:Read() == 0 then
 			c.Log('No stars, cannot uppercut')
 			return false
 		end
 		local orig = addr.OppHp:Read()
-		c.PushStart(2)
+		c.PushStart()
+
+		-- TODO: need a better API for sending in other button presses
+		if isMisdirected then
+			c.PushUpAndStart()
+		else
+			c.PushStart()
+		end
+		
 
 		if c.CurrentMacMove() ~= 13 then
 			c.Log('Mac did not start punch')
