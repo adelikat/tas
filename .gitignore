@@ -24,3 +24,4 @@ Input Log.txt
 *.z64
 DW4-2/
 MTPO/Lua/state-archive/
+**/OpenTK.dll.config
