@@ -442,6 +442,9 @@ c = {
     return false
     ]]
     Cap = function(func, limit)
+        if movie.mode() ~= 'RECORD' then
+            error('Movie must be recording')
+        end
         local tempFile = 'Cap-'.. emu.framecount()
         c.Save(tempFile)
         local i
@@ -467,6 +470,9 @@ c = {
     attempt occurred
     ]]
     Best = function(func, tries)
+        if movie.mode() ~= 'RECORD' then
+            error('Movie must be recording')
+        end
         local noResult = 9999999
         local best = noResult
         local tempFile = 'Best-Start-'.. emu.framecount()
