@@ -3,7 +3,7 @@ dofile('../DW4Core.lua')
 c.InitSession()
 c.FastMode()
 c.BlackscreenMode()
-c.Load(1)
+c.Load(2)
 
 local function _leaveChambers()
     c.RandomFor(220)
@@ -80,7 +80,7 @@ end
 
 while not c.IsDone() do
     c.NoEncountersPossible = true
-    local result = c.Best(_do, 2)
+    local result = c.Best(_do, 5)
     if c.Success(result) then
         c.Done()
     end

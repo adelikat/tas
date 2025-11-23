@@ -5,7 +5,7 @@ dofile('../DW4Core.lua')
 c.InitSession()
 c.FastMode()
 c.BlackscreenMode()
-c.Load(2)
+c.Load(3)
 
 
 local function _enterCave()

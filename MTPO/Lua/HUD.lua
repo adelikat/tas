@@ -76,6 +76,7 @@ local function _isRngOffSet()
 end
 
 local function _drawHealthBar(x1, y1, hp, dmg, color)
+	gui.drawBox(88, 66, 110, 93, 'red')
 	local opp = addr.OppNumber:Read()
 	if _isRngOffSet() then
 		x1 = x1 + 1
