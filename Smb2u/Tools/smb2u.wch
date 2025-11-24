@@ -6,83 +6,94 @@ SystemID NES
 003C	b	u	0	RAM	X Speed
 0032	b	u	0	RAM	Y
 0411	b	u	0	RAM	Y Subpixel
-0029	b	u	0	RAM	E1 Level X
-002A	b	u	0	RAM	E2 Level X
-002B	b	u	0	RAM	E3 Level X
-002C	b	u	0	RAM	E4 Level X
-002D	b	u	0	RAM	E5 Level X
-002E	b	u	0	RAM	I1 X
-002F	b	u	0	RAM	I2 X
-0030	b	u	0	RAM	I3 X
-0031	b	u	0	RAM	I4 X
-0032	b	u	0	RAM	I5 X
-0033	b	u	0	RAM	E1 Level Y
-0034	b	u	0	RAM	E2 Level Y
-0035	b	u	0	RAM	E3 Level Y
-0036	b	u	0	RAM	E4 Level Y
-0037	b	u	0	RAM	E5 Level Y
-0038	b	u	0	RAM	I1 Y
-0039	b	u	0	RAM	I2 Y
-003A	b	u	0	RAM	I3 Y
-003B	b	u	0	RAM	I4 Y
-003C	b	u	0	RAM	I5 Y
-003D	b	u	0	RAM	E1 X Speed
-003E	b	u	0	RAM	E2 X Speed
-003F	b	u	0	RAM	E3 X Speed
-0040	b	u	0	RAM	E4 X Speed
-0041	b	u	0	RAM	E5 X Speed
-0042	b	u	0	RAM	I1 X Speed
-0043	b	u	0	RAM	I2 X Speed
-0044	b	u	0	RAM	I3 X Speed
-0045	b	u	0	RAM	I4 X Speed
-0046	b	u	0	RAM	I5 X Speed
-0047	b	u	0	RAM	E1 Y Speed
-0048	b	u	0	RAM	E2 Y Speed
-0049	b	u	0	RAM	E3 Y Speed
-004A	b	u	0	RAM	E4 Y Speed
-004B	b	u	0	RAM	E5 Y Speed
-004B	b	u	0	RAM	I1 Y Speed
-004C	b	u	0	RAM	I2 Y Speed
-004D	b	u	0	RAM	I3 Y Speed
-004E	b	u	0	RAM	I4 Y Speed
-004F	b	u	0	RAM	I5 Y Speed
-0050	b	u	0	RAM	I5 Y Speed
-0051	b	u	0	RAM	E1 Loaded
-0052	b	u	0	RAM	E2 Loaded
-0053	b	u	0	RAM	E3 Loaded
-0054	b	u	0	RAM	E4 Loaded
-0055	b	u	0	RAM	E5 Loaded
-0056	b	u	0	RAM	I1 Loaded
-0057	b	u	0	RAM	I1 Loaded
-0058	b	u	0	RAM	I1 Loaded
-0059	b	u	0	RAM	I1 Loaded
-005A	b	u	0	RAM	I1 Loaded
-005B	b	u	0	RAM	E1 ?
-005C	b	u	0	RAM	E2 ?
-005D	b	u	0	RAM	E3 ?
-005E	b	u	0	RAM	E4 ?
-005F	b	u	0	RAM	E5 ?
-0060	b	u	0	RAM	I1 ?
-0061	b	u	0	RAM	I2 ?
-0062	b	u	0	RAM	I3 ?
-0063	b	u	0	RAM	I4 ?
-0064	b	u	0	RAM	I5 ?
-0065	b	u	0	RAM	E1 palette?
-0066	b	u	0	RAM	E2 palette?
-0067	b	u	0	RAM	E3 palette?
-0068	b	u	0	RAM	E4 palette?
-0069	b	u	0	RAM	E5 palette?
-006A	b	u	0	RAM	I1 palette?
-006B	b	u	0	RAM	I2 palette?
-006C	b	u	0	RAM	I3 palette?
-006D	b	u	0	RAM	I4 palette?
-006E	b	u	0	RAM	I5 palette?
+00FD	b	u	0	RAM	Camera X
 0	S	_	1		
-0409	b	h	0	RAM	E X Subpixel
-040A	b	h	0	RAM	E X Subpixel
-040B	b	h	0	RAM	E X Subpixel
-040C	b	h	0	RAM	E X Subpixel
+0029	b	u	0	RAM	E5 Level X
+002A	b	u	0	RAM	E4 Level X
+002B	b	u	0	RAM	E3 Level X
+002C	b	u	0	RAM	E2 Level X
+002D	b	u	0	RAM	E1 Level X
+002E	b	u	0	RAM	I5 X
+002F	b	u	0	RAM	I4 X
+0030	b	u	0	RAM	I3 X
+0031	b	u	0	RAM	I2 X
+0032	b	u	0	RAM	I1 X
+0033	b	u	0	RAM	E5 Level Y
+0034	b	u	0	RAM	E4 Level Y
+0035	b	u	0	RAM	E3 Level Y
+0036	b	u	0	RAM	E2 Level Y
+0037	b	u	0	RAM	E1 Level Y
+0038	b	u	0	RAM	I5 Y
+0039	b	u	0	RAM	I4 Y
+003A	b	u	0	RAM	I3 Y
+003B	b	u	0	RAM	I2 Y
+003C	b	u	0	RAM	I1 Y
+003D	b	s	0	RAM	E5 X Speed
+003E	b	s	0	RAM	E4 X Speed
+003F	b	s	0	RAM	E3 X Speed
+0040	b	s	0	RAM	E2 X Speed
+0041	b	s	0	RAM	E1 X Speed
+0042	b	s	0	RAM	I5 X Speed
+0043	b	s	0	RAM	I4 X Speed
+0044	b	s	0	RAM	I3 X Speed
+0045	b	s	0	RAM	I2 X Speed
+0046	b	s	0	RAM	I1 X Speed
+0047	b	s	0	RAM	E5 Y Speed
+0048	b	s	0	RAM	E4 Y Speed
+0049	b	s	0	RAM	E3 Y Speed
+004A	b	s	0	RAM	E2 Y Speed
+004B	b	s	0	RAM	E1 Y Speed
+004B	b	u	0	RAM	??????
+004C	b	s	0	RAM	I5 Y Speed
+004D	b	s	0	RAM	I4 Y Speed
+004E	b	s	0	RAM	I3 Y Speed
+004F	b	s	0	RAM	I2 Y Speed
+0050	b	s	0	RAM	I1 Y Speed
+0051	b	u	0	RAM	E5 Loaded (1=alive, 2=dying)
+0052	b	u	0	RAM	E4 Loaded
+0053	b	u	0	RAM	E3 Loaded
+0054	b	u	0	RAM	E2 Loaded
+0055	b	u	0	RAM	E1 Loaded
+0056	b	u	0	RAM	???
+0057	b	u	0	RAM	???
+0058	b	u	0	RAM	???
+0059	b	u	0	RAM	???
+005A	b	u	0	RAM	Is On Ground
+005B	b	u	0	RAM	E5 Is On Ground
+005C	b	u	0	RAM	E4 Is On Ground
+005D	b	u	0	RAM	E3 Is On Ground
+005E	b	u	0	RAM	E2 Is On Ground
+005F	b	u	0	RAM	E1 Is On Ground
+0060	b	u	0	RAM	I5 Is Held or on Ground (4)
+0061	b	u	0	RAM	I4 Is Held or on Ground
+0062	b	u	0	RAM	I3 Is Held or on Ground
+0063	b	u	0	RAM	I2 Is Held or on Ground
+0064	b	u	0	RAM	I1 Is Held or on Ground
+0065	b	u	0	RAM	E5 palette
+0066	b	u	0	RAM	E4 palette
+0067	b	u	0	RAM	E3 palette
+0068	b	u	0	RAM	E2 palette
+0069	b	u	0	RAM	E1 palette
+006A	b	u	0	RAM	I5 palette?
+006B	b	u	0	RAM	I4 palette?
+006C	b	u	0	RAM	I3 palette?
+006D	b	u	0	RAM	I2 palette?
+006E	b	u	0	RAM	I1 palette?
+0	S	_	1		
+0408	b	h	0	RAM	E5 X Subpixel
+0409	b	h	0	RAM	E4 X Subpixel
+040A	b	h	0	RAM	E3 X Subpixel
+040B	b	h	0	RAM	E2 X Subpixel
+040C	b	h	0	RAM	E1 X Subpixel
+0412	b	h	0	RAM	E5 Y Subpixel
+0413	b	h	0	RAM	E4 Y Subpixel
+0414	b	h	0	RAM	E3 Y Subpixel
+0415	b	h	0	RAM	E2 Y Subpixel
+0416	b	h	0	RAM	E1 Y Subpixel
+0417	b	h	0	RAM	
 0	S	_	1		
 062A	b	u	0	RAM	Cherry Count
 0622	b	u	0	RAM	Coin Count
+0094	b	u	0	RAM	E5 Type
+
 
