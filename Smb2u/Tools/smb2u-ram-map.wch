@@ -1,0 +1,188 @@
+SystemID NES
+0010	b	u	0	RAM	255 frame rule timer
+0014	b	u	0	RAM	Level X 2nd Byte
+001E	b	u	0	RAM	Level Y 2nd Byte
+0028	b	u	0	RAM	Level X
+0029	b	u	0	RAM	E5 Level X
+002A	b	u	0	RAM	E4 Level X
+002B	b	u	0	RAM	E3 Level X
+002C	b	u	0	RAM	E2 Level X
+002D	b	u	0	RAM	E1 Level X
+002E	b	u	0	RAM	I3 X
+002F	b	u	0	RAM	I2 X
+0030	b	u	0	RAM	I1 X
+0031	b	u	0	RAM	?
+0032	b	u	0	RAM	Level Y
+0033	b	u	0	RAM	E5 Level Y
+0034	b	u	0	RAM	E4 Level Y
+0035	b	u	0	RAM	E3 Level Y
+0036	b	u	0	RAM	E2 Level Y
+0037	b	u	0	RAM	E1 Level Y
+0038	b	u	0	RAM	I3 Y?
+0039	b	u	0	RAM	I2 Y?
+003A	b	u	0	RAM	I1 Y?
+003B	b	u	0	RAM	?
+003C	b	u	0	RAM	X Speed
+003D	b	s	0	RAM	E5 X Speed
+003E	b	s	0	RAM	E4 X Speed
+003F	b	s	0	RAM	E3 X Speed
+0040	b	s	0	RAM	E2 X Speed
+0041	b	s	0	RAM	E1 X Speed
+0042	b	s	0	RAM	I5 X Speed
+0043	b	s	0	RAM	I4 X Speed
+0044	b	s	0	RAM	I3 X Speed
+0045	b	s	0	RAM	I2 X Speed
+0046	b	s	0	RAM	Y Jump
+0047	b	s	0	RAM	E5 Y Jump
+0048	b	s	0	RAM	E4 Y Jump
+0049	b	s	0	RAM	E3 Y Jump
+004A	b	s	0	RAM	E2 Y Jump
+004B	b	s	0	RAM	E1 Y Jump
+004C	b	s	0	RAM	?
+004D	b	s	0	RAM	I3 Y Speed
+004E	b	s	0	RAM	I2 Y Speed
+004F	b	s	0	RAM	I1 Y Speed
+0050	b	s	0	RAM	Player Status (0 = standing, 1 = on vine, 2 = picking something up, 7 = dying)
+0051	b	u	0	RAM	E5 Loaded (1=alive, 2=dying)
+0052	b	u	0	RAM	E4 Loaded
+0053	b	u	0	RAM	E3 Loaded
+0054	b	u	0	RAM	E2 Loaded
+0055	b	u	0	RAM	E1 Loaded
+0056	b	u	0	RAM	???
+0057	b	u	0	RAM	I3 Loaded
+0058	b	u	0	RAM	I2 Loaded
+0059	b	u	0	RAM I1 Loaded
+005A	b	u	0	RAM	Is On Ground
+005B	b	u	0	RAM	E5 Status (0 - not on ground, 4 walking, 5 turning left because object block, 6 - rurn right because object block, 20 - carrying main character when reaching an edge to turn around
+24 - carrying main character with same speed as movement)
+005C	b	u	0	RAM	E4 Status
+005D	b	u	0	RAM	E3 Status
+005E	b	u	0	RAM	E2 Status
+005F	b	u	0	RAM	E1 Status
+0060	b	u	0	RAM	?
+0061	b	u	0	RAM	I3 Is Held or on Ground
+0062	b	u	0	RAM	I2 Is Held or on Ground
+0063	b	u	0	RAM	I1 Is Held or on Ground
+0064	b	u	0	RAM	?
+0065	b	u	0	RAM	E5 palette
+0066	b	u	0	RAM	E4 palette
+0067	b	u	0	RAM	E3 palette
+0068	b	u	0	RAM	E2 palette
+0069	b	u	0	RAM	E1 palette
+006A	b	u	0	RAM	?
+006B	b	u	0	RAM	I3 mirroring
+006C	b	u	0	RAM	I2 mirroring
+006D	b	u	0	RAM	I1 mirroring
+006E	b	u	0	RAM	?
+0085	b	u	0	RAM	Player invuln timer
+0087	b	u	0	RAM	E5 Timer
+0088	b	u	0	RAM	E4 Timer
+0089	b	u	0	RAM	E3 Timer
+008A	b	u	0	RAM	E2 Timer
+008B	b	u	0	RAM	E1 Timer
+008C	b	u	0	RAM	I3 Timer
+008D	b	u	0	RAM	I2 Timer
+008E	b	u	0	RAM	I1 Timer
+0094	b	u	0	RAM	E5 Type
+009C	b	u	0	RAM	Player is holding item
+00B9	b	u	0	RAM	Flying Carpet timer
+00BA	b	u	0	RAM	Camera X Speed
+00FD	b	u	0	RAM	Camera X
+00AD	b	u	0	RAM	Is Key held (in room that does not have a key)
+0	S	_	1		
+0400	b	u	0	RAM	8 frame timer, in-level
+0407	b	u	0	RAM	X Subpixel
+0408	b	h	0	RAM	E5 X Subpixel
+0409	b	h	0	RAM	E4 X Subpixel
+040A	b	h	0	RAM	E3 X Subpixel
+040B	b	h	0	RAM	E2 X Subpixel
+040C	b	h	0	RAM	E1 X Subpixel
+040C	b	h	0	RAM	?
+040E	b	h	0	RAM	I Y Subpixel? (only when killing an enemy with veggie)
+040F	b	h	0	RAM	I Y Subpixel? (only when killing an enemy with veggie)
+0410	b	u	0	RAM	?
+0411	b	u	0	RAM	Y Subpixel
+0412	b	h	0	RAM	E5 Y Subpixel
+0413	b	h	0	RAM	E4 Y Subpixel
+0414	b	h	0	RAM	E3 Y Subpixel
+0415	b	h	0	RAM	E2 Y Subpixel
+0416	b	h	0	RAM	E1 Y Subpixel
+0417	b	h	0	RAM	?
+0418	b	h	0	RAM	I3 Y Subpixel
+0419	b	h	0	RAM	I2 Y Subpixel
+041A	b	h	0	RAM	I1 Y Subpixel
+0465	b	u	0	RAM	E5 HP
+0466	b	u	0	RAM	E4 HP
+0467	b	u	0	RAM	E3 HP
+0468	b	u	0	RAM	E2 HP
+0469	b	u	0	RAM	E1 HP
+04B7	b	u	0	RAM	Time left in subspace
+04BF	b	u	0	RAM	Level X 2nd Byte
+04C0	b	u	0	RAM	Camera X?
+04C1	b	u	0	RAM	Camera X?
+04C2	b	u	0	RAM	Player HP (high nibble)
+04C3	b	u	0	RAM	Total HP (Number of extra HP)
+04CA	b	u	0	RAM	Crouch timer
+04E0	b	u	0	RAM	Starman timer
+04E7	b	u	0	RAM	Area
+04E8	b	u	0	RAM	Sub-area
+04E9	b	u	0	RAM	Page
+04ED	b	u	0	RAM	Lives
+04FB	b	u	0	RAM	First mushroom been pulled? (if 1, will not reappear)
+04FC	b	u	0	RAM	Second mushroom been pulled? (if 1, will not reappear)
+04FF	b	u	0	RAM	Stopwatch timer
+0	S	_	1		
+0531	b	u	0	RAM	Current Level (0 - 1-1, 13 - 7-2)
+0546	b	u	0	RAM	Pickup Speed Animation 1
+0547	b	u	0	RAM	Pickup Speed Animation 2
+0548	b	u	0	RAM	Pickup Speed Animation 3
+0549	b	u	0	RAM	Pickup Speed Animation 4
+054A	b	u	0	RAM	Pickup Speed Animation 5
+054B	b	u	0	RAM	Pickup Speed Animation 6
+054C	b	u	0	RAM	Standing jump height
+054D	b	u	0	RAM	?
+054E	b	u	0	RAM	Crouching jump height
+0550	b	u	0	RAM	Running Jump Height
+0551	b	u	0	RAM	Running Jump Height while carrying object
+0553	b	u	0	RAM	Princess float timer (0 for other characters)
+0554	b	u	0	RAM	Player jumping physics (2 = luigi flutter, 4 = normal)
+0555	b	u	0	RAM	Player jumping physics (1 = luigi flutter, 4 = normal)
+05C5	b	u	0	RAM	# of Continues
+05EE	b	u	0	RAM	Current music track?
+05EF	b	u	0	RAM	Current music track?
+0	S	_	1		
+0600	b	u	0	RAM	plays current song strack
+0601	b	u	0	RAM	plays a sound effect
+0602	b	u	0	RAM	plays a sound effect
+0603	b	u	0	RAM	plays a small clip of music (and ending sequence)
+0604	b	u	0	RAM	player sound effects
+0605	b	u	0	RAM	POW sound effects
+0606	b	u	0	RAM	sound effect played by 0603
+0607	b	u	0	RAM	sound effect played by 0602
+0608	b	u	0	RAM	sound effect played by 0601
+0609	b	u	0	RAM	sound effect played by 0600
+0612	b	u	0	RAM	current music tempo
+0620	b	u	0	RAM	Has 1-up been pulled (if 1, then will not reappear)
+0621	b	u	0	RAM	# times leaving subscapce after grabbing a coin (2 - no more chances, get veggies)
+0622	b	u	0	RAM	Coin Count
+0628	b	u	0	RAM	Is in subspace
+0629	b	u	0	RAM	Subspace offset?
+062A	b	u	0	RAM	Cherry Count
+062B	b	u	0	RAM	# coins
+062C	b	u	0	RAM	# BIG Veggies
+062D	b	u	0	RAM	# Levels finished as Mario
+062E	b	u	0	RAM	# Levels finished as Princess
+062F	b	u	0	RAM	# Levels finished as Toad
+0630	b	u	0	RAM	# Levels finished as Luigi
+0635	b	u	0	RAM	Current World #
+
+0638	b	u	0	RAM	Player clothes palette
+0639	b	u	0	RAM	Player cap palette
+063A	b	u	0	RAM	Player skin palette
+06F7	b	u	0	RAM	Current Level Tileset (10 - Grass, 12 - Desert, 14 - sky, 16 - wart Palace)
+06F8	b	u	0	RAM	Current Cycling SPrite Tileset
+06F9	b	u	0	RAM	Current Character (appearance) (0 - mario, 1 - luigi, 2 - princess, 3 - toad, 4 small mario, 5 small luigi, etc)
+06FA	b	u	0	RAM	Current standard spritres (standard enemies?)
+06FB	b	u	0	RAM	Current standard spritres (1-ui, birdo ? bosses?)
+06FC	b	u	0	RAM	Current changeable spries (Ostro, pidget, pkey, etc)
+06FD	b	u	0	RAM	Current animation of 06F8 (cycling sprites)
