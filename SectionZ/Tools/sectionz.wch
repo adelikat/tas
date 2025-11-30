@@ -1,11 +1,15 @@
 SystemID NES
-0049	b	u	0	RAM	Lives
 03F9	b	u	0	RAM	Screen X
 03FB	b	u	0	RAM	Screen Y
-03F7	b	h	0	RAM	Camera X
+0030	w	u	1	RAM	Camera X
 0430	b	u	0	RAM	E HP
 0450	b	u	0	RAM	E HP
 0470	b	u	0	RAM	E HP
 0490	b	u	0	RAM	E HP
+04B0	b	u	0	RAM	E HP
+04D0	b	u	0	RAM	E HP
+04F0	b	u	0	RAM	E HP
+0510	b	u	0	RAM	E HP
+0530	b	u	0	RAM	E HP
 0550	b	u	0	RAM	E HP
 
