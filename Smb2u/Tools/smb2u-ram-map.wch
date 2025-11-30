@@ -32,12 +32,12 @@ SystemID NES
 0043	b	s	0	RAM	I4 X Speed
 0044	b	s	0	RAM	I3 X Speed
 0045	b	s	0	RAM	I2 X Speed
-0046	b	s	0	RAM	Y Jump
-0047	b	s	0	RAM	E5 Y Jump
-0048	b	s	0	RAM	E4 Y Jump
-0049	b	s	0	RAM	E3 Y Jump
-004A	b	s	0	RAM	E2 Y Jump
-004B	b	s	0	RAM	E1 Y Jump
+0046	b	s	0	RAM	Y Speed
+0047	b	s	0	RAM	E5 Y Speed
+0048	b	s	0	RAM	E4 Y Speed
+0049	b	s	0	RAM	E3 Y Speed
+004A	b	s	0	RAM	E2 Y Speed
+004B	b	s	0	RAM	E1 Y Speed
 004C	b	s	0	RAM	?
 004D	b	s	0	RAM	I3 Y Speed
 004E	b	s	0	RAM	I2 Y Speed

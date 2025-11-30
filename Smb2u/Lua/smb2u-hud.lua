@@ -32,11 +32,11 @@ local eColors = {
 
 local cameraX
 
-function readGlobals()
+local function readGlobals()
     cameraX = memory.readbyte(0x00FD)
 end
 
-function getEnemy(n)
+local function getEnemy(n)
     local x = memory.readbyte(0x002d - n + 1)
     local y = memory.readbyte(0x0037 - n + 1)
     local type = enemyTypes[memory.readbyte(0x0094 - n + 1)]
@@ -56,7 +56,7 @@ function getEnemy(n)
     return enemy
 end
 
-function drawEBox(enemy)
+local function drawEBox(enemy)
     if (enemy:isActive()) then
         gui.drawBox(enemy.x, enemy.y - 8, enemy.x + 16, enemy.y + 8, eColors[enemy.slot])
 
@@ -64,6 +64,22 @@ function drawEBox(enemy)
             gui.drawPixel(enemy.x + (i * 2) + 2, enemy.y - 8, 'black')
         end
     end
+end
+
+local function toSignedByte(b)
+    if b > 127 then
+        return b - 256
+    else
+        return b
+    end
+end
+
+local function toLeftNibble(b)
+    return string.sub(string.format("%01X", b), 1, 1)
+end
+
+local function toPositionStr(b1, b2, bsub, speed)
+    return (b1 + (toSignedByte(b2) * 256)) .. '.' .. toLeftNibble(bsub) .. ' ' .. toSignedByte(speed)
 end
 
 while true do
@@ -78,6 +94,18 @@ while true do
     drawEBox(e3)
     drawEBox(e4)
     drawEBox(e5)
+
+    local levelX1st = memory.readbyte(0x0028)
+    local levelX2nd = memory.readbyte(0x0014)
+    local xSubpixel = memory.readbyte(0x0407)
+    local xSpeed = memory.readbyte(0x003C)
+    gui.text(0, 68, 'X: ' .. toPositionStr(levelX1st, levelX2nd, xSubpixel, xSpeed))
+
+    local levelY1st = memory.readbyte(0x0032)
+    local levelY2nd = memory.readbyte(0x001E)
+    local ySubpixel = memory.readbyte(0x0411)
+    local ySpeed = memory.readbyte(0x0046)
+    gui.text(0, 88, 'Y: ' .. toPositionStr(levelY1st, levelY2nd, ySubpixel, ySpeed))
 
 	emu.frameadvance();
 end
