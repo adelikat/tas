@@ -1,6 +1,8 @@
 SystemID NES
 03F9	b	u	0	RAM	Screen X
+03FA	b	h	0	RAM	Screen X Subpixel
 03FB	b	u	0	RAM	Screen Y
+03FC	b	h	0	RAM	Screen Y Subpixel
 0030	w	u	1	RAM	Camera X
 0430	b	u	0	RAM	E HP
 0450	b	u	0	RAM	E HP
@@ -12,4 +14,9 @@ SystemID NES
 0510	b	u	0	RAM	E HP
 0530	b	u	0	RAM	E HP
 0550	b	u	0	RAM	E HP
+03DB	b	u	0	RAM	Speed Upgrade count
+004D	b	u	0	RAM	Kill related
+03FD	b	u	0	RAM	Kill related
+007D	b	u	0	RAM	Kill Related
+05B0	b	u	0	RAM	Missle Armed
 
