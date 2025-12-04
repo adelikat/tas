@@ -29,8 +29,6 @@ local function getEnemy(n)
     return enemy
 end
 
-local prevsKillCount = 0;
-local wrapCount = 0;
 while true do
 	-- Code here will run once when the script is loaded, then after each emulated frame.
     local isLag = emu.islagged()
@@ -57,18 +55,6 @@ while true do
     if anyDrawn == false then
         gui.clearGraphics()
     end
-
-
-
-    local sKillCount = memory.readbyte(0x03FD);
-    if sKillCount == 0 and prevsKillCount == 9 then
-        wrapCount = wrapCount + 1
-    end
-
-    prevsKillCount = sKillCount
-
-    gui.drawText(0,198, 'Kill count: ' .. sKillCount)
-    gui.drawText(0,210, 'Kill count wrap: ' .. wrapCount)
 
 	emu.frameadvance();
 end

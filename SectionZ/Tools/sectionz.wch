@@ -16,7 +16,7 @@ SystemID NES
 0550	b	u	0	RAM	E HP
 03DB	b	u	0	RAM	Speed Upgrade count
 004D	b	u	0	RAM	Kill related
-03FD	b	u	0	RAM	Kill related
-007D	b	u	0	RAM	Kill Related
+03FD	b	u	0	RAM	Kill count
+007D	b	u	0	RAM	Kill count
 05B0	b	u	0	RAM	Missle Armed
 
