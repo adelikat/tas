@@ -14,6 +14,10 @@ local function toSignedByte(b)
     end
 end
 
+local function toHex(b)
+    return string.format("%02X", b)
+end
+
 local startAddr = 0x421
 local function getEnemy(n)
     local eStart = startAddr + ((n - 1) * 32)
@@ -23,7 +27,8 @@ local function getEnemy(n)
         type = memory.readbyte(eStart),
         hp = toSignedByte(memory.readbyte(eStart + 15)),
         x = memory.readbyte(eStart + 2),
-        y = memory.readbyte(eStart + 4)
+        y = memory.readbyte(eStart + 4),
+        loaded = memory.readbyte(eStart + 1)
     }
 
     return enemy
@@ -43,12 +48,10 @@ while true do
 
     for i = 1, 10 do
         local e = getEnemy(i)
-        if e.hp >= 0 then
+        if e.hp >= 0 and e.loaded > 0 then
             anyDrawn = true
             gui.drawRectangle(e.x - 8, e.y - 16, 16, 16, color)
-            if e.hp > 0 then
-                gui.drawText(e.x, e.y, e.hp)
-            end
+            gui.drawText(e.x, e.y, e.hp + 1)
         end
     end
 
