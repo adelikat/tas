@@ -20,4 +20,5 @@ SystemID NES
 007D	b	u	0	RAM	Kill count
 05B0	b	u	0	RAM	Missle Armed
 0432	b	u	0	RAM	Boss Timer
+00B3	b	u	0	RAM	
 
