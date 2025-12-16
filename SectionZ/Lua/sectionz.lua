@@ -34,6 +34,17 @@ local function getEnemy(n)
     return enemy
 end
 
+local function drawMissleBox()
+    playerX = memory.readbyte(0x03F9)
+    playerY = memory.readbyte(0x03FB)
+    color = 'red'
+    if (playerX >= 123 and playerX <= 132 and playerY >= 112 and playerY <= 143) then
+        color = 'green'
+    end
+
+    gui.drawRectangle(123 - 8, 112 - 8, 132-123, 143-132, color)
+end
+
 while true do
 	-- Code here will run once when the script is loaded, then after each emulated frame.
     local isLag = emu.islagged()
@@ -58,6 +69,8 @@ while true do
     if anyDrawn == false then
         gui.clearGraphics()
     end
+
+    drawMissleBox()
 
 	emu.frameadvance();
 end
