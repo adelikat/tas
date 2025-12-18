@@ -1,0 +1,35 @@
+-i tased the game because nostalgia, i played it as a kid, and was never able to beat it (got into the high 50's but couldn't find the route to the boss)
+-the game had no submissions or even WIPs on tasvideos
+
+-game similar to gradius, but caps speed upgrades to 3, as lifting this cap lets you zip around similarly.  No "eat at joes" advertisingments unfortunately
+
+-16 frame rule for warps (including warp backs, bonus screens)
+
+speed 2 is better than speed 3
+show level warp frame charts
+decision point is for warps, 3 will allow the warp screen to be completed faster and could be the better choice if it breaks a frame rule without costing more frame rules in future parts
+
+speed 2 can get the fastest possible transitions even though it moves at 3 pixels per second
+	- for up, you must move to an open top area and get 40 position, then move down to 70
+	- for down, you must AVOID the top of the screen, so that 179 is possible
+
+luck manipulation
+	every 9 kills of an enemy type yields a random drop, that can be energy (needed for missles), speed (usually not needed) or nothing
+	most enemies are the same enemy type
+	speed = 2 is important to manipulate before the first warp, and manipulation is needed
+	the section 45 boss needs max energy
+	otherwise, for the most part, you will probably have the upgrades you need so long as you kill most enemies, but I do manipulate luck to ensure i have the proper resources
+
+section 45 boss is the real part of the TAS, a vast majority of the planning and effort is put here.  Got it in a 3 cycle
+
+missle is weird, you press a+b to have it appear on the screen in the center, and you need to hover over that area to grab it.  While it is in the air, if you get another, it doubles up the damage it does when it hits a target (unless the boss is artificially locked to only receive 1 hp of dmg).  Once it hits, continuging to grab missles will continue to do more dmg.  Missles do 16 damage a hit, so bosses can be killed quite quickly.  The caveat is that you have to be in the center of the screen which can be a problem depending on the boss movment
+
+the M weapon is theoretically best because it does 4 dmg (5 if done at point blank range), (unless boss artifically locks it to 1 dmg) all bosses are killed by the missle trick so this ends up not mattering.  However, it is slightly better than the pea shooter for larger hit box.  The 3-way M upgrade is not good.  While it shoots 3 at once, you still can only have 3 on the screen at once, so you have to wait for one wave to disappear before shooting another.  This makes boss fighting slower
+
+sound glitch, a few bosses are not required to beat.  The level is long and assumes you will dispatch the boss by the time you get to the end.  If you time it so that you kill the boss and the kill sound effects are still happening while leaving the level, it gets stuck playing for the duration of the next level. I do this to show off the glitch because well, its a glitch, so might as well show off
+
+-route
+credit Synopsis Grim's speedrun for route
+explain warps, bosses unlock levels, most levels have up/down options
+
+show ram addresses
