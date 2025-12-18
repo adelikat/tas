@@ -1,0 +1,6 @@
+SystemID NES
+0070	b	u	0	RAM	Player X
+0084	b	u	0	RAM	Player Y
+0098	b	u	0	RAM	direction
+0627	b	u	0	RAM	Kill Count
+
