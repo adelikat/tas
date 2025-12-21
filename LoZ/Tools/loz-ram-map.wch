@@ -1,9 +1,37 @@
 SystemID NES
-0070	b	u	0	RAM	Player X
-0084	b	u	0	RAM	Player Y
-0098	b	u	0	RAM	direction
+0012	b	h	0	RAM	Game Mode
+0016	b	u	0	RAM	Cur save slot
 0050	b	u	0	RAM	Kill Counter
 0051	b	u	0	RAM	Bonus Item Type
 0052	b	u	0	RAM	Item Counter
+0029	b	u	0	RAM	E1 Timer
+002A	b	u	0	RAM	E2 Timer
+002B	b	u	0	RAM	E3 Timer
+002C	b	u	0	RAM	E4 Timer
+002D	b	u	0	RAM	E5 Timer
+002E	b	u	0	RAM	E6 Timer
+0070	b	u	0	RAM	Player X
+0071	b	u	0	RAM	E1 X
+0076	b	u	0	RAM	E6 X
+0084	b	u	0	RAM	Player Y
+0085	b	u	0	RAM	E1 Y
+008A	b	u	0	RAM	E6 Y
+0098	b	u	0	RAM	Player Direction
+0099	b	u	0	RAM	E1 Direction
+003C	b	u	0	RAM	Flute timer
+004C	b	u	0	RAM	Bubble timer
+0513	b	u	0	RAM	Blue candle used
 0627	b	u	0	RAM	Fairy Counter
+0657	b	u	0	RAM	Current Sword
+0658	b	u	0	RAM	# Bombs
+0668	b	u	0	RAM	Has Lv 9 Map
+066D	b	u	0	RAM	# Rupies
+066E	b	u	0	RAM	# Keys
+0350	b	u	0	RAM	E1 Type
+0355	b	u	0	RAM	E6 Type
+0394	b	s	0	RAM	Player Sub-tile
+03A8	b	s	0	RAM	Player Sub-pixel
+0448	b	u	0	RAM	Money Making Left
+0449	b	u	0	RAM	Money Making Middle
+0449	b	u	0	RAM	Money Making Right
 
