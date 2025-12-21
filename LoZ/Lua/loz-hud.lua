@@ -8,8 +8,19 @@ function screenScrollHelper()
     y = memory.readbyte(0x0084)
     color = 'white'
     if (direction == facingLeft and x == 5)
-        or (direction == facingRight and x == 235) then
+        or (direction == facingRight and x == 0)
+        or (direction == facingRight and x == 235)
+        or (direction == facingDown and y == 216) then
         color = 'green'
+    end
+
+    if (direction == facingRight and x == 16)
+        or (direction == facingRight and x == 16)
+        or (direction == facingLeft and x == 240)
+        or (direction == facingLeft and x == 224)
+        or (direction == facingUp and y == 205)
+        or (direction == facingDown and y == 61) then
+        color = 'yellow'
     end
 
     if direction == facingLeft then
@@ -17,9 +28,9 @@ function screenScrollHelper()
     elseif direction == facingRight then
         gui.drawLine(x + 12, y - 8, x + 12, y + 16, color)
     elseif direction == facingUp then
-        gui.drawLine(x, y - 8, x + 16, y - 8)
+        gui.drawLine(x, y - 8, x + 16, y - 8, color)
     elseif direction == facingDown then
-        gui.drawLine(x, y + 8, x + 16, y + 8)
+        gui.drawLine(x, y + 7, x + 16, y + 7, color)
     end
 end
 
