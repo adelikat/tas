@@ -1,88 +1,33 @@
-local Directions = {
-    Right = 1,
-    Left = 2,
-    Down = 4,
-    Up = 8,
-}
-
-local GameModes = {
-    Transition = 0,
-    SelectionScreen = 1,
-    FinishScroll = 4,
-    Normal = 5,
-    PrepareScroll = 6,
-    Scrolling = 7,
-    Cave = 0x0B,
-    Registration = 0xE,
-    Elimination = 0xF,
-}
+dofile('loz-core.lua')
 
 function screenScrollHelper()
-    direction = memory.readbyte(0x0098)
-    x = memory.readbyte(0x0070)
-    y = memory.readbyte(0x0084)
+    p = c.Player();
     color = 'white'
-    if (direction == Directions.Left and x == 5)
-        or (direction == Directions.Right and x == 0)
-        or (direction == Directions.Right and x == 235)
-        or (direction == Directions.Down and y == 216) then
+    if (p.direction == c.Directions.Left and p.x == 5)
+        or (p.direction == c.Directions.Right and p.x == 0)
+        or (p.direction == c.Directions.Right and p.x == 235)
+        or (p.direction == c.Directions.Down and p.y == 216) then
         color = 'green'
     end
 
-    if (direction == facingRight and x == 16)
-        or (direction == Directions.Right and x == 16)
-        or (direction == Directions.Left and x == 240)
-        or (direction == Directions.Left and x == 224)
-        or (direction == Directions.Up and y == 205)
-        or (direction == Directions.Down and y == 61) then
+    if (p.direction == facingRight and p.x == 16)
+        or (p.direction == c.Directions.Right and p.x == 16)
+        or (p.direction == c.Directions.Left and p.x == 240)
+        or (p.direction == c.Directions.Left and p.x == 224)
+        or (p.direction == c.Directions.Up and p.y == 205)
+        or (p.direction == c.Directions.Down and p.y == 61) then
         color = 'yellow'
     end
 
-    if direction == Directions.Left then
-        gui.drawLine(x, y - 8, x, y + 16, color)
-    elseif direction == Directions.Right then
-        gui.drawLine(x + 12, y - 8, x + 12, y + 16, color)
-    elseif direction == Directions.Up then
-        gui.drawLine(x, y - 8, x + 16, y - 8, color)
-    elseif direction == Directions.Down then
-        gui.drawLine(x, y + 7, x + 16, y + 7, color)
+    if p.direction == c.Directions.Left then
+        gui.drawLine(p.x, p.y - 8, p.x, p.y + 16, color)
+    elseif p.direction == c.Directions.Right then
+        gui.drawLine(p.x + 12, p.y - 8, p.x + 12, p.y + 16, color)
+    elseif p.direction == c.Directions.Up then
+        gui.drawLine(p.x, p.y - 8, p.x + 16, p.y - 8, color)
+    elseif p.direction == c.Directions.Down then
+        gui.drawLine(p.x, p.y + 7, p.x + 16, p.y + 7, color)
     end
-end
-
-local function toSignedByte(b)
-    if b > 127 then
-        return b - 256
-    else
-        return b
-    end
-end
-
-local function toHex(b)
-    return string.format("%02X", b)
-end
-
-local function getGameMode()
-    return memory.readbyte(0x0012)
-end
-
-local function toLeftNibble(b)
-    return string.sub(string.format("%01X", b), 1, 1)
-end
-
-local function getEnemy(n)
-    i = n - 1
-
-    local enemy = {
-        num = n,
-        x = memory.readbyte(0x0071 + i),
-        y = memory.readbyte(0x0085 + i),
-        direction = memory.readbyte(0x099 + i),
-        type = memory.readbyte(0x0350 + i),
-        hp = memory.readbyte(0x0486 + i),
-        timer = memory.readbyte(0x0029 + i)
-    }
-
-    return enemy
 end
 
 local function drawEnemy(enemy)
@@ -90,28 +35,28 @@ local function drawEnemy(enemy)
         return
     end
 
-    local mode = getGameMode()
-    if mode ~= GameModes.Normal and mode ~= GameModes.Cave then
+    local mode = c.GameMode()
+    if mode ~= c.GameModes.Normal and mode ~= c.GameModes.Cave then
         return
     end
 
     gui.drawRectangle(enemy.x, enemy.y - 8, 16, 16, 'white')
 
-    if enemy.direction == Directions.Left then
+    if enemy.direction == c.Directions.Left then
         gui.drawLine(enemy.x, enemy.y - 8, enemy.x, enemy.y + 8, 'green')
-    elseif enemy.direction == Directions.Right then
+    elseif enemy.direction == c.Directions.Right then
         gui.drawLine(enemy.x + 16, enemy.y - 8, enemy.x + 16, enemy.y + 8, 'green')
-    elseif enemy.direction == Directions.Up then
+    elseif enemy.direction == c.Directions.Up then
         gui.drawLine(enemy.x, enemy.y - 8, enemy.x + 16, enemy.y - 8, 'green')
-    elseif enemy.direction == Directions.Down then
+    elseif enemy.direction == c.Directions.Down then
         gui.drawLine(enemy.x, enemy.y + 8, enemy.x + 16, enemy.y + 8, 'green')
     end
 
-    if enemy.hp > 16 and mode == GameModes.Normal then
-        gui.drawText(enemy.x, enemy.y + 8, toLeftNibble(enemy.hp))
+    if enemy.hp > 16 and mode == c.GameModes.Normal then
+        gui.drawText(enemy.x, enemy.y + 8, c.ToLeftNibble(enemy.hp))
     end
 
-    if mode == GameModes.Cave and enemy.timer > 0 then
+    if mode == c.GameModes.Cave and enemy.timer > 0 then
         gui.drawText(enemy.x + 16, enemy.y + 8, enemy.timer )
     end
 
@@ -138,7 +83,7 @@ local function moneyMakingColor(val)
 end
 
 local function moneyMakingHud()
-    if getGameMode() ~= GameModes.Cave then
+    if c.GameMode() ~= c.GameModes.Cave then
        return
     end
 
@@ -158,12 +103,12 @@ while true do
 	screenScrollHelper()
     moneyMakingHud()
 
-    drawEnemy(getEnemy(1))
-    drawEnemy(getEnemy(2))
-    drawEnemy(getEnemy(3))
-    drawEnemy(getEnemy(4))
-    drawEnemy(getEnemy(5))
-    drawEnemy(getEnemy(6))
+    drawEnemy(c.Enemy(1))
+    drawEnemy(c.Enemy(2))
+    drawEnemy(c.Enemy(3))
+    drawEnemy(c.Enemy(4))
+    drawEnemy(c.Enemy(5))
+    drawEnemy(c.Enemy(6))
 
 	emu.frameadvance();
 end
