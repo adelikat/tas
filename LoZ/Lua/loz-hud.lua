@@ -40,7 +40,12 @@ local function drawEnemy(enemy)
         return
     end
 
-    gui.drawRectangle(enemy.x, enemy.y - 8, 16, 16, 'white')
+    color = 'white'
+    if (enemy.num == 1) then
+        color = 'gray'
+    end
+
+    gui.drawRectangle(enemy.x, enemy.y - 8, 16, 16, color)
 
     if enemy.direction == c.Directions.Left then
         gui.drawLine(enemy.x, enemy.y - 8, enemy.x, enemy.y + 8, 'green')

@@ -7,4 +7,6 @@ SystemID NES
 0052	b	u	0	RAM	Item Counter
 0627	b	u	0	RAM	Fairy Counter
 0012	b	u	0	RAM	Game Mode
+0523	b	u	0	RAM	Flute Index
+0029	b	u	0	RAM	E1 Timer
 

@@ -21,6 +21,7 @@ SystemID NES
 003C	b	u	0	RAM	Flute timer
 004C	b	u	0	RAM	Bubble timer
 0513	b	u	0	RAM	Blue candle used
+0523	b	u	0	RAM	Flute index
 0627	b	u	0	RAM	Fairy Counter
 0657	b	u	0	RAM	Current Sword
 0658	b	u	0	RAM	# Bombs
