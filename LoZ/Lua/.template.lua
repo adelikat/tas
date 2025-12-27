@@ -1,5 +1,8 @@
--- This template lives at `.../Lua/.template.lua`.
-while true do
-	-- Code here will run once when the script is loaded, then after each emulated frame.
-	emu.frameadvance();
+dofile('loz-core.lua')
+
+c.Start()
+while not c.IsDone() do
+    c.Done()
 end
+
+c.Finish()

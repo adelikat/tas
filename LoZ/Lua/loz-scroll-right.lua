@@ -4,7 +4,7 @@ function isFasterToMoveRight(x)
     return x >= 106
 end
 
-client.unpause()
+c.Start()
 p = c.Player()
 
 if (isFasterToMoveRight(p.x)) then

@@ -1,5 +1,5 @@
 dofile('loz-core.lua')
-client.unpause()
+c.Start()
 while not c.IsDone()  do
     c.PushRight(100)
     c.Done()

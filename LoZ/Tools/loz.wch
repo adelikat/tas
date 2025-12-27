@@ -9,4 +9,5 @@ SystemID NES
 0012	b	u	0	RAM	Game Mode
 0523	b	u	0	RAM	Flute Index
 0029	b	u	0	RAM	E1 Timer
+048A	b	u	0	RAM	
 

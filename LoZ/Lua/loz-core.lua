@@ -107,6 +107,8 @@ c = {
         PrepareScroll = 6,
         Scrolling = 7,
         Cave = 0x0B,
+        Dungeon = 0x09,
+        LeavingDungeon = 0x10,
         Registration = 0xE,
         Elimination = 0xF,
     },
@@ -132,8 +134,13 @@ c = {
     Done = function()
 		_done = true
 	end,
+    Start = function()
+        client.unpause()
+        client.speedmode(800)
+    end,
     Finish = function()
         console.log('---------------')
+        client.speedmode(100)
         client.pause()
         if _done then
 		    console.log('Success!')
@@ -277,4 +284,25 @@ c = {
             c.WaitFor(targetFrames)
         end
     end,
+    UntilNextLagFrame = function()
+        if emu.islagged() then
+            console.log('already lag')
+            return
+        end
+
+        c.Save("CoreTemp")
+        local startFrameCount = emu.framecount()
+
+        while not emu.islagged() do
+            c.WaitFor(1)
+        end
+
+        local endFrameCount = emu.framecount()
+        local targetFrames = endFrameCount - startFrameCount - 1
+
+        c.Load("CoreTemp")
+        if targetFrames > 0 then
+            c.WaitFor(targetFrames)
+        end
+    end
 }

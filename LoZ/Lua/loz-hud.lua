@@ -114,6 +114,7 @@ while true do
     drawEnemy(c.Enemy(4))
     drawEnemy(c.Enemy(5))
     drawEnemy(c.Enemy(6))
+    drawEnemy(c.Enemy(7))
 
 	emu.frameadvance();
 end

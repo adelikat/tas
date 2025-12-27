@@ -33,3 +33,11 @@ get 1 more key to avoid having to buy one before level 9
 Good:
 going from level 5 to 6 -> raft glitch, plus already having the flute enabled -> a lot of time saved
 Lv 7 - leave life, uses no frames compared to rupees, no need to get rupees, if 3 hearts, just lose health
+
+
+----
+what I need to research
+	why zig zagging works, write script to help automate
+	rng
+	 a - enemy patterns
+	 b - drops
