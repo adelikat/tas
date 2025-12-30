@@ -6,16 +6,21 @@ function screenScrollHelper()
     if (p.direction == c.Directions.Left and p.x == 5)
         or (p.direction == c.Directions.Right and p.x == 0)
         or (p.direction == c.Directions.Right and p.x == 235)
-        or (p.direction == c.Directions.Down and p.y == 216) then
+        or (p.direction == c.Directions.Down and p.y == 216)
+        or (p.direction == c.Directions.Up and p.y == 66) then
         color = 'green'
     end
 
-    if (p.direction == facingRight and p.x == 16)
+    if (p.direction == c.Directions.Right and p.x == 16)
         or (p.direction == c.Directions.Right and p.x == 16)
         or (p.direction == c.Directions.Left and p.x == 240)
         or (p.direction == c.Directions.Left and p.x == 224)
         or (p.direction == c.Directions.Up and p.y == 205)
         or (p.direction == c.Directions.Down and p.y == 61) then
+        color = 'yellow'
+    end
+
+    if (p.direction == c.Directions.Down and p.y == 77) then
         color = 'yellow'
     end
 

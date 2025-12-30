@@ -10,4 +10,5 @@ SystemID NES
 0523	b	u	0	RAM	Flute Index
 0029	b	u	0	RAM	E1 Timer
 048A	b	u	0	RAM	
+048A	b	h	0	RAM	
 

@@ -1,8 +1,8 @@
 0 .\loz-core.lua
-1 .\loz-hud.lua
+1 .\hud.lua
 0 .\loz-test.lua
 0 .\next-lag.lua
-0 .\loz-scroll-right.lua
-0 .\loz-scroll-left.lua
-0 .\loz-move-up.lua
-0 .\loz-move-down.lua
+0 .\move-up.lua
+0 .\move-down.lua
+0 .\move-left.lua
+0 .\move-right.lua
