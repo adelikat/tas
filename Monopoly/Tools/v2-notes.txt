@@ -1,0 +1,43 @@
+V2
+30 Rupee secret                |
+gambling top-right, 50 rupess  | 80 Rupees
+Buy candle					   | 20 rupees
+Bomb get (medcine screen)
+GET Flute (2 keys of 4 avail)  | 20 rupees | 2 keys
+100 Rupee secret (skip 5 rupee)| 120 rupess | 2 keys
+GET Ladder                     | 120 rupees | 1 key
+Power bracelet
+Buy arrows                     | 40 rupees | 1 key
+GET Wand                       | 48 rupees | 0 keys
+FINISH Lv1 + boomerang         | 59 rupees | 1 key
+FINISH Lv2  + heart            | 65 rupees | 2 keys
+FINISH Lv8  + heart            | 67 rupees | 0 keys 
+FINISH Lv4 + leave money + raft| 17 rupees | 1 key
+FINISH Lv3 + heart             | 41 rupees | 1 key -> went out of my way for a key, wish i had an extra one coming in
+FINISH Lv5 + bow               | 48 rupees | 1 key
+FINISH Lv6 (SPEND 3 rupees)    | 50 rupees | 1 key
+FINISH Lv7 (SPEND 3)(leavelife)| 52 rupees | 1 key
+GET wooden swoard              
+Gamble 50 rupees			   | 102rupees | 1 key
+Buy keys					   | 2 rupees  | 2 keys
+LV 9 (SPEND 1 rupee)
+
+Notes:
+
+Bad:
+can skip boomerang, wasn't useful, saves several screens
+get more keys from level 2 while getting flute
+Lv 4 - pay life instead of money, costs some time, but saves the need to grind any rupees
+get 1 more key to avoid having to buy one before level 9
+
+Good:
+going from level 5 to 6 -> raft glitch, plus already having the flute enabled -> a lot of time saved
+Lv 7 - leave life, uses no frames compared to rupees, no need to get rupees, if 3 hearts, just lose health
+
+
+----
+what I need to research
+	why zig zagging works, write script to help automate
+	rng
+	 a - enemy patterns
+	 b - drops

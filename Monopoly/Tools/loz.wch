@@ -1,0 +1,14 @@
+SystemID NES
+0070	b	u	0	RAM	Player X
+0084	b	u	0	RAM	Player Y
+0098	b	u	0	RAM	direction
+0050	b	u	0	RAM	Kill Counter
+0051	b	u	0	RAM	Bonus Item Type
+0052	b	u	0	RAM	Item Counter
+0627	b	u	0	RAM	Fairy Counter
+0012	b	u	0	RAM	Game Mode
+0523	b	u	0	RAM	Flute Index
+0029	b	u	0	RAM	E1 Timer
+048A	b	u	0	RAM	
+048A	b	h	0	RAM	
+
