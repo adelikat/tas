@@ -35,4 +35,6 @@ SystemID NES
 0448	b	u	0	RAM	Money Making Left
 0449	b	u	0	RAM	Money Making Middle
 0449	b	u	0	RAM	Money Making Right
+04F0	b	u	0	RAM	Player Invuln Timer
+04F1	b	u	0	RAM	E1 Invul Timer
 

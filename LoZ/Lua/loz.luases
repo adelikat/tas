@@ -1,6 +1,8 @@
 0 .\savestater.lua
 0 .\loz-core.lua
 1 .\hud.lua
+1 .\hud-enemypatterns.lua
+0 .\hud-gridlines.lua
 0 .\loz-test.lua
 0 .\next-lag.lua
 0 .\move-up.lua

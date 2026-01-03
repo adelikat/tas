@@ -67,9 +67,10 @@ local function drawEnemy(enemy)
     end
 
     if mode == c.GameModes.Cave and enemy.timer > 0 then
-        gui.drawText(enemy.x + 16, enemy.y + 8, enemy.timer )
+        gui.drawText(enemy.x + 16, enemy.y + 8, enemy.timer, color)
+    elseif enemy.invulnTimer > 0 then
+        gui.drawText(enemy.x + 16, enemy.y + 8, enemy.invulnTimer, 'red')
     end
-
 end
 
 local function moneyMakingDisplay(val)

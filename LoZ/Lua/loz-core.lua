@@ -205,7 +205,9 @@ c = {
             direction = memory.readbyte(0x099 + i),
             type = memory.readbyte(0x0350 + i),
             hp = memory.readbyte(0x0486 + i),
-            timer = memory.readbyte(0x0029 + i)
+            timer = memory.readbyte(0x0029 + i),
+            invulnTimer = memory.readbyte(0x04F1 + i),
+            target = memory.readbyte(0x0413 + i)
         }
 
         return enemy
