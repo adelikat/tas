@@ -1,8 +1,14 @@
 
-6
+12
 00000	0070	b	u	0	Player X
 00001	0084	b	u	0	Player Y
 00002	0050	b	s	0	Kill Counter
 00003	0051	b	s	0	Bonus Item Type
 00004	0052	b	s	0	Item Counter
 00005	0627	b	s	0	Fairy Conter
+00006	0018	b	u	0	RNG1
+00007	0019	b	u	0	RNG2
+00008	001A	b	u	0	RNG3
+00009	001B	b	u	0	RNG4
+00010	001C	b	u	0	RNG5
+00011	001D	b	u	0	RNG6
