@@ -71,6 +71,8 @@ local function drawEnemy(enemy)
     elseif enemy.invulnTimer > 0 then
         gui.drawText(enemy.x + 16, enemy.y + 8, enemy.invulnTimer, 'red')
     end
+
+    --gui.drawText(enemy.x + 24, enemy.y, 't' .. enemy.timer)
 end
 
 local function moneyMakingDisplay(val)
@@ -110,9 +112,24 @@ local function moneyMakingHud()
     gui.drawText(144, 176, moneyMakingDisplay(right), moneyMakingColor(right))
 end
 
+local function subMenuHelper()
+    itemScrolling = memory.readbyte(0x00E1)
+    yPos = memory.readbyte(0x00FC)
+
+    local color = 'yellow'
+    if yPos == 65 then
+        color = 'green'
+    end
+
+    if itemScrolling > 0 then
+        gui.drawLine(40, 224 - yPos, 220, 224 - yPos, color)
+    end
+end
+
 while true do
 	screenScrollHelper()
     moneyMakingHud()
+    subMenuHelper()
 
     drawEnemy(c.Enemy(1))
     drawEnemy(c.Enemy(2))

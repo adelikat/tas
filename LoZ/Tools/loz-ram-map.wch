@@ -1,4 +1,5 @@
 SystemID NES
+0010	b	u	0	RAM	Current Level
 0012	b	h	0	RAM	Game Mode
 0016	b	u	0	RAM	Cur save slot
 0018	b	u	0	RAM	RNG1
@@ -43,4 +44,8 @@ SystemID NES
 0449	b	u	0	RAM	Money Making Right
 04F0	b	u	0	RAM	Player Invuln Timer
 04F1	b	u	0	RAM	E1 Invul Timer
+00EB	b	u	0	RAM	Current Screen
+00EC	b	u	0	RAM	Next Screen
+00FC	b	u	0	RAM	Start Menu Y scroll
+00E1	b	u	0	RAM	Item Menu Scrolling Animation
 

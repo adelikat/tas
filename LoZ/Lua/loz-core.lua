@@ -306,5 +306,23 @@ c = {
         if targetFrames > 0 then
             c.WaitFor(targetFrames)
         end
-    end
+    end,
+    Quest = function()
+        --TODO: this logic will fail on registration or elimination screens
+        -- they return higher values for current slot value (for 4th and 5th menu options)
+        currSaveSlot = memory.readbyte(0x0016)
+
+        --062D = slot 1, E = 2, F = 3
+        quest = memory.readbyte(0x062D + currSaveSlot)
+        return quest + 1
+    end,
+    Level = function()
+        return memory.readbyte(0x10)
+    end,
+    Screen = function()
+        return memory.readbyte(0x00EB)
+    end,
+    NextScreen = function()
+        return memory.readbyte(0x00EC)
+    end,
 }
