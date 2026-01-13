@@ -63,21 +63,30 @@ function Evaluate()
     if e3.y ~= 0x7D then
         return false
     end
-
+console.log('e3: ' .. e3.x .. ',' .. e3.y)
     return true
 end
 
 
 c.Start()
+local delay = 0
+c.Save('temp-start')
 while not c.IsDone() do
+    c.Load('temp-start')
+    console.log('attempting with delay: ' .. delay)
+    c.WaitFor(delay)
     UntilScrollStart()
     UntilScreenScrollDone()
     UpUntilY(164)
     local success = Evaluate()
+    console.log('success: ' .. tostring(success))
     if success then
         console.log('sucessful attempt')
+        c.Done()
     end
-    c.Done()
+
+    delay = delay + 1
+
 end
 
 c.Finish()

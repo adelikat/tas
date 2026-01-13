@@ -145,7 +145,7 @@ c = {
         if _done then
 		    console.log('Success!')
             c.Save('Success' .. emu.framecount())
-		    c.Save(9)
+		    c.Save(99)
         end
     end,
     Save = function(slot)
