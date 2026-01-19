@@ -1,0 +1,28 @@
+SystemID NES
+0070	b	u	0	RAM	Player X
+0084	b	u	0	RAM	Player Y
+0	S	_	1		
+0071	b	u	0	RAM	E1 X
+0085	b	u	0	RAM	E1 Y
+0099	b	u	0	RAM	E1 Dir
+0	S	_	1		
+0072	b	u	0	RAM	E2 X
+0086	b	u	0	RAM	E2 Y
+009A	b	u	0	RAM	E2 Dir
+0	S	_	1		
+0073	b	u	0	RAM	E3 X
+0087	b	u	0	RAM	E3 Y
+009B	b	u	0	RAM	E3 Dir
+0	S	_	1		
+0074	b	u	0	RAM	E4 X
+0088	b	u	0	RAM	E4 Y
+009C	b	u	0	RAM	E4 Dir
+0	S	_	1		
+0075	b	u	0	RAM	E5 X
+0089	b	u	0	RAM	E5 Y
+009D	b	u	0	RAM	E5 Dir
+0	S	_	1		
+0076	b	u	0	RAM	E6 X
+008A	b	u	0	RAM	E6 Y
+009E	b	u	0	RAM	E6 Dir
+

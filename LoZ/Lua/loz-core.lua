@@ -92,6 +92,10 @@ local function _doFrame(keys)
 	emu.frameadvance()
 end
 
+local function _isDebug()
+	return _config.SpeedPercent < 800
+end
+
 c = {
     Directions = {
         Right = 1,
@@ -125,6 +129,11 @@ c = {
     ToLeftNibble = function(b)
         return string.sub(string.format("%01X", b), 1, 1)
     end,
+    Debug = function(msg)
+		if _isDebug() then
+			console.log(msg)
+		end
+	end,
     Done = function()
 		_done = true
 	end,
@@ -228,8 +237,15 @@ c = {
 			_doFrame(btns)
 		end
 	end,
+    PushUpAndSelect = function()
+        local btns = _buttons().With('Select').With('Up')
+        _doFrame(btns)
+    end,
     PushStart = function(numFrames)
 		c.PushFor('Start', numFrames)
+	end,
+    PushSelect = function(numFrames)
+		c.PushFor('Select', numFrames)
 	end,
 	PushB = function(numFrames)
 		c.PushFor('B', numFrames)

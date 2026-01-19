@@ -2,7 +2,7 @@ SystemID NES
 0070	b	u	0	RAM	Player X
 0084	b	u	0	RAM	Player Y
 0098	b	u	0	RAM	direction
-0050	b	u	0	RAM	Kill Counter
+0050	b	u	0	RAM	10 Kill Counter
 0051	b	u	0	RAM	Bonus Item Type
 0052	b	u	0	RAM	Item Counter
 0627	b	u	0	RAM	Fairy Counter
@@ -18,4 +18,6 @@ SystemID NES
 001B	b	u	0	RAM	RNG4
 001C	b	u	0	RAM	RNG5
 001D	b	u	0	RAM	RNG6
+052A	b	u	0	RAM	Kill Counter
+00EB	b	u	0	RAM	Screen
 

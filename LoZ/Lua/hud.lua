@@ -73,6 +73,7 @@ local function drawEnemy(enemy)
     end
 
     --gui.drawText(enemy.x + 24, enemy.y, 't' .. enemy.timer)
+    gui.drawText(enemy.x, enemy.y - 8, enemy.num)
 end
 
 local function moneyMakingDisplay(val)
