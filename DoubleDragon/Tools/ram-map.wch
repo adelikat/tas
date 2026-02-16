@@ -1,0 +1,20 @@
+SystemID NES
+005A	b	u	0	RAM	P Level X
+005B	b	u	0	RAM	E1 Level X
+005C	b	u	0	RAM	E2 Level X
+0062	b	u	0	RAM	P Level X 2nd Byte
+0063	b	u	0	RAM	E1 Level X 2nd Byte
+0064	b	u	0	RAM	E2 Level X 2nd Byte
+0072	b	u	0	RAM	P Level Y
+0073	b	u	0	RAM	E1 Level Y
+0074	b	u	0	RAM	E2 Level Y
+03B4	b	u	0	RAM	P HP
+03B5	b	u	0	RAM	E1 HP
+03B6	b	u	0	RAM	E2 HP
+00DB	b	u	0	RAM	Camera X
+00DC	b	u	0	RAM	Camera X 2nd Byte
+00DD	b	u	0	RAM	Camera Y
+00DE	b	u	0	RAM	Camera Y 2nd Byte
+041E	b	u	0	RAM	Enemies left
+03C9	b	u	0	RAM	E1 Dmg Timer
+
