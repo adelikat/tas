@@ -1,57 +1,28 @@
 SystemID NES
-0703	b	u	0	RAM	Player Sprite Screen X1
-0707	b	u	0	RAM	Player Sprite Screen X2
-070B	b	u	0	RAM	Player Sprite Screen X3
-070F	b	u	0	RAM	Player Sprite Screen X4
-0700	b	u	0	RAM	Player Sprite Screen Y1
-0704	b	u	0	RAM	Player Sprite Screen Y2
-0708	b	u	0	RAM	Player Sprite Screen Y3
-070C	b	u	0	RAM	Player Sprite Screen Y4
-0	S	_	1		
-0743	b	u	0	RAM	E1 Sprite Screen X1
-0747	b	u	0	RAM	E1 Sprite Screen X2
-074B	b	u	0	RAM	E1 Sprite Screen X3
-074F	b	u	0	RAM	E1 Sprite Screen X4
-0740	b	u	0	RAM	E1 Sprite Screen Y1
-0744	b	u	0	RAM	E1 Sprite Screen Y2
-0748	b	u	0	RAM	E1 Sprite Screen Y3
-074C	b	u	0	RAM	E1 Sprite Screen Y4
-0	S	_	1		
-0723	b	u	0	RAM	E2 Sprite Screen X1
-0727	b	u	0	RAM	E2 Sprite Screen X2
-072B	b	u	0	RAM	E2 Sprite Screen X3
-072F	b	u	0	RAM	E2 Sprite Screen X4
-0720	b	u	0	RAM	E2 Sprite Screen Y1
-0724	b	u	0	RAM	E2 Sprite Screen Y2
-0728	b	u	0	RAM	E2 Sprite Screen Y3
-072C	b	u	0	RAM	E2 Sprite Screen Y4
-0	S	_	1		
-0733	b	u	0	RAM	E3 Sprite Screen X1
-0737	b	u	0	RAM	E3 Sprite Screen X2
-073B	b	u	0	RAM	E3 Sprite Screen X3
-073F	b	u	0	RAM	E3 Sprite Screen X4
-0730	b	u	0	RAM	E3 Sprite Screen Y1
-0734	b	u	0	RAM	E3 Sprite Screen Y2
-0738	b	u	0	RAM	E3 Sprite Screen Y3
-073C	b	u	0	RAM	E3 Sprite Screen Y4
-0	S	_	1		
 0004	b	u	0	RAM	Camera X
+0006	b	u	0	RAM	Btn Pressed
 0020	b	u	0	RAM	Player Block X Pos
 0021	b	u	0	RAM	Player Block Y Pos
+0053	b	u	0	RAM	E Drop Loc
 00C4	b	u	0	RAM	Gold Collected
 0093	b	u	0	RAM	Gold Remaining
+009E	b	u	0	RAM	
 00C5	b	u	0	RAM	Kill Count
+00E5	b	u	0	RAM	Game Speed
 0	S	_	1		
 0663	b	u	0	RAM	E1 Block X
 066B	b	u	0	RAM	E1 Block Y
 0661	b	u	0	RAM	E2 Block X
 0669	b	u	0	RAM	E2 Block Y
+0661	b	u	0	RAM	E1 Lv X
 0662	b	u	0	RAM	E3 Block X
+0663	b	u	0	RAM	E3 Lv X
+0669	b	u	0	RAM	E1 Lv Y
 066A	b	u	0	RAM	E3 Block Y
-0671	b	s	0	E1 Timer
-0672	b	s	0	E2 Timer
-0673	b	s	0	E3 Timer
-0	S	_	1		
+066B	b	u	0	RAM	E3 Lv Y
+0671	b	s	0	RAM	E1 Timer
+0672	b	s	0	RAM	E2 Timer
+0673	b	s	0	RAM	E3 Timer
 06E0	b	u	0	RAM	Dig Counter 1
 06E1	b	u	0	RAM	Dig Counter 2
 06E2	b	u	0	RAM	Dig Counter 3
@@ -60,4 +31,38 @@ SystemID NES
 06E5	b	u	0	RAM	Dig Counter 6
 06E6	b	u	0	RAM	Dig Counter 7
 06E7	b	u	0	RAM	Dig Counter 8
+0	S	_	1		
+0703	b	u	0	RAM	Player Sprite Screen X1
+0707	b	u	0	RAM	Player Sprite Screen X2
+070B	b	u	0	RAM	Player Sprite Screen X3
+070F	b	u	0	RAM	Player Sprite Screen X4
+0700	b	u	0	RAM	Player Sprite Screen Y1
+0704	b	u	0	RAM	Player Sprite Screen Y2
+0708	b	u	0	RAM	Player Sprite Screen Y3
+070C	b	u	0	RAM	Player Sprite Screen Y4
+0723	b	u	0	RAM	E2 Sprite Screen X1
+0727	b	u	0	RAM	E2 Sprite Screen X2
+072B	b	u	0	RAM	E2 Sprite Screen X3
+072F	b	u	0	RAM	E2 Sprite Screen X4
+0720	b	u	0	RAM	E2 Sprite Screen Y1
+0724	b	u	0	RAM	E2 Sprite Screen Y2
+0728	b	u	0	RAM	E2 Sprite Screen Y3
+072C	b	u	0	RAM	E2 Sprite Screen Y4
+0733	b	u	0	RAM	E3 Sprite Screen X1
+0737	b	u	0	RAM	E3 Sprite Screen X2
+073B	b	u	0	RAM	E3 Sprite Screen X3
+073F	b	u	0	RAM	E3 Sprite Screen X4
+0730	b	u	0	RAM	E3 Sprite Screen Y1
+0734	b	u	0	RAM	E3 Sprite Screen Y2
+0738	b	u	0	RAM	E3 Sprite Screen Y3
+073C	b	u	0	RAM	E3 Sprite Screen Y4
+0743	b	u	0	RAM	E1 Sprite Screen X1
+0747	b	u	0	RAM	E1 Sprite Screen X2
+074B	b	u	0	RAM	E1 Sprite Screen X3
+074F	b	u	0	RAM	E1 Sprite Screen X4
+0740	b	u	0	RAM	E1 Sprite Screen Y1
+0744	b	u	0	RAM	E1 Sprite Screen Y2
+0748	b	u	0	RAM	E1 Sprite Screen Y3
+074C	b	u	0	RAM	E1 Sprite Screen Y4
+0689	b	u	0	RAM	
 

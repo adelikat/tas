@@ -14,4 +14,6 @@ SystemID NES
 00E5	b	u	0	RAM	Game Speed
 009E	b	u	0	RAM	
 0053	b	u	0	RAM	E Drop Loc
+0020	b	u	0	RAM	P Lv X
+0021	b	u	0	RAM	P Lv Y
 
