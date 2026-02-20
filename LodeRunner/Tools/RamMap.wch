@@ -6,10 +6,14 @@ SystemID NES
 0053	b	u	0	RAM	E Drop Loc
 00C4	b	u	0	RAM	Gold Collected
 0093	b	u	0	RAM	Gold Remaining
-009E	b	u	0	RAM	
+009E	b	u	0	RAM
 00C5	b	u	0	RAM	Kill Count
 00E5	b	u	0	RAM	Game Speed
-0	S	_	1		
+0	S	_	1
+0200	b	u	0	RAM	256bytes of level data
+0300	b	u	0	RAM	256bytes of level data
+0400	b	u	0	RAM	256bytes of level data
+0	S	_	1
 0663	b	u	0	RAM	E1 Block X
 066B	b	u	0	RAM	E1 Block Y
 0661	b	u	0	RAM	E2 Block X
@@ -23,6 +27,12 @@ SystemID NES
 0671	b	s	0	RAM	E1 Timer
 0672	b	s	0	RAM	E2 Timer
 0673	b	s	0	RAM	E3 Timer
+0679	b	u	0	RAM	E1 X Tile offset
+067A	b	u	0	RAM	E2 X Tile offset
+067B	b	u	0	RAM	E3 X Tile offset
+0681	b	u	0	RAM	E1 Y Tile offset
+0682	b	u	0	RAM	E2 Y Tile offset
+0683	b	u	0	RAM	E3 Y Tile offset
 06E0	b	u	0	RAM	Dig Counter 1
 06E1	b	u	0	RAM	Dig Counter 2
 06E2	b	u	0	RAM	Dig Counter 3
@@ -31,7 +41,7 @@ SystemID NES
 06E5	b	u	0	RAM	Dig Counter 6
 06E6	b	u	0	RAM	Dig Counter 7
 06E7	b	u	0	RAM	Dig Counter 8
-0	S	_	1		
+0	S	_	1
 0703	b	u	0	RAM	Player Sprite Screen X1
 0707	b	u	0	RAM	Player Sprite Screen X2
 070B	b	u	0	RAM	Player Sprite Screen X3
@@ -64,5 +74,5 @@ SystemID NES
 0744	b	u	0	RAM	E1 Sprite Screen Y2
 0748	b	u	0	RAM	E1 Sprite Screen Y3
 074C	b	u	0	RAM	E1 Sprite Screen Y4
-0689	b	u	0	RAM	
+0689	b	u	0	RAM
 
