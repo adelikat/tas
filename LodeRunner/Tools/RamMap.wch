@@ -33,6 +33,22 @@ SystemID NES
 0681	b	u	0	RAM	E1 Y Tile offset
 0682	b	u	0	RAM	E2 Y Tile offset
 0683	b	u	0	RAM	E3 Y Tile offset
+06A0	b	u	0	RAM	Dig Location X 1
+06A1	b	u	0	RAM	Dig Location X 2
+06A2	b	u	0	RAM	Dig Location X 3
+06A3	b	u	0	RAM	Dig Location X 4
+06A4	b	u	0	RAM	Dig Location X 5
+06A5	b	u	0	RAM	Dig Location X 6
+06A6	b	u	0	RAM	Dig Location X 7
+06A7	b	u	0	RAM	Dig Location X 8
+06C0	b	u	0	RAM	Dig Location Y 1
+06C1	b	u	0	RAM	Dig Location Y 2
+06C2	b	u	0	RAM	Dig Location Y 3
+06C3	b	u	0	RAM	Dig Location Y 4
+06C4	b	u	0	RAM	Dig Location Y 5
+06C5	b	u	0	RAM	Dig Location Y 6
+06C6	b	u	0	RAM	Dig Location Y 7
+06C7	b	u	0	RAM	Dig Location Y 8
 06E0	b	u	0	RAM	Dig Counter 1
 06E1	b	u	0	RAM	Dig Counter 2
 06E2	b	u	0	RAM	Dig Counter 3
