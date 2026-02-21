@@ -21,5 +21,3 @@ SystemID NES
 06C0	b	u	0	RAM	dig y 1
 0703	b	h	0	RAM	screen x
 0704	b	h	0	RAM	screen y
-00DB	b	u	0	RAM	
-
