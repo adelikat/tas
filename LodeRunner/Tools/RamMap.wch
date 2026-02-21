@@ -8,6 +8,7 @@ SystemID NES
 0093	b	u	0	RAM	Gold Remaining
 009E	b	u	0	RAM
 00C5	b	u	0	RAM	Kill Count
+00DB	b	u	0	RAM	Game Mode
 00E5	b	u	0	RAM	Game Speed
 0	S	_	1
 0200	b	u	0	RAM	256bytes of level data

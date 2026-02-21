@@ -17,5 +17,9 @@ SystemID NES
 0021	b	u	0	RAM	P Lv Y
 009E	b	u	0	RAM	Global Timer
 0053	b	u	0	RAM	Spawn/Drop Timer
-0671	b	u	0	RAM	E1 Timer
+06A0	b	u	0	RAM	dig x 1
+06C0	b	u	0	RAM	dig y 1
+0703	b	h	0	RAM	screen x
+0704	b	h	0	RAM	screen y
+00DB	b	u	0	RAM	
 

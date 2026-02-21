@@ -89,12 +89,17 @@ local function drawSpawnPrediction(num)
 end
 
 while true do
-    drawEnemy(getEnemy(1))
-    drawEnemy(getEnemy(2))
-    drawEnemy(getEnemy(3))
-    drawSpawnPrediction(1)
-    drawSpawnPrediction(2)
-    drawSpawnPrediction(3)
-    drawSpawnPrediction(4)
+    if memory.readbyte(0x00DB) == 1 then
+        drawEnemy(getEnemy(1))
+        drawEnemy(getEnemy(2))
+        drawEnemy(getEnemy(3))
+        drawSpawnPrediction(1)
+        drawSpawnPrediction(2)
+        drawSpawnPrediction(3)
+        drawSpawnPrediction(4)
+    else
+        gui.clearGraphics()
+    end
+
 	emu.frameadvance();
 end
