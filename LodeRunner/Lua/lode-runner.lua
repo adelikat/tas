@@ -1,42 +1,4 @@
--- use spawn timer to create a lag counter
-local function toSignedByte(b)
-    if b > 127 then
-        return b - 256
-    else
-        return b
-    end
-end
-
-local function getEnemy(n)
-    local i = n - 1;
-
-    local colors = {
-        [0] = 'magenta',
-        [1] = 'purple',
-        [2] = 'red',
-    }
-
-    local enemy = {
-        index = i,
-        levelX = memory.readbyte(0x0661 + i),
-        levelY = memory.readbyte(0x0669 + i),
-        timer = toSignedByte(memory.readbyte(0x0671 + i)),
-        xTileOffset = memory.readbyte(0x0679 + i),
-        yTileOffset = memory.readbyte(0x0681 + i),
-        color = colors[i] or 'magenta'
-    }
-
-    return enemy
-end
-
-local function XcoordToScreen(x)
-    local camX = memory.readbyte(0x0004)
-    return (((x) * 16) - camX) + 14 + 2
-end
-
-local function YcoordToScreen(y)
-    return ((y - 1) * 16) + 8
-end
+dofile('lode-runner-core.lua')
 
 local function drawEnemy(e)
     local camX = memory.readbyte(0x0004)
@@ -81,18 +43,18 @@ local function drawSpawnPrediction(num)
 
     local camX = memory.readbyte(0x0004)
     local prediction = (spawnTimer + digCounter) % 32
-    local x = XcoordToScreen(prediction)
-    local y = YcoordToScreen(1)
+    local x = c.XcoordToScreen(prediction)
+    local y = c.YcoordToScreen(1)
     local color = colors[i] or '#4B2E1A';
     gui.drawEllipse(x + 2, y, 15, 15, color)
-    gui.drawRectangle(XcoordToScreen(digX), YcoordToScreen(digY), 15, 15, color)
+    gui.drawRectangle(c.XcoordToScreen(digX), c.YcoordToScreen(digY), 15, 15, color)
 end
 
 while true do
     if memory.readbyte(0x00DB) == 1 then
-        drawEnemy(getEnemy(1))
-        drawEnemy(getEnemy(2))
-        drawEnemy(getEnemy(3))
+        drawEnemy(c.Enemy(1))
+        drawEnemy(c.Enemy(2))
+        drawEnemy(c.Enemy(3))
         drawSpawnPrediction(1)
         drawSpawnPrediction(2)
         drawSpawnPrediction(3)

@@ -3,6 +3,8 @@ SystemID NES
 0006	b	u	0	RAM	Btn Pressed
 0020	b	u	0	RAM	Player Block X Pos
 0021	b	u	0	RAM	Player Block Y Pos
+0022	b	u	0	RAM	Player Block X Tile offset
+0023	b	u	0	RAM	Player Block Y Tile offset
 0053	b	u	0	RAM	E Drop Loc
 00C4	b	u	0	RAM	Gold Collected
 0093	b	u	0	RAM	Gold Remaining
