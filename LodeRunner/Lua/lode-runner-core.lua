@@ -123,9 +123,6 @@ c = {
 	IsDone = function()
 		return _done
 	end,
-    Done = function()
-		_done = true
-	end,
     Start = function()
         client.unpause()
         client.speedmode(800)
@@ -266,6 +263,7 @@ c = {
         if not emu.islagged() then
             c.WaitFor(1)
             if not emu.islagged() then
+                c.Save('error')
                 error('This function must be run during lag, or one frame before it')
             end
         end
@@ -346,20 +344,51 @@ c = {
     FindSelectSkip = function(direction)
         if direction ~= 'Right' and direction ~= 'Left' then
             error('FindSelectSkip only supports Left or Right currently')
-            return
+            return false
         end
         c.Save('find-select-temp')
+        local max = 310
         local delay = 0
         local found = false
         while not found do
+            c.Load('find-select-temp')
             c.WaitFor(delay)
             if direction == 'Left' then
                 c.PushLeftAndSelect()
             else
                 c.PushRightAndSelect()
             end
+            c.WaitFor(12)
+            local gameMode = memory.readbyte(0x00DB)
+            if gameMode == 1 then
+                local camX = memory.readbyte(0x0004)
+                c.WaitFor(12)
+                local newCamX = memory.readbyte(0x0004)
+                if newCamX == camX then
+                    found = true
+                else
+                    delay = delay + 1
+                    if delay > max then
+                        console.log('find select skip FAILED, bailing after ' .. max .. 'frames')
+                        return false
+                    end
+                    c.Debug('delay: ' .. delay .. ' did not work')
+                end
+
+                c.Debug('found select skip')
+            else
+                delay = delay + 1
+                if delay > max then
+                    console.log('find select skip FAILED, bailing after ' .. max .. 'frames')
+                    return false
+                end
+                c.Debug('delay: ' .. delay .. ' did not work')
+            end
+
+
         end
-
-
+        c.Save(99)
+        console.log('success, delay: ' .. delay)
+        return true
     end,
 }
