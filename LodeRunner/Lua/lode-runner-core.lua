@@ -341,13 +341,13 @@ c = {
             c.PushUpAndRight()
         end
     end,
-    FindSelectSkip = function(direction)
+    FindSelectSkip = function(direction, maxDelay)
         if direction ~= 'Right' and direction ~= 'Left' then
             error('FindSelectSkip only supports Left or Right currently')
             return false
         end
         c.Save('find-select-temp')
-        local max = 310
+        local max = maxDelay or 310
         local delay = 0
         local found = false
         while not found do
