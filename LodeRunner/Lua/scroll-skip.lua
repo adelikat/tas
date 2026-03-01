@@ -40,7 +40,7 @@ while not c.IsDone() do
             console.log('-----GIVING UP----------')
         end
     else
-        local result = c.FindSelectSkip('Right', 310)
+        local result = c.FindSelectSkip('Right', 200)
         if (result) then
             c.Done()
         else
