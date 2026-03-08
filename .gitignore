@@ -1,5 +1,8 @@
 EmuHawk.exe
 EmuHawk.exe.config
+EmuHawkMono.sh
+EmuHawkMono_laststderr.txt
+EmuHawkMono_laststdout.txt
 config.ini
 defctrl.json
 Input Log.txt

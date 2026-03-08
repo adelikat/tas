@@ -21,6 +21,9 @@ local function drawEnemy(e)
     if e.timer > 0 and e.timer < 126 then -- signed positive is pit timer, unlesss 126-127 which is for spawning at top
         gui.drawText(x, y, e.timer, e.color)
     end
+
+    local coordText = string.format("(%d,%d)", e.levelX, e.levelY)
+    gui.drawText(0 + (e.index * 100), 212, coordText, e.color, 'black', 10)
 end
 
 local function drawSpawnPrediction(num)
