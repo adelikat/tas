@@ -25,9 +25,9 @@ function finishPreviousLevel()
     return true
 end
 
-local giveUp = 100
+local giveUp = 10
 c.Save('find-start')
-local delay = 26
+local delay = 0
 while not c.IsDone() do
     c.Load('find-start')
     console.log('full attempt with delay ' .. delay)
@@ -40,7 +40,7 @@ while not c.IsDone() do
             console.log('-----GIVING UP----------')
         end
     else
-        local result = c.FindSelectSkip('Right', 310 - delay)
+         local result = c.FindSelectSkip('Right', 20 - delay)
         if (result) then
             c.Done()
         else

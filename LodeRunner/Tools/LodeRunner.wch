@@ -4,8 +4,8 @@ SystemID NES
 0004	b	u	0	RAM	Camera X
 009E	b	u	0	RAM	Global Timer
 0053	b	u	0	RAM	Spawn/Drop Timer
-0703	b	h	0	RAM	Screen X
-0704	b	h	0	RAM	Screen Y
+0703	b	u	0	RAM	Screen X
+0704	b	u	0	RAM	Screen Y
 0020	b	u	0	RAM	Block X
 0021	b	u	0	RAM	Block Y
 
