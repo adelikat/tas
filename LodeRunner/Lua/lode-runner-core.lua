@@ -227,6 +227,10 @@ c = {
         local btns = _buttons().With('Select').With('Right')
         _doFrame(btns)
     end,
+    PushAAndSelect = function()
+        local btns = _buttons().With('Select').With('A')
+        _doFrame(btns)
+    end,
     PushUpAndLeft = function()
         local btns = _buttons().With('Up').With('Left')
         _doFrame(btns)
