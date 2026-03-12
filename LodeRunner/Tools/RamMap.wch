@@ -61,37 +61,259 @@ SystemID NES
 06E6	b	u	0	RAM	Dig Counter 7
 06E7	b	u	0	RAM	Dig Counter 8
 0	S	_	1
-0703	b	u	0	RAM	Player Sprite Screen X1
-0707	b	u	0	RAM	Player Sprite Screen X2
-070B	b	u	0	RAM	Player Sprite Screen X3
-070F	b	u	0	RAM	Player Sprite Screen X4
-0700	b	u	0	RAM	Player Sprite Screen Y1
-0704	b	u	0	RAM	Player Sprite Screen Y2
-0708	b	u	0	RAM	Player Sprite Screen Y3
-070C	b	u	0	RAM	Player Sprite Screen Y4
-0723	b	u	0	RAM	E2 Sprite Screen X1
-0727	b	u	0	RAM	E2 Sprite Screen X2
-072B	b	u	0	RAM	E2 Sprite Screen X3
-072F	b	u	0	RAM	E2 Sprite Screen X4
-0720	b	u	0	RAM	E2 Sprite Screen Y1
-0724	b	u	0	RAM	E2 Sprite Screen Y2
-0728	b	u	0	RAM	E2 Sprite Screen Y3
-072C	b	u	0	RAM	E2 Sprite Screen Y4
-0733	b	u	0	RAM	E3 Sprite Screen X1
-0737	b	u	0	RAM	E3 Sprite Screen X2
-073B	b	u	0	RAM	E3 Sprite Screen X3
-073F	b	u	0	RAM	E3 Sprite Screen X4
-0730	b	u	0	RAM	E3 Sprite Screen Y1
-0734	b	u	0	RAM	E3 Sprite Screen Y2
-0738	b	u	0	RAM	E3 Sprite Screen Y3
-073C	b	u	0	RAM	E3 Sprite Screen Y4
-0743	b	u	0	RAM	E1 Sprite Screen X1
-0747	b	u	0	RAM	E1 Sprite Screen X2
-074B	b	u	0	RAM	E1 Sprite Screen X3
-074F	b	u	0	RAM	E1 Sprite Screen X4
-0740	b	u	0	RAM	E1 Sprite Screen Y1
-0744	b	u	0	RAM	E1 Sprite Screen Y2
-0748	b	u	0	RAM	E1 Sprite Screen Y3
-074C	b	u	0	RAM	E1 Sprite Screen Y4
-0689	b	u	0	RAM
-
+0700	b	u	0	RAM	Player Srite 1 Screen Y
+0701	b	u	0	RAM	Player Sprite 1 Tile
+0702	b	u	0	RAM	Player Sprite 1 Direction Facing
+0703	b	u	0	RAM	Player Sprite 1 Screen X
+0704	b	u	0	RAM	Player Sprite 2 Screen Y
+0705	b	u	0	RAM	Player Sprite 2 Tile
+0706	b	u	0	RAM	Player Sprite 2 Direction Facing
+0707	b	u	0	RAM	Player Sprite 2 Screen X
+0708	b	u	0	RAM	Player Sprite 3 Screen Y
+0709	b	u	0	RAM	Player Sprite 3 Tile
+070A	b	u	0	RAM	Player Sprite 3 Direction Facing
+070B	b	u	0	RAM	Player Sprite 3 Screen X
+070C	b	u	0	RAM	Player Sprite 4 Screen Y
+070D	b	u	0	RAM	Player Sprite 4 Tile
+070E	b	u	0	RAM	Player Sprite 4 Direction Facing
+070F	b	u	0	RAM	Player Sprite 4 Screen X
+0710	b	u	0	RAM	Unused Would be sprite info for a 2nd player
+0711	b	u	0	RAM	Unused Would be sprite info for a 2nd player
+0712	b	u	0	RAM	Unused Would be sprite info for a 2nd player
+0713	b	u	0	RAM	Unused Would be sprite info for a 2nd player
+0714	b	u	0	RAM	Unused Would be sprite info for a 2nd player
+0715	b	u	0	RAM	Unused Would be sprite info for a 2nd player
+0716	b	u	0	RAM	Unused Would be sprite info for a 2nd player
+0717	b	u	0	RAM	Unused Would be sprite info for a 2nd player
+0718	b	u	0	RAM	Unused Would be sprite info for a 2nd player
+0719	b	u	0	RAM	Unused Would be sprite info for a 2nd player
+071A	b	u	0	RAM	Unused Would be sprite info for a 2nd player
+071B	b	u	0	RAM	Unused Would be sprite info for a 2nd player
+071C	b	u	0	RAM	Unused Would be sprite info for a 2nd player
+071D	b	u	0	RAM	Unused Would be sprite info for a 2nd player
+071E	b	u	0	RAM	Unused Would be sprite info for a 2nd player
+071F	b	u	0	RAM	Unused Would be sprite info for a 2nd player
+0720	b	u	0	RAM	E1 Srite 1 Screen Y
+0721	b	u	0	RAM	E1 Sprite 1 Tile
+0722	b	u	0	RAM	E1 Sprite 1 Direction Facing
+0723	b	u	0	RAM	E1 Sprite 1 Screen X
+0724	b	u	0	RAM	E1 Sprite 2 Screen Y
+0725	b	u	0	RAM	E1 Sprite 2 Tile
+0726	b	u	0	RAM	E1 Sprite 2 Direction Facing
+0727	b	u	0	RAM	E1 Sprite 2 Screen X
+0728	b	u	0	RAM	E1 Sprite 3 Screen Y
+0729	b	u	0	RAM	E1 Sprite 3 Tile
+072A	b	u	0	RAM	E1 Sprite 3 Direction Facing
+072B	b	u	0	RAM	E1 Sprite 3 Screen X
+072C	b	u	0	RAM	E1 Sprite 4 Screen Y
+072D	b	u	0	RAM	E1 Sprite 4 Tile
+072E	b	u	0	RAM	E1 Sprite 4 Direction Facing
+072F	b	u	0	RAM	E1 Sprite 4 Screen X
+0730	b	u	0	RAM	E2 Srite 1 Screen Y
+0731	b	u	0	RAM	E2 Sprite 1 Tile
+0732	b	u	0	RAM	E2 Sprite 1 Direction Facing
+0733	b	u	0	RAM	E2 Sprite 1 Screen X
+0734	b	u	0	RAM	E2 Sprite 2 Screen Y
+0735	b	u	0	RAM	E2 Sprite 2 Tile
+0736	b	u	0	RAM	E2 Sprite 2 Direction Facing
+0737	b	u	0	RAM	E2 Sprite 2 Screen X
+0738	b	u	0	RAM	E2 Sprite 3 Screen Y
+0739	b	u	0	RAM	E2 Sprite 3 Tile
+073A	b	u	0	RAM	E2 Sprite 3 Direction Facing
+073B	b	u	0	RAM	E2 Sprite 3 Screen X
+073C	b	u	0	RAM	E2 Sprite 4 Screen Y
+073D	b	u	0	RAM	E2 Sprite 4 Tile
+073E	b	u	0	RAM	E2 Sprite 4 Direction Facing
+073F	b	u	0	RAM	E2 Sprite 4 Screen X
+0740	b	u	0	RAM	E3 Srite 1 Screen Y
+0741	b	u	0	RAM	E3 Sprite 1 Tile
+0742	b	u	0	RAM	E3 Sprite 1 Direction Facing
+0743	b	u	0	RAM	E3 Sprite 1 Screen X
+0744	b	u	0	RAM	E3 Sprite 2 Screen Y
+0745	b	u	0	RAM	E3 Sprite 2 Tile
+0746	b	u	0	RAM	E3 Sprite 2 Direction Facing
+0747	b	u	0	RAM	E3 Sprite 2 Screen X
+0748	b	u	0	RAM	E3 Sprite 3 Screen Y
+0749	b	u	0	RAM	E3 Sprite 3 Tile
+074A	b	u	0	RAM	E3 Sprite 3 Direction Facing
+074B	b	u	0	RAM	E3 Sprite 3 Screen X
+074C	b	u	0	RAM	E3 Sprite 4 Screen Y
+074D	b	u	0	RAM	E3 Sprite 4 Tile
+074E	b	u	0	RAM	E3 Sprite 4 Direction Facing
+074F	b	u	0	RAM	E3 Sprite 4 Screen X
+0750	b	u	0	RAM	Unused Would be sprite info for a 4th enemy
+0751	b	u	0	RAM	Unused Would be sprite info for a 4th enemy
+0752	b	u	0	RAM	Unused Would be sprite info for a 4th enemy
+0753	b	u	0	RAM	Unused Would be sprite info for a 4th enemy
+0754	b	u	0	RAM	Unused Would be sprite info for a 4th enemy
+0755	b	u	0	RAM	Unused Would be sprite info for a 4th enemy
+0756	b	u	0	RAM	Unused Would be sprite info for a 4th enemy
+0757	b	u	0	RAM	Unused Would be sprite info for a 4th enemy
+0758	b	u	0	RAM	Unused Would be sprite info for a 4th enemy
+0759	b	u	0	RAM	Unused Would be sprite info for a 4th enemy
+075A	b	u	0	RAM	Unused Would be sprite info for a 4th enemy
+075B	b	u	0	RAM	Unused Would be sprite info for a 4th enemy
+075C	b	u	0	RAM	Unused Would be sprite info for a 4th enemy
+075D	b	u	0	RAM	Unused Would be sprite info for a 4th enemy
+075E	b	u	0	RAM	Unused Would be sprite info for a 4th enemy
+075F	b	u	0	RAM	Unused Would be sprite info for a 4th enemy
+0760	b	u	0	RAM	Unused
+0761	b	u	0	RAM	Unused
+0762	b	u	0	RAM	Unused
+0763	b	u	0	RAM	Unused
+0764	b	u	0	RAM	Unused
+0765	b	u	0	RAM	Unused
+0766	b	u	0	RAM	Unused
+0767	b	u	0	RAM	Unused
+0768	b	u	0	RAM	Unused
+0769	b	u	0	RAM	Unused
+076A	b	u	0	RAM	Unused
+076B	b	u	0	RAM	Unused
+076C	b	u	0	RAM	Unused
+076D	b	u	0	RAM	Unused
+076E	b	u	0	RAM	Unused
+076F	b	u	0	RAM	Unused
+0770	b	u	0	RAM	Unused
+0771	b	u	0	RAM	Unused
+0772	b	u	0	RAM	Unused
+0773	b	u	0	RAM	Unused
+0774	b	u	0	RAM	Unused
+0775	b	u	0	RAM	Unused
+0776	b	u	0	RAM	Unused
+0777	b	u	0	RAM	Unused
+0778	b	u	0	RAM	Unused
+0779	b	u	0	RAM	Unused
+077A	b	u	0	RAM	Unused
+077B	b	u	0	RAM	Unused
+077C	b	u	0	RAM	Unused
+077D	b	u	0	RAM	Unused
+077E	b	u	0	RAM	Unused
+077F	b	u	0	RAM	Unused
+0780	b	u	0	RAM	Unused
+0781	b	u	0	RAM	Unused
+0782	b	u	0	RAM	Unused
+0783	b	u	0	RAM	Unused
+0784	b	u	0	RAM	Unused
+0785	b	u	0	RAM	Unused
+0786	b	u	0	RAM	Unused
+0787	b	u	0	RAM	Unused
+0788	b	u	0	RAM	Unused
+0789	b	u	0	RAM	Unused
+078A	b	u	0	RAM	Unused
+078B	b	u	0	RAM	Unused
+078C	b	u	0	RAM	Unused
+078D	b	u	0	RAM	Unused
+078E	b	u	0	RAM	Unused
+078F	b	u	0	RAM	Unused
+0790	b	u	0	RAM	Unused
+0791	b	u	0	RAM	Unused
+0792	b	u	0	RAM	Unused
+0793	b	u	0	RAM	Unused
+0794	b	u	0	RAM	Unused
+0795	b	u	0	RAM	Unused
+0796	b	u	0	RAM	Unused
+0797	b	u	0	RAM	Unused
+0798	b	u	0	RAM	Unused
+0799	b	u	0	RAM	Unused
+079A	b	u	0	RAM	Unused
+079B	b	u	0	RAM	Unused
+079C	b	u	0	RAM	Unused
+079D	b	u	0	RAM	Unused
+079E	b	u	0	RAM	Unused
+079F	b	u	0	RAM	Unused
+07A0	b	u	0	RAM	Unused
+07A1	b	u	0	RAM	Unused
+07A2	b	u	0	RAM	Unused
+07A3	b	u	0	RAM	Unused
+07A4	b	u	0	RAM	Unused
+07A5	b	u	0	RAM	Unused
+07A6	b	u	0	RAM	Unused
+07A7	b	u	0	RAM	Unused
+07A8	b	u	0	RAM	Unused
+07A9	b	u	0	RAM	Unused
+07AA	b	u	0	RAM	Unused
+07AB	b	u	0	RAM	Unused
+07AC	b	u	0	RAM	Unused
+07AD	b	u	0	RAM	Unused
+07AE	b	u	0	RAM	Unused
+07AF	b	u	0	RAM	Unused
+07B0	b	u	0	RAM	Unused
+07B1	b	u	0	RAM	Unused
+07B2	b	u	0	RAM	Unused
+07B3	b	u	0	RAM	Unused
+07B4	b	u	0	RAM	Unused
+07B5	b	u	0	RAM	Unused
+07B6	b	u	0	RAM	Unused
+07B7	b	u	0	RAM	Unused
+07B8	b	u	0	RAM	Unused
+07B9	b	u	0	RAM	Unused
+07BA	b	u	0	RAM	Unused
+07BB	b	u	0	RAM	Unused
+07BC	b	u	0	RAM	Unused
+07BD	b	u	0	RAM	Unused
+07BE	b	u	0	RAM	Unused
+07BF	b	u	0	RAM	Unused
+07C0	b	u	0	RAM	Unused
+07C1	b	u	0	RAM	Unused
+07C2	b	u	0	RAM	Unused
+07C3	b	u	0	RAM	Unused
+07C4	b	u	0	RAM	Unused
+07C5	b	u	0	RAM	Unused
+07C6	b	u	0	RAM	Unused
+07C7	b	u	0	RAM	Unused
+07C8	b	u	0	RAM	Unused
+07C9	b	u	0	RAM	Unused
+07CA	b	u	0	RAM	Unused
+07CB	b	u	0	RAM	Unused
+07CC	b	u	0	RAM	Unused
+07CD	b	u	0	RAM	Unused
+07CE	b	u	0	RAM	Unused
+07CF	b	u	0	RAM	Unused
+07D0	b	u	0	RAM	Unused
+07D1	b	u	0	RAM	Unused
+07D2	b	u	0	RAM	Unused
+07D3	b	u	0	RAM	Unused
+07D4	b	u	0	RAM	Unused
+07D5	b	u	0	RAM	Unused
+07D6	b	u	0	RAM	Unused
+07D7	b	u	0	RAM	Unused
+07D8	b	u	0	RAM	Unused
+07D9	b	u	0	RAM	Unused
+07DA	b	u	0	RAM	Unused
+07DB	b	u	0	RAM	Unused
+07DC	b	u	0	RAM	Unused
+07DD	b	u	0	RAM	Unused
+07DE	b	u	0	RAM	Unused
+07DF	b	u	0	RAM	Unused
+07E0	b	u	0	RAM	Unused
+07E1	b	u	0	RAM	Unused
+07E2	b	u	0	RAM	Unused
+07E3	b	u	0	RAM	Unused
+07E4	b	u	0	RAM	Unused
+07E5	b	u	0	RAM	Unused
+07E6	b	u	0	RAM	Unused
+07E7	b	u	0	RAM	Unused
+07E8	b	u	0	RAM	Unused
+07E9	b	u	0	RAM	Unused
+07EA	b	u	0	RAM	Unused
+07EB	b	u	0	RAM	Unused
+07EC	b	u	0	RAM	Unused
+07ED	b	u	0	RAM	Unused
+07EE	b	u	0	RAM	Unused
+07EF	b	u	0	RAM	Unused
+07F0	b	u	0	RAM	Unused
+07F1	b	u	0	RAM	Unused
+07F2	b	u	0	RAM	Unused
+07F3	b	u	0	RAM	Unused
+07F4	b	u	0	RAM	Unused
+07F5	b	u	0	RAM	Unused
+07F6	b	u	0	RAM	Unused
+07F7	b	u	0	RAM	Unused
+07F8	b	u	0	RAM	Unused
+07F9	b	u	0	RAM	Unused
+07FA	b	u	0	RAM	Unused
+07FB	b	u	0	RAM	Unused
+07FC	b	u	0	RAM	Unused
+07FD	b	u	0	RAM	Unused
+07FE	b	u	0	RAM	Unused
+07FF	b	u	0	RAM	Unused
