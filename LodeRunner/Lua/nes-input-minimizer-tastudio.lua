@@ -1,6 +1,6 @@
 local verboseLogging = false
-local targetFrame = 1000 -- how many frames to advance to ensure memory is synced after changing inputs
-local toNextMarker = false -- if true, will process frames between current frame and next marker, otherwise will process frames between previous and next marker
+local targetFrame = 30 -- how many frames to advance to ensure memory is synced after changing inputs
+local toNextMarker = true -- if true, will process frames between current frame and next marker, otherwise will process frames between previous and next marker
 local mode = movie.mode()
 
 if not tastudio.engaged() then
