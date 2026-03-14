@@ -123,6 +123,7 @@ local function minimizeButtonsOnFrame(frame, currentFrame)
             Log('Sync Success! keeping ' .. k .. ' off')
         else
             Log('Sync Failed! ' .. k .. ' is needed')
+            navigateTo(frame)
             tastudio.submitinputchange(frame, k, true)
             tastudio.applyinputchanges()
         end
@@ -154,7 +155,9 @@ client.unpause()
 client.speedmode(1600)
 local currentFrame = startFrame
 while not done do
+    console.log('navigating to frame ' .. currentFrame)
     navigateTo(currentFrame)
+    console.log('navigated to frame ' .. currentFrame)
     minimizeButtonsOnFrame(currentFrame)
     currentFrame = currentFrame + 1
 
