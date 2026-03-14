@@ -1,5 +1,6 @@
 local verboseLogging = false
-local targetFrame = 20 -- how many frames to advance to ensure memory is synced after changing inputs
+local targetFrame = 1000 -- how many frames to advance to ensure memory is synced after changing inputs
+local toNextMarker = false -- if true, will process frames between current frame and next marker, otherwise will process frames between previous and next marker
 local mode = movie.mode()
 
 if not tastudio.engaged() then
@@ -9,17 +10,6 @@ end
 if mode ~= 'PLAY' then
     error('Movie needs to be in playback mode, current mode: ' .. mode)
 end
-
-local _rawBtnList = {
-    ['P1 Up'] = false,
-    ['P1 Down'] = false,
-    ['P1 Left'] = false,
-    ['P1 Right'] = false,
-    ['P1 B'] = false,
-    ['P1 A'] = false,
-    ['P1 Select'] = false,
-    ['P1 Start'] = false,
-}
 
 function Log(msg)
     console.log(msg)
@@ -110,7 +100,7 @@ local function isAnyBtnPressed(btns)
 end
 
 local function minimizeButtonsOnFrame(frame, currentFrame)
-    local btns = movie.getinput(frame)
+    local btns = getPressedBtns(movie.getinput(frame))
     Debug('btns for frame ' .. frame)
     Debug(btns)
     if not isAnyBtnPressed(btns) then
@@ -148,7 +138,11 @@ if startFrame == nil then
     error('No marker found before current frame')
 end
 
-local endFrame = getMarkerAfter(currentFrame)
+endFrame = movie.length() - 1
+
+if toNextMarker then
+    endFrame = getMarkerAfter(currentFrame)
+end
 if endFrame == nil then
     endFrame = movie.length() - 1
 end
