@@ -24,7 +24,12 @@ function Debug(str)
 end
 
 function getAllMemory()
-    return mainmemory.read_bytes_as_array(0x0000, 0x07FF)
+    local ram = mainmemory.read_bytes_as_array(0x0000, 0x07FF)
+    ram['X'] = emu.getregister('X')
+    ram['Y'] = emu.getregister('Y')
+    ram['A'] = emu.getregister('A')
+    ram['P'] = emu.getregister('P')
+    return ram
 end
 
 local function getPressedBtns(btns)
