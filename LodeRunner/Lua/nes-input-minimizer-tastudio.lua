@@ -25,10 +25,12 @@ end
 
 function getAllMemory()
     local ram = mainmemory.read_bytes_as_array(0x0000, 0x07FF)
-    ram['X'] = emu.getregister('X')
-    ram['Y'] = emu.getregister('Y')
-    ram['A'] = emu.getregister('A')
-    ram['P'] = emu.getregister('P')
+    local allRegisters = emu.getregisters()
+    --concat ram and registers
+    for k, v in pairs(allRegisters) do
+        ram[k] = v
+    end
+
     return ram
 end
 
