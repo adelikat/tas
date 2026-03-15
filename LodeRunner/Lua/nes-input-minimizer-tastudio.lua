@@ -1,5 +1,5 @@
 local verboseLogging = false
-local targetFrame = 30 -- how many frames to advance to ensure memory is synced after changing inputs
+local targetFrame = 20 -- how many frames to advance to ensure memory is synced after changing inputs
 local toNextMarker = true -- if true, will process frames between current frame and next marker, otherwise will process frames between previous and next marker
 local mode = movie.mode()
 
@@ -127,9 +127,9 @@ local function minimizeButtonsOnFrame(frame, currentFrame)
         local newMemory = getAllMemory()
         local result = areArraysTheSame(syncedMemory, newMemory)
         if result then
-            Log('Sync Success! keeping ' .. k .. ' off')
+            Debug('Sync Success! keeping ' .. k .. ' off')
         else
-            Log('Sync Failed! ' .. k .. ' is needed')
+            Debug('Sync Failed! ' .. k .. ' is needed')
             navigateTo(frame)
             tastudio.submitinputchange(frame, k, true)
             tastudio.applyinputchanges()
@@ -162,9 +162,7 @@ client.unpause()
 client.speedmode(1600)
 local currentFrame = startFrame
 while not done do
-    console.log('navigating to frame ' .. currentFrame)
     navigateTo(currentFrame)
-    console.log('navigated to frame ' .. currentFrame)
     minimizeButtonsOnFrame(currentFrame)
     currentFrame = currentFrame + 1
 
