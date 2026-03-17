@@ -109,6 +109,93 @@ local function _buttons()
     return btns
 end
 
+local function _untilNextInputFrameTastudio()
+    if emu.framecount() > 0 and not emu.islagged() then
+        c.WaitFor(1)
+        if not emu.islagged() then
+            c.Save('error')
+            error('This function must be run during lag, or one frame before it')
+        end
+    end
+
+    while emu.islagged() or emu.framecount() == 0 do
+        c.WaitFor(1)
+    end
+
+    _tastudioGoToFrame(emu.framecount() - 1)
+end
+
+local function _untilNextInputFrame()
+    if emu.framecount() > 0 and not emu.islagged() then
+        c.WaitFor(1)
+        if not emu.islagged() then
+            c.Save('error')
+            error('This function must be run during lag, or one frame before it')
+        end
+    end
+
+    c.Save("CoreTemp")
+    local startFrameCount = emu.framecount()
+
+    while emu.islagged() or emu.framecount() == 0 do
+        c.WaitFor(1)
+    end
+
+    local endFrameCount = emu.framecount()
+    local targetFrames = endFrameCount - startFrameCount - 1
+
+    c.Load("CoreTemp")
+    if targetFrames > 0 then
+        c.WaitFor(targetFrames)
+    end
+end
+
+-- end ON the lag frame, untilNextInput frame ends 1 frame before it
+function _untilNextLagFrame()
+    if emu.framecount() > 0 then
+        if emu.islagged() then
+            c.WaitFor(1)
+            if emu.islagged() then
+                console.log('already lag')
+                return
+            end
+        end
+    end
+
+    c.Save("CoreTemp")
+    local startFrameCount = emu.framecount()
+
+    while not emu.islagged() do
+        c.WaitFor(1)
+    end
+
+    local endFrameCount = emu.framecount()
+    local targetFrames = endFrameCount - startFrameCount - 1
+
+    c.Load("CoreTemp")
+    if targetFrames > 0 then
+        c.WaitFor(targetFrames)
+    end
+end
+
+function _untilNextLagFrameTastudio()
+    if emu.framecount() > 0 then
+        if emu.islagged() then
+            c.WaitFor(1)
+            if emu.islagged() then
+                console.log('already lag')
+                return
+            end
+        end
+    end
+
+    while not emu.islagged() do
+        c.WaitFor(1)
+    end
+
+    _tastudioGoToFrame(emu.framecount() - 1)
+end
+
 local function _isDebug()
 	return _config.SpeedPercent < 800
 end
@@ -122,6 +209,7 @@ local function toSignedByte(b)
 end
 
 c = {
+    --------------------Core functions--------------------
     ToSignedByte = toSignedByte,
     ToHex = function(b)
         return string.format("%02X", b)
@@ -191,27 +279,6 @@ c = {
 			savestate.load(string.format('state-archive/%s.State', slot))
 		end
 	end,
-    Enemy = function(n)
-         local i = n - 1;
-
-        local colors = {
-            [0] = 'magenta',
-            [1] = 'purple',
-            [2] = 'red',
-        }
-
-        local enemy = {
-            index = i,
-            levelX = memory.readbyte(0x0661 + i),
-            levelY = memory.readbyte(0x0669 + i),
-            timer = toSignedByte(memory.readbyte(0x0671 + i)),
-            xTileOffset = memory.readbyte(0x0679 + i),
-            yTileOffset = memory.readbyte(0x0681 + i),
-            color = colors[i] or 'magenta'
-        }
-
-        return enemy
-    end,
     WaitFor = function(frames)
         if not frames then
 			frames = 1
@@ -283,49 +350,46 @@ c = {
 		c.PushFor('Right', numFrames)
 	end,
     UntilNextInputFrame = function()
-        if emu.framecount() > 0 and not emu.islagged() then
-            c.WaitFor(1)
-            if not emu.islagged() then
-                c.Save('error')
-                error('This function must be run during lag, or one frame before it')
-            end
-        end
-
-        c.Save("CoreTemp")
-        local startFrameCount = emu.framecount()
-
-        while emu.islagged() or emu.framecount() == 0 do
-            c.WaitFor(1)
-        end
-
-        local endFrameCount = emu.framecount()
-        local targetFrames = endFrameCount - startFrameCount - 1
-
-        c.Load("CoreTemp")
-        if targetFrames > 0 then
-            c.WaitFor(targetFrames)
+        if tastudio.engaged() then
+            _untilNextInputFrameTastudio()
+        else
+            _untilNextInputFrame()
         end
     end,
     UntilNextLagFrame = function()
-        if emu.islagged() then
-            console.log('already lag')
-            return
+        if tastudio.engaged() then
+            _untilNextLagFrameTastudio()
+        else
+            _untilNextLagFrame()
         end
-
-        c.Save("CoreTemp")
-        local startFrameCount = emu.framecount()
-
-        while not emu.islagged() do
-            c.WaitFor(1)
+    end,
+    GoToFrame = function(frame)
+        if not tastudio.engaged() then
+            error('tastudio must be engaged to use GoToFrame')
         end
+        _tastudioGoToFrame(frame)
+    end,
+    --------------------Game specific functions below--------------------
+    Enemy = function(n)
+         local i = n - 1;
 
-        local endFrameCount = emu.framecount()
-        local targetFrames = endFrameCount - startFrameCount - 1
+        local colors = {
+            [0] = 'magenta',
+            [1] = 'purple',
+            [2] = 'red',
+        }
 
-        c.Load("CoreTemp")
-        if targetFrames > 0 then
-            c.WaitFor(targetFrames)
-        end
+        local enemy = {
+            index = i,
+            levelX = memory.readbyte(0x0661 + i),
+            levelY = memory.readbyte(0x0669 + i),
+            timer = toSignedByte(memory.readbyte(0x0671 + i)),
+            xTileOffset = memory.readbyte(0x0679 + i),
+            yTileOffset = memory.readbyte(0x0681 + i),
+            color = colors[i] or 'magenta'
+        }
+
+        return enemy
     end,
     XcoordToScreen = function(x)
         local camX = memory.readbyte(0x0004)
@@ -414,10 +478,19 @@ c = {
         console.log('success, delay: ' .. delay)
         return true
     end,
-    GoToFrame = function(frame)
-        if not tastudio.engaged() then
-            error('tastudio must be engaged to use GoToFrame')
+
+    CurrentLevel = function()
+        return memory.readbyte(0x00A6)
+    end,
+    GameMode = function()
+        return memory.readbyte(0x00DB)
+    end,
+    GraphicsMode = function()
+        return memory.readbyte(0x0003)
+    end,
+    UntilLevelAppears = function()
+        while c.GraphicsMode() ~= 8 do
+            c.WaitFor(1)
         end
-        _tastudioGoToFrame(frame)
-    end
+    end,
 }

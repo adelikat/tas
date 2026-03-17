@@ -8,4 +8,6 @@ SystemID NES
 0704	b	u	0	RAM	Screen Y
 0020	b	u	0	RAM	Block X
 0021	b	u	0	RAM	Block Y
+00DB	b	u	0	RAM	Game Mode
+00A6	b	u	0	RAM	Level
 

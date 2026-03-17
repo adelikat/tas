@@ -71,7 +71,6 @@ SystemID NES
 05AF	b	u	0	2nd Player Score 8th digit (0-9)
 05B0	b	u	0	RAM	Player 2 Current Level (same as 00A6)
 05B1	b	u	0	RAM	Player 2 # of Lives (same as 0098)
-
 0	S	_	1
 0661	b	u	0	RAM	E1 Block X
 0662	b	u	0	RAM	E2 Block X

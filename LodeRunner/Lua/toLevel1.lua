@@ -11,38 +11,39 @@ end
 
 c.Start()
 
-function IncreaseSpeed()
+function IncreaseSpeed(last)
     local speed = memory.readbyte(0x00E5)
     c.PushAAndSelect()
     local newSpeed = memory.readbyte(0x00E5)
     if newSpeed >= speed then
         error('failed to increase speed ' .. speed .. '-' .. newSpeed)
     end
-    c.WaitFor(1)
+    if not last then
+        c.WaitFor(1)
+    end
 end
 
 while not c.IsDone() do
     c.UntilNextInputFrame()
     c.PushStart()
-    c.WaitFor(1)
+    c.UntilNextLagFrame()
     c.UntilNextInputFrame()
-    c.PushSelect()
-    c.PushSelect()
-    c.WaitFor(1)
+    c.PushFor('Select', 2)
+    c.UntilNextLagFrame()
     c.UntilNextInputFrame()
-
     for i = 1, 34 do
-         IncreaseSpeed()
+         IncreaseSpeed(i == 34)
     end
 
     c.PushStart()
     c.UntilNextLagFrame()
     c.UntilNextInputFrame()
-    c.WaitFor(1)
     c.UntilNextLagFrame()
     c.WaitFor(1)
-    c.UntilNextInputFrame()
 
+    if tastudio.engaged() then
+        tastudio.setmarker(emu.framecount(), 'lv 1')
+    end
     c.Done()
 end
 
