@@ -1,7 +1,36 @@
 local _done = false
 local _config = client.getconfig()
 
+local function _tastudioGoToFrame(frame)
+    tastudio.setplayback(frame)
+    client.unpause()
+    while emu.framecount() < frame do
+        emu.frameadvance()
+    end
+    client.pause()
+end
+
+local function _doFrameTastudio(keys)
+    local frame = emu.framecount()
+    if (keys ~= nil) then
+		if (type(keys.ToTable) == 'function') then
+			keys = keys.ToTable()
+		end
+	end
+
+    for k, v in pairs(keys) do
+        tastudio.submitinputchange(frame, k, v)
+    end
+    tastudio.applyinputchanges()
+    _tastudioGoToFrame(frame + 1)
+end
+
 local function _doFrame(keys)
+    if tastudio.engaged() then
+        _doFrameTastudio(keys)
+        return
+    end
+
 	if (keys ~= nil) then
 		if (type(keys.ToTable) == 'function') then
 			keys = keys.ToTable()
@@ -80,18 +109,6 @@ local function _buttons()
     return btns
 end
 
-local function _doFrame(keys)
-	if (keys ~= nil) then
-		if (type(keys.ToTable) == 'function') then
-			keys = keys.ToTable()
-		end
-
-		joypad.set(keys)
-	end
-
-	emu.frameadvance()
-end
-
 local function _isDebug()
 	return _config.SpeedPercent < 800
 end
@@ -125,7 +142,7 @@ c = {
 	end,
     Start = function()
         client.unpause()
-        client.speedmode(800)
+        client.speedmode(1600)
     end,
     Finish = function()
         console.log('---------------')
@@ -196,10 +213,12 @@ c = {
         return enemy
     end,
     WaitFor = function(frames)
-		if (frames > 0) then
-			for i = 1, frames, 1 do
-				emu.frameadvance()
-			end
+        if not frames then
+			frames = 1
+		end
+		for i = 1, frames, 1 do
+            btns = _buttons()
+			_doFrame(btns)
 		end
 	end,
     PushFor = function(btn, frames)
@@ -264,7 +283,7 @@ c = {
 		c.PushFor('Right', numFrames)
 	end,
     UntilNextInputFrame = function()
-        if not emu.islagged() then
+        if emu.framecount() > 0 and not emu.islagged() then
             c.WaitFor(1)
             if not emu.islagged() then
                 c.Save('error')
@@ -275,7 +294,7 @@ c = {
         c.Save("CoreTemp")
         local startFrameCount = emu.framecount()
 
-        while emu.islagged() do
+        while emu.islagged() or emu.framecount() == 0 do
             c.WaitFor(1)
         end
 
@@ -395,4 +414,10 @@ c = {
         console.log('success, delay: ' .. delay)
         return true
     end,
+    GoToFrame = function(frame)
+        if not tastudio.engaged() then
+            error('tastudio must be engaged to use GoToFrame')
+        end
+        _tastudioGoToFrame(frame)
+    end
 }
