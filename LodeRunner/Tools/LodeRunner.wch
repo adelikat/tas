@@ -2,7 +2,6 @@ SystemID NES
 00E5	b	u	0	RAM	Game Speed
 0093	b	u	0	RAM	Gold Left
 0004	b	u	0	RAM	Camera X
-009E	b	u	0	RAM	Global Timer
 0053	b	u	0	RAM	Spawn/Drop Timer
 0703	b	u	0	RAM	Screen X
 0704	b	u	0	RAM	Screen Y
