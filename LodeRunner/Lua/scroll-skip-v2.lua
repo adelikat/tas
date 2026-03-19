@@ -1,0 +1,65 @@
+-- Start at the end of a level, where pressing up for 1 frame will end the level
+dofile('lode-runner-core.lua')
+
+c.Start()
+c.Save('find-skip-start')
+
+local function PushSelectUntilLevelSkip()
+    c.Save('find-lv-select')
+    local done = false
+    local frames = 1
+    while not done do
+        c.PushFor('Select', frames)
+        c.WaitFor(1)
+        if c.GameMode() == 0 then
+            return true
+        else
+            c.Load('find-lv-select')
+            frames = frames + 1
+        end
+    end
+
+
+end
+
+function FindSkipFromBeginningOfLevel()
+    local origPlayer = c.Player()
+    local origX = (origPlayer.levelX * 16) + origPlayer.xTileOffset
+    c.PushLeftAndSelect()
+
+    c.Save('lv1-select-skip')
+    local startFrame = emu.framecount()
+
+    c.WaitFor(12)
+    local gameMode = c.GameMode()
+    local newPlayer = c.Player()
+    local newX = (newPlayer.levelX * 16) + newPlayer.xTileOffset
+
+    c.Load('lv1-select-skip')
+    return gameMode == 1 and newX < origX
+end
+
+local function FindSkip()
+    c.PushFor('Up', 2) -- 2 frames to ensure it ends the level
+    c.UntilNextInputFrame()
+
+    PushSelectUntilLevelSkip()
+    c.UntilNextLagFrame()
+    c.UntilNextInputFrame()
+    c.PushStart()
+    c.UntilNextLagFrame()
+    c.UntilNextInputFrame()
+
+    c.UntilNextLagFrame() -- Level jingle
+    c.UntilNextInputFrame()
+
+    return c.FrameSearch(FindSkipFromBeginningOfLevel, 100)
+end
+
+while not c.IsDone() do
+    c.Load('find-skip-start')
+    c.BestSearch(FindSkip, 15)
+    c.Done()
+end
+
+c.Finish()

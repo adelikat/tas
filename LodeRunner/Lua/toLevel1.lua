@@ -41,9 +41,7 @@ while not c.IsDone() do
     c.UntilNextLagFrame()
     c.WaitFor(1)
 
-    if tastudio.engaged() then
-        tastudio.setmarker(emu.framecount(), 'lv 1')
-    end
+    c.Marker('lv 1')
     c.Done()
 end
 

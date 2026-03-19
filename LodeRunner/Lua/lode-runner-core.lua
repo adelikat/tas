@@ -208,6 +208,9 @@ local function toSignedByte(b)
     end
 end
 
+-- a key value pair of label and frame number to store when c.Save is called with that label
+local saveFrameDict = {}
+
 c = {
     --------------------Core functions--------------------
     ToSignedByte = toSignedByte,
@@ -231,6 +234,11 @@ c = {
     Start = function()
         client.unpause()
         client.speedmode(1600)
+
+        if tastudio.engaged() then
+            local frame = tastudio.find_marker_on_or_before(emu.framecount())
+            c.GoToFrame(frame)
+        end
     end,
     Finish = function()
         console.log('---------------')
@@ -242,7 +250,19 @@ c = {
 		    c.Save(99)
         end
     end,
+    Marker = function(markerName)
+        if tastudio.engaged() and markerName ~= nil then
+            tastudio.setmarker(emu.framecount(), markerName)
+        else
+            c.Save('marker-' .. markerName)
+        end
+    end,
     Save = function(slot)
+        if tastudio.engaged() then
+            saveFrameDict[slot] = emu.framecount()
+            return
+        end
+
 		if slot == nil then
 			error("slot can not be nil")
 		end
@@ -266,6 +286,16 @@ c = {
 		if slot == nil then
 			error("slot must be a number")
 		end
+
+        if tastudio.engaged() then
+            local frame = saveFrameDict[slot]
+            if frame == nil then
+                error('No save found for slot ' .. slot)
+            end
+
+            c.GoToFrame(saveFrameDict[slot] or 0)
+            return
+        end
 
 		slotNum = tonumber(slot)
 
@@ -293,10 +323,22 @@ c = {
 			frames = 1
 		end
 		for i = 1, frames, 1 do
-            btns = _buttons().With(btn)
+            local btns = _buttons().With(btn)
 			_doFrame(btns)
 		end
 	end,
+    PushBtnsFor = function(btns, frames)
+        if not frames then
+            frames = 1
+        end
+        local allBtns = _buttons()
+        for _, btn in ipairs(btns) do
+            allBtns.With(btn)
+        end
+        for i = 1, frames, 1 do
+            _doFrame(allBtns)
+        end
+    end,
     PushUpAndSelect = function()
         local btns = _buttons().With('Select').With('Up')
         _doFrame(btns)
@@ -369,6 +411,69 @@ c = {
         end
         _tastudioGoToFrame(frame)
     end,
+    --[[
+    runs a parameterless boolean function, delaying 1 frame each attempt, until it
+    returns true or the limit is reached in which it will
+    return false
+    ]]
+    FrameSearch = function(func, limit)
+        c.Save('frame-search-temp-' .. limit)
+        local delay = 0;
+
+        while delay < limit do
+            c.Load('frame-search-temp-' .. limit)
+            c.WaitFor(delay)
+            local result = func()
+            if result then
+                return true
+            end
+
+            delay = delay + 1
+        end
+
+        return false
+    end,
+    --[[
+    runs a parameterless boolean function, delaying 1 frame each attempt,
+    until the limit is reached.  It tracks the best result, and replays that and returns true
+    if the boolean function never returns true on any attempt, will return false
+    ]]
+    BestSearch = function(func, limit)
+        local saveStateName = 'frame-search-temp-' .. limit
+        c.Save(saveStateName)
+        --TODO
+        local delay = 0
+        local best = 9999999
+        local bestDelay = 0
+        local anySuccess = false
+
+        while delay <= limit do
+            c.Load(saveStateName)
+            c.WaitFor(delay)
+            local result = func()
+            if result then
+                anySuccess = true
+                local final = emu.framecount()
+                if final < best then
+                     console.log('New best found, delay: ' .. delay)
+                    best = final
+                    bestDelay = delay
+                end
+            end
+
+            delay = delay + 1
+        end
+
+        if anySuccess then
+            c.Load(saveStateName)
+            c.WaitFor(bestDelay)
+            return func()
+        end
+
+
+        console.log('No attempts succeeded')
+        return false
+    end,
     --------------------Game specific functions below--------------------
     Enemy = function(n)
          local i = n - 1;
@@ -391,6 +496,17 @@ c = {
 
         return enemy
     end,
+    Player = function()
+        local player = {
+            levelX = memory.readbyte(0x0020),
+            levelY = memory.readbyte(0x0021),
+            xTileOffset = memory.readbyte(0x0022),
+            yTileOffset = memory.readbyte(0x0023),
+            isalive = memory.readbyte(0x009A) == 1,
+        }
+
+        return player
+    end,
     XcoordToScreen = function(x)
         local camX = memory.readbyte(0x0004)
         return (((x) * 16) - camX) + 14 + 2
@@ -398,35 +514,143 @@ c = {
     YcoordToScreen = function(y)
         return ((y - 1) * 16) + 8
     end,
-    LeftUntil = function (targetX)
+    LeftUntil = function(targetX)
         local x = memory.readbyte(0x0020)
         while x ~= targetX do
             x = memory.readbyte(0x0020)
             c.PushLeft()
+            if c.Player().isalive == false then
+                c.Debug('Player died while trying to move left until ' .. targetX)
+                return false
+            end
         end
+
+        return true
     end,
-    RightUntil = function (targetY)
-        local y = memory.readbyte(0x0021)
-        while y ~= targetY do
-            y = memory.readbyte(0x0021)
+    RightUntil = function(targetX)
+        local player = c.Player()
+        local x = c.Player().levelX
+        while x ~= targetX do
+            x = c.Player().levelX
             c.PushRight()
+            if c.Player().isalive == false then
+
+                c.Debug('Player died while trying to move right until ' .. targetX)
+                return false
+            end
         end
+
+        return true
     end,
     LeftUntilLadderGrab = function()
+        c.Save('left-ladder-grab')
+        local startFrame = emu.framecount()
+
         local yTileOffset = memory.readbyte(0x0023)
         local initalOffset = memory.readbyte(0x0023)
         while yTileOffset == initalOffset do
             yTileOffset = memory.readbyte(0x0023)
             c.PushUpAndLeft()
         end
+
+        local totalFrames = emu.framecount() - startFrame
+        c.Load('left-ladder-grab')
+        for i = 1, totalFrames - 2, 1 do
+            c.PushLeft()
+        end
+        c.PushUpAndLeft()
     end,
     RightUntilLadderGrab = function()
+        c.Save('right-ladder-grab')
+        local startFrame = emu.framecount()
+
+        -- todo call c.Player() and use those vallues instead of reading memory directly
         local yTileOffset = memory.readbyte(0x0023)
         local initalOffset = memory.readbyte(0x0023)
         while yTileOffset == initalOffset do
             yTileOffset = memory.readbyte(0x0023)
             c.PushUpAndRight()
         end
+
+        local totalFrames = emu.framecount() - startFrame
+        c.Load('right-ladder-grab')
+        for i = 1, totalFrames - 2, 1 do
+            c.PushRight()
+        end
+        c.PushUpAndRight()
+
+    end,
+    UpUntil = function(targetY)
+        local player = c.Player()
+        local y = c.Player().levelY
+        while y ~= targetY do
+            y = c.Player().levelY
+            c.PushUp()
+            if c.Player().isalive == false then
+
+                c.Debug('Player died while trying to move up until ' .. targetY)
+                return false
+            end
+        end
+
+        return true
+    end,
+    UpUntilLevelEnd = function()
+        local start = emu.framecount()
+        c.Save('up-until-level-end-')
+        while not emu.islagged() do
+            c.PushUp()
+        end
+
+        local final = emu.framecount()
+        local length = final - start
+        c.Load('up-until-level-end-')
+        -- We want to end 1 frame before the level ends, to manipulate the next level
+        c.PushFor('Up', length - 2)
+        if tastudio.engaged() then
+            for k, v in pairs(_buttons()) do
+                tastudio.submitinputchange(final - 1, k, v)
+                tastudio.submitinputchange(final - 2, k, v)
+            end
+            tastudio.applyinputchanges()
+        end
+
+    end,
+    UpUntilRight = function()
+        c.PushUpAndRight()
+        c.Save('up-until-right')
+
+        local startFrame = emu.framecount()
+        local player = c.Player()
+        local initalOffset = player.xTileOffset
+        while c.Player().xTileOffset == initalOffset do
+            c.PushUpAndRight()
+        end
+
+        local totalFrames = emu.framecount() - startFrame
+        c.Load('up-until-right')
+        for i = 1, totalFrames - 2, 1 do
+            c.PushUp()
+        end
+        c.PushUpAndRight()
+    end,
+    UpUntilLeft = function()
+        c.PushUpAndLeft()
+        c.Save('up-until-left')
+
+        local startFrame = emu.framecount()
+        local player = c.Player()
+        local initalOffset = player.xTileOffset
+        while c.Player().xTileOffset == initalOffset do
+            c.PushUpAndLeft()
+        end
+
+        local totalFrames = emu.framecount() - startFrame
+        c.Load('up-until-left')
+        for i = 1, totalFrames - 2, 1 do
+            c.PushUp()
+        end
+        c.PushUpAndLeft()
     end,
     FindSelectSkip = function(direction, maxDelay)
         if direction ~= 'Right' and direction ~= 'Left' then
@@ -446,11 +670,11 @@ c = {
                 c.PushRightAndSelect()
             end
             c.WaitFor(12)
-            local gameMode = memory.readbyte(0x00DB)
+            local gameMode = c.GameMode()
             if gameMode == 1 then
-                local camX = memory.readbyte(0x0004)
+                local camX = c.CamX()
                 c.WaitFor(12)
-                local newCamX = memory.readbyte(0x0004)
+                local newCamX = c.CamX()
                 if newCamX == camX then
                     found = true
                 else
@@ -488,9 +712,18 @@ c = {
     GraphicsMode = function()
         return memory.readbyte(0x0003)
     end,
+    CamX = function()
+        return memory.readbyte(0x0004)
+    end,
     UntilLevelAppears = function()
         while c.GraphicsMode() ~= 8 do
             c.WaitFor(1)
         end
     end,
+    UntilDigAppears = function(moveDirection, digBtn)
+        console.log(memory.readbyte(0x00A0))
+        while memory.readbyte(0x00A0) ~= 1 do
+            c.PushBtnsFor({moveDirection, digBtn}, 1)
+        end
+     end,
 }

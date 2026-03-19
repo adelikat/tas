@@ -18,6 +18,7 @@ SystemID NES
 0093	b	u	0	RAM	Gold Remaining
 0098	b	u	0	RAM	Current Player # of lives
 009E	b	u	0	RAM	Global Timer 0-255
+00A0	b	u	0	RAM	Dig sequence (current animation state)
 00A6	b	u	0	RAM	Current Player Current Level
 00C5	b	u	0	RAM	Kill Count
 00DB	b	u	0	RAM	Game Mode (1 = playing a level)
@@ -27,48 +28,48 @@ SystemID NES
 0300	b	u	0	RAM	256bytes of level data
 0400	b	u	0	RAM	256bytes of level data
 0	S	_	1
-0500	b	u	0	16 bytes of level data
-0510	b	u	0	16 bytes of level data
-0520	b	u	0	16 bytes of level data
-0530	b	u	0	16 bytes of level data
-0540	b	u	0	16 bytes of level data
-0550	b	u	0	16 bytes of level data
-0560	b	u	0	16 bytes of level data
-0560	b	u	0	8 bytes of level data
-0588	b	u	0	Hi Score 1st digit (0-9)
-0589	b	u	0	Hi Score 2nd digit (0-9)
-058A	b	u	0	Hi Score 3rd digit (0-9)
-058B	b	u	0	Hi Score 4th digit (0-9)
-058C	b	u	0	Hi Score 5th digit (0-9)
-058D	b	u	0	Hi Score 6th digit (0-9)
-058E	b	u	0	Hi Score 7th digit (0-9)
-058F	b	u	0	Hi Score 8th digit (0-9)
-0590	b	u	0	Score 1st digit (0-9) (Temp during level transition)
-0591	b	u	0	Score 2nd digit (0-9) (Temp during level transition)
-0592	b	u	0	Score 3rd digit (0-9) (Temp during level transition)
-0593	b	u	0	Score 4th digit (0-9) (Temp during level transition)
-0594	b	u	0	Score 5th digit (0-9) (Temp during level transition)
-0595	b	u	0	Score 6th digit (0-9) (Temp during level transition)
-0596	b	u	0	Score 7th digit (0-9) (Temp during level transition)
-0597	b	u	0	Score 8th digit (0-9) (Temp during level transition)
-0598	b	u	0	Current Player Score 1st digit (0-9)
-0599	b	u	0	Current Player Score 2nd digit (0-9)
-059A	b	u	0	Current Player Score 3rd digit (0-9)
-059B	b	u	0	Current Player Score 4th digit (0-9)
-059C	b	u	0	Current Player Score 5th digit (0-9)
-059D	b	u	0	Current Player Score 6th digit (0-9)
-059E	b	u	0	Current Player Score 7th digit (0-9)
-059F	b	u	0	Current Player Score 8th digit (0-9)
+0500	b	u	0	RAM	16 bytes of level data
+0510	b	u	0	RAM	16 bytes of level data
+0520	b	u	0	RAM	16 bytes of level data
+0530	b	u	0	RAM	16 bytes of level data
+0540	b	u	0	RAM	16 bytes of level data
+0550	b	u	0	RAM	16 bytes of level data
+0560	b	u	0	RAM	16 bytes of level data
+0560	b	u	0	RAM	8 bytes of level data
+0588	b	u	0	RAM	Hi Score 1st digit (0-9)
+0589	b	u	0	RAM	Hi Score 2nd digit (0-9)
+058A	b	u	0	RAM	Hi Score 3rd digit (0-9)
+058B	b	u	0	RAM	Hi Score 4th digit (0-9)
+058C	b	u	0	RAM	Hi Score 5th digit (0-9)
+058D	b	u	0	RAM	Hi Score 6th digit (0-9)
+058E	b	u	0	RAM	Hi Score 7th digit (0-9)
+058F	b	u	0	RAM	Hi Score 8th digit (0-9)
+0590	b	u	0	RAM	Score 1st digit (0-9) (Temp during level transition)
+0591	b	u	0	RAM	Score 2nd digit (0-9) (Temp during level transition)
+0592	b	u	0	RAM	Score 3rd digit (0-9) (Temp during level transition)
+0593	b	u	0	RAM	Score 4th digit (0-9) (Temp during level transition)
+0594	b	u	0	RAM	Score 5th digit (0-9) (Temp during level transition)
+0595	b	u	0	RAM	Score 6th digit (0-9) (Temp during level transition)
+0596	b	u	0	RAM	Score 7th digit (0-9) (Temp during level transition)
+0597	b	u	0	RAM	Score 8th digit (0-9) (Temp during level transition)
+0598	b	u	0	RAM	Current Player Score 1st digit (0-9)
+0599	b	u	0	RAM	Current Player Score 2nd digit (0-9)
+059A	b	u	0	RAM	Current Player Score 3rd digit (0-9)
+059B	b	u	0	RAM	Current Player Score 4th digit (0-9)
+059C	b	u	0	RAM	Current Player Score 5th digit (0-9)
+059D	b	u	0	RAM	Current Player Score 6th digit (0-9)
+059E	b	u	0	RAM	Current Player Score 7th digit (0-9)
+059F	b	u	0	RAM	Current Player Score 8th digit (0-9)
 05A0	b	u	0	RAM	Player 1 Current Level (same as 00A6)
 05A1	b	u	0	RAM	Player 1 # of Lives (same as 0098)
-05A8	b	u	0	2nd Player Score 1st digit (0-9)
-05A9	b	u	0	2nd Player Score 2nd digit (0-9)
-05AA	b	u	0	2nd Player Score 3rd digit (0-9)
-05AB	b	u	0	2nd Player Score 4th digit (0-9)
-05AC	b	u	0	2nd Player Score 5th digit (0-9)
-05AD	b	u	0	2nd Player Score 6th digit (0-9)
-05AE	b	u	0	2nd Player Score 7th digit (0-9)
-05AF	b	u	0	2nd Player Score 8th digit (0-9)
+05A8	b	u	0	RAM	2nd Player Score 1st digit (0-9)
+05A9	b	u	0	RAM	2nd Player Score 2nd digit (0-9)
+05AA	b	u	0	RAM	2nd Player Score 3rd digit (0-9)
+05AB	b	u	0	RAM	2nd Player Score 4th digit (0-9)
+05AC	b	u	0	RAM	2nd Player Score 5th digit (0-9)
+05AD	b	u	0	RAM	2nd Player Score 6th digit (0-9)
+05AE	b	u	0	RAM	2nd Player Score 7th digit (0-9)
+05AF	b	u	0	RAM	2nd Player Score 8th digit (0-9)
 05B0	b	u	0	RAM	Player 2 Current Level (same as 00A6)
 05B1	b	u	0	RAM	Player 2 # of Lives (same as 0098)
 0	S	_	1
