@@ -5,7 +5,7 @@ c.Start()
 
 
 if c.CurrentLevel() ~= 2 then
-    error('must be run in level 1')
+    error('must be run in level 2')
 end
 
 if c.GameMode() ~= 1 then
@@ -13,7 +13,8 @@ if c.GameMode() ~= 1 then
 end
 
 while not c.IsDone() do
-    c.LeftUntilLadderGrab()
+    c.UntilLadderGrab('Left')
+    c.Climb(2)
     c.Done()
 end
 

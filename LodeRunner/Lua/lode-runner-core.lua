@@ -634,6 +634,10 @@ c = {
 
         return true
     end,
+    Climb = function (tiles)
+        local currentTile = c.Player().levelY
+        return c.ClimbUntil(currentTile - tiles)
+    end,
     ClimbUntil = function(targetY)
         local player = c.Player()
         local y = c.Player().levelY
@@ -649,10 +653,6 @@ c = {
         end
 
         return true
-    end,
-    ClimbFor = function (tiles)
-        local currentTile = c.Player().levelY
-        return c.ClimbUntil(currentTile - tiles)
     end,
     ClimbUntilLevelEnd = function()
         local start = emu.framecount()

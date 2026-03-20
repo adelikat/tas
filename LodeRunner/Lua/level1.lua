@@ -61,7 +61,7 @@ while not c.IsDone() do
     end
 
     c.UntilLadderGrab('Left')
-    c.ClimbFor(2)
+    c.Climb(2)
     c.RightFor(12)
     c.PushRight()
     c.PushDown()
@@ -79,13 +79,13 @@ while not c.IsDone() do
     end
 
     c.UntilLadderGrab('Right')
-    c.ClimbFor(1)
+    c.Climb(1)
     c.UntilLadderGrab('Left')
 
-    c.ClimbFor(5)
+    c.Climb(5)
     c.UntilLadderGrab('Right')
 
-    c.ClimbFor(2)
+    c.Climb(2)
     c.LeftUntil(19)
 
     -- This is hardcoded input patterns found manually
