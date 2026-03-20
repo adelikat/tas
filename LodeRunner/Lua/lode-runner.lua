@@ -1,5 +1,11 @@
 dofile('lode-runner-core.lua')
 
+local function toCoordsStr(obj)
+    local x = '' .. obj.levelX .. '.' .. obj.xTileOffset
+    local y = '' .. obj.levelY .. '.' .. obj.yTileOffset
+    return string.format('(%s,%s)', x, y)
+end
+
 local function drawEnemy(e)
     local camX = memory.readbyte(0x0004)
     -- todo - use XcoordToScreen
@@ -22,7 +28,7 @@ local function drawEnemy(e)
         gui.drawText(x, y, e.timer, e.color)
     end
 
-    local coordText = string.format("(%d,%d)", e.levelX, e.levelY)
+    local coordText = toCoordsStr(e); -- string.format("(%d,%d)", e.levelX, e.levelY)
     gui.drawText(0 + (e.index * 100), 212, coordText, e.color, 'black', 10)
 end
 
@@ -53,6 +59,12 @@ local function drawSpawnPrediction(num)
     gui.drawRectangle(c.XcoordToScreen(digX), c.YcoordToScreen(digY), 15, 15, color)
 end
 
+
+
+function drawPlayer()
+    gui.drawText(200, 0, toCoordsStr(c.Player()), '#4240FE', '#551308', 10)
+end
+
 while true do
     if memory.readbyte(0x00DB) == 1 then
         drawEnemy(c.Enemy(1))
@@ -62,6 +74,7 @@ while true do
         drawSpawnPrediction(2)
         drawSpawnPrediction(3)
         drawSpawnPrediction(4)
+        drawPlayer()
     else
         gui.clearGraphics()
     end
