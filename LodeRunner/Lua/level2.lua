@@ -15,6 +15,9 @@ end
 while not c.IsDone() do
     c.UntilLadderGrab('Left')
     c.Climb(2)
+    c.UntilLadderGrab('Right')
+    --c.Climb(5)
+
     c.Done()
 end
 

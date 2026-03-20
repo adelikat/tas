@@ -504,7 +504,27 @@ c = {
         console.log('No attempts succeeded')
         return false
     end,
+    ---------------------------------------------------------------------
     --------------------Game specific functions below--------------------
+    ---------------------------------------------------------------------
+    CurrentLevel = function()
+        return memory.readbyte(0x00A6)
+    end,
+    GameMode = function()
+        return memory.readbyte(0x00DB)
+    end,
+    GameSpeed = function()
+        return memory.readbyte(0x00E5)
+    end,
+    GraphicsMode = function()
+        return memory.readbyte(0x0003)
+    end,
+    CamX = function()
+        return memory.readbyte(0x0004)
+    end,
+    SpawnTimer = function()
+        return memory.readbyte(0x0053)
+    end,
     Enemy = function(n)
          local i = n - 1;
 
@@ -561,180 +581,7 @@ c = {
     YcoordToScreen = function(y)
         return ((y - 1) * 16) + 8
     end,
-    LeftUntil = function(targetX)
-        local x = memory.readbyte(0x0020)
-        while x ~= targetX do
-            x = memory.readbyte(0x0020)
-            c.PushLeft()
-            if _playerDied() then
-                return false
-            end
-        end
-
-        return true
-    end,
-    RightUntil = function(targetX)
-        local x = c.Player().levelX
-        while x ~= targetX do
-            c.PushRight()
-            x = c.Player().levelX
-            if _playerDied() then
-                return false
-            end
-        end
-
-        return true
-    end,
-    RightFor = function (tiles)
-        local currentTile = c.Player().levelX
-        return c.RightUntil(currentTile + tiles)
-    end,
-    UntilLadderGrab = function(direction)
-        if (direction ~= 'Left' and direction ~= 'Right') then
-            error('invalid direction for ladder grab: ' .. direction)
-        end
-
-        -- This is needed if coming off of a ladder because the player isn't done moving up for a few frames after the first one necessary to move
-        -- This could be a problem if this method is run too close to a successful grab
-        c.PushFor(direction, 2)
-
-
-        local stateName = direction..'-ladder-grab'
-        local startFrame = emu.framecount()
-
-        local initial = c.Player().yPos()
-        local done = false
-        while not done do
-            c.Save(stateName)
-            c.PushBtnsFor({direction, 'Up'})
-
-            if _playerDied() then
-                return false
-            end
-
-            if c.Player().yPos() < initial then
-                done = true
-            else
-                c.Load(stateName)
-                c.PushFor(direction)
-            end
-        end
-
-        -- Test if pushing Up is equal or faster than pushing both btns
-        -- Even if equal we prefer because it can affect the spawn timer, and it is cleaner anyway
-        local finalPos = c.Player().yPos()
-        c.Load(stateName)
-        c.PushUp()
-
-        local newFinalPos = c.Player().yPos()
-        if newFinalPos < finalPos then
-            c.Load(stateName)
-            c.PushBtnsFor({direction, 'Up'})
-        end
-
-        return true
-    end,
-    Climb = function (tiles)
-        local currentTile = c.Player().levelY
-        return c.ClimbUntil(currentTile - tiles)
-    end,
-    ClimbUntil = function(targetY)
-        local player = c.Player()
-        local y = c.Player().levelY
-
-        while y ~= targetY do
-            c.PushUp()
-            y = c.Player().levelY
-            if c.Player().isAlive == false then
-
-                c.Debug('Player died while trying to move up until ' .. targetY)
-                return false
-            end
-        end
-
-        return true
-    end,
-    ClimbUntilLevelEnd = function()
-        local start = emu.framecount()
-        c.Save('up-until-level-end-')
-        while not emu.islagged() do
-            c.PushUp()
-        end
-
-        local final = emu.framecount()
-        local length = final - start
-        c.Load('up-until-level-end-')
-        -- We want to end 1 frame before the level ends, to manipulate the next level
-        c.PushFor('Up', length - 2)
-        if tastudio.engaged() then
-            c.WaitFor(2)
-            tastudio.setplayback(emu.framecount() - 2)
-        end
-
-    end,
-    ClimbRight = function()
-        c.PushUp()
-        c.Save('up-until-right')
-
-        local startFrame = emu.framecount()
-        local player = c.Player()
-        local initalOffset = player.xTileOffset
-        while c.Player().xTileOffset == initalOffset do
-            c.PushUpAndRight()
-        end
-
-        local totalFrames = emu.framecount() - startFrame
-        c.Load('up-until-right')
-        for i = 1, totalFrames - 2, 1 do
-            c.PushUp()
-        end
-        c.PushUpAndRight()
-        if tastudio.engaged() then
-            c.WaitFor(2)
-            tastudio.setplayback(emu.framecount() - 2)
-        end
-    end,
-    ClimbLeft = function()
-        c.PushUp()
-        c.Save('up-until-left')
-
-        local startFrame = emu.framecount()
-        local player = c.Player()
-        local initalOffset = player.xTileOffset
-        while c.Player().xTileOffset == initalOffset do
-            c.PushUpAndLeft()
-        end
-
-        local totalFrames = emu.framecount() - startFrame
-        c.Load('up-until-left')
-        for i = 1, totalFrames - 2, 1 do
-            c.PushUp()
-        end
-        c.PushUpAndLeft()
-        if tastudio.engaged() then
-            c.WaitFor(2)
-            tastudio.setplayback(emu.framecount() - 2)
-        end
-    end,
-    FinishFalling = function()
-        c.Save('finish-falling')
-        local startFrame = emu.framecount()
-        local test = memory.readbyte(0x009B)
-        console.log('teswt', test)
-        if not c.Player().isFalling then
-            c.Debug('Player was not falling ' .. emu.framecount())
-            return
-        end
-
-        while c.Player().isFalling do
-            c.WaitFor(1)
-        end
-
-        local endFrame = emu.framecount()
-        c.Load('finish-falling')
-        c.WaitFor(endFrame - startFrame - 1)
-
-    end,
+    --------------------Bot functions below--------------------
     FindSelectSkip = function(direction, maxDelay)
         if direction ~= 'Right' and direction ~= 'Left' then
             error('FindSelectSkip only supports Left or Right currently')
@@ -785,24 +632,139 @@ c = {
         console.log('success, delay: ' .. delay)
         return true
     end,
+    LeftUntil = function(targetX)
+        local x = memory.readbyte(0x0020)
+        while x ~= targetX do
+            x = memory.readbyte(0x0020)
+            c.PushLeft()
+            if _playerDied() then
+                return false
+            end
+        end
 
-    CurrentLevel = function()
-        return memory.readbyte(0x00A6)
+        return true
     end,
-    GameMode = function()
-        return memory.readbyte(0x00DB)
+    RightUntil = function(targetX)
+        local x = c.Player().levelX
+        while x ~= targetX do
+            c.PushRight()
+            x = c.Player().levelX
+            if _playerDied() then
+                return false
+            end
+        end
+
+        return true
     end,
-    GameSpeed = function()
-        return memory.readbyte(0x00E5)
+    LeftFor = function (tiles)
+        local currentTile = c.Player().levelX
+        return c.RightUntil(currentTile - tiles)
     end,
-    GraphicsMode = function()
-        return memory.readbyte(0x0003)
+    RightFor = function (tiles)
+        local currentTile = c.Player().levelX
+        return c.RightUntil(currentTile + tiles)
     end,
-    CamX = function()
-        return memory.readbyte(0x0004)
+    UntilLadderGrab = function(direction)
+        if (direction ~= 'Left' and direction ~= 'Right') then
+            error('invalid direction for ladder grab: ' .. direction)
+        end
+
+        -- This is needed if coming off of a ladder because the player isn't done moving up for a few frames after the first one necessary to move
+        -- This could be a problem if this method is run too close to a successful grab
+        c.PushFor(direction, 2)
+
+        local stateName = direction..'-ladder-grab'
+        local startFrame = emu.framecount()
+
+        local initial = c.Player().yPos()
+        console.log('initital', initial)
+        local done = false
+        while not done do
+            c.Save(stateName)
+            c.PushBtnsFor({direction, 'Up'})
+
+            if _playerDied() then
+                return false
+            end
+
+            if c.Player().yPos() < initial then
+                console.log('done, new pos: ' .. c.Player().yPos())
+                done = true
+            else
+                c.Load(stateName)
+                c.PushFor(direction)
+            end
+        end
+
+        -- Test if pushing Up is equal or faster than pushing both btns
+        -- Even if equal we prefer because it can affect the spawn timer, and it is cleaner anyway
+        local finalPos = c.Player().yPos()
+        c.Load(stateName)
+        c.PushUp()
+
+        local newFinalPos = c.Player().yPos()
+        if newFinalPos > finalPos then
+            c.Load(stateName)
+            c.PushBtnsFor({direction, 'Up'})
+        end
+
+        return true
     end,
-    SpawnTimer = function()
-        return memory.readbyte(0x0053)
+    Climb = function (tiles)
+        local currentTile = c.Player().levelY
+        return c.ClimbUntil(currentTile - tiles)
+    end,
+    ClimbUntil = function(targetY)
+        local player = c.Player()
+        local y = c.Player().levelY
+
+        while y ~= targetY do
+            c.PushUp()
+            y = c.Player().levelY
+            if c.Player().isAlive == false then
+
+                c.Debug('Player died while trying to move up until ' .. targetY)
+                return false
+            end
+        end
+
+        return true
+    end,
+    ClimbUntilLevelEnd = function()
+        local start = emu.framecount()
+        c.Save('up-until-level-end-')
+        while not emu.islagged() do
+            c.PushUp()
+        end
+
+        local final = emu.framecount()
+        local length = final - start
+        c.Load('up-until-level-end-')
+        -- We want to end 1 frame before the level ends, to manipulate the next level
+        c.PushFor('Up', length - 2)
+        if tastudio.engaged() then
+            c.WaitFor(2)
+            tastudio.setplayback(emu.framecount() - 2)
+        end
+
+    end,
+    FinishFalling = function()
+        c.Save('finish-falling')
+        local startFrame = emu.framecount()
+        local test = memory.readbyte(0x009B)
+        console.log('teswt', test)
+        if not c.Player().isFalling then
+            c.Debug('Player was not falling ' .. emu.framecount())
+            return
+        end
+
+        while c.Player().isFalling do
+            c.WaitFor(1)
+        end
+
+        local endFrame = emu.framecount()
+        c.Load('finish-falling')
+        c.WaitFor(endFrame - startFrame - 1)
     end,
     UntilLevelAppears = function()
         while c.GraphicsMode() ~= 8 do
