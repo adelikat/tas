@@ -29,7 +29,7 @@ local function drawEnemy(e)
     end
 
     local coordText = toCoordsStr(e); -- string.format("(%d,%d)", e.levelX, e.levelY)
-    gui.drawText(0 + (e.index * 100), 212, coordText, e.color, 'black', 10)
+    gui.text(0 + (e.index * 200), 8, coordText, e.color, 'bottomleft')
 end
 
 local function drawSpawnPrediction(num)
@@ -62,11 +62,28 @@ end
 
 
 function drawPlayer()
-    gui.drawText(200, 0, toCoordsStr(c.Player()), '#4240FE', '#551308', 10)
+    local color = 'red'
+    if c.Player().isAlive then
+        color = '#4240FE'
+    end
+    gui.text(5, 0, toCoordsStr(c.Player()), color, 'topright')
+end
+
+function drawGameSpeed()
+    if c.GameMode() == 1 then
+        return
+    end
+
+    gui.drawText(80, 75, 'Game Speed ' .. c.GameSpeed(), 'white')
+end
+
+function drawLevel()
+    gui.text(8, 8, 'Level ' .. c.CurrentLevel(), 'white', 'bottomright')
 end
 
 while true do
-    if memory.readbyte(0x00DB) == 1 then
+    gui.clearGraphics()
+    if c.GameMode() == 1 then
         drawEnemy(c.Enemy(1))
         drawEnemy(c.Enemy(2))
         drawEnemy(c.Enemy(3))
@@ -75,8 +92,9 @@ while true do
         drawSpawnPrediction(3)
         drawSpawnPrediction(4)
         drawPlayer()
+        drawLevel()
     else
-        gui.clearGraphics()
+        drawGameSpeed()
     end
 
 	emu.frameadvance();

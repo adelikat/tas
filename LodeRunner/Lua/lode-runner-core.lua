@@ -200,12 +200,13 @@ local function _isDebug()
 	return _config.SpeedPercent < 800
 end
 
-local function toSignedByte(b)
-    if b > 127 then
-    return b - 256
-    else
-        return b
+local function _playerDied()
+    if c.Player().isAlive == false then
+        c.Debug('Player died')
+        return true
     end
+
+    return false
 end
 
 -- a key value pair of label and frame number to store when c.Save is called with that label
@@ -213,7 +214,13 @@ local saveFrameDict = {}
 
 c = {
     --------------------Core functions--------------------
-    ToSignedByte = toSignedByte,
+    ToSignedByte = function(b)
+        if b > 127 then
+        return b - 256
+        else
+            return b
+        end
+    end,
     ToHex = function(b)
         return string.format("%02X", b)
     end,
@@ -226,6 +233,7 @@ c = {
 		end
 	end,
     Done = function()
+        c.Scrub(100)
 		_done = true
 	end,
 	IsDone = function()
@@ -288,12 +296,21 @@ c = {
 		end
 
         if tastudio.engaged() then
-            local frame = saveFrameDict[slot]
-            if frame == nil then
+            local currentFrame = emu.framecount()
+            local loadFrame = saveFrameDict[slot]
+            if loadFrame == nil then
                 error('No save found for slot ' .. slot)
             end
 
             c.GoToFrame(saveFrameDict[slot] or 0)
+
+            for i = loadFrame, currentFrame, 1 do
+                for k, v in pairs(_buttons()) do
+                    tastudio.submitinputchange(i, k, false)
+                end
+            end
+            tastudio.applyinputchanges()
+
             return
         end
 
@@ -309,6 +326,19 @@ c = {
 			savestate.load(string.format('state-archive/%s.State', slot))
 		end
 	end,
+    Scrub = function(amt)
+        if not tastudio.engaged() then
+            return
+        end
+
+        local start = emu.framecount()
+        for i = start, start + amt, 1 do
+            for k, v in pairs(_buttons()) do
+                tastudio.submitinputchange(i, k, false)
+            end
+        end
+        tastudio.applyinputchanges()
+    end,
     WaitFor = function(frames)
         if not frames then
 			frames = 1
@@ -488,7 +518,7 @@ c = {
             index = i,
             levelX = memory.readbyte(0x0661 + i),
             levelY = memory.readbyte(0x0669 + i),
-            timer = toSignedByte(memory.readbyte(0x0671 + i)),
+            timer = c.ToSignedByte(memory.readbyte(0x0671 + i)),
             xTileOffset = memory.readbyte(0x0679 + i),
             yTileOffset = memory.readbyte(0x0681 + i),
             color = colors[i] or 'magenta'
@@ -502,7 +532,7 @@ c = {
             levelY = memory.readbyte(0x0021),
             xTileOffset = memory.readbyte(0x0022),
             yTileOffset = memory.readbyte(0x0023),
-            isalive = memory.readbyte(0x009A) == 1,
+            isAlive = memory.readbyte(0x009A) == 1,
         }
 
         return player
@@ -519,8 +549,7 @@ c = {
         while x ~= targetX do
             x = memory.readbyte(0x0020)
             c.PushLeft()
-            if c.Player().isalive == false then
-                c.Debug('Player died while trying to move left until ' .. targetX)
+            if _playerDied() then
                 return false
             end
         end
@@ -528,19 +557,20 @@ c = {
         return true
     end,
     RightUntil = function(targetX)
-        local player = c.Player()
         local x = c.Player().levelX
         while x ~= targetX do
-            x = c.Player().levelX
             c.PushRight()
-            if c.Player().isalive == false then
-
-                c.Debug('Player died while trying to move right until ' .. targetX)
+            x = c.Player().levelX
+            if _playerDied() then
                 return false
             end
         end
 
         return true
+    end,
+    RightFor = function (tiles)
+        local currentTile = c.Player().levelX
+        return c.RightUntil(currentTile + tiles)
     end,
     LeftUntilLadderGrab = function()
         c.Save('left-ladder-grab')
@@ -551,6 +581,9 @@ c = {
         while yTileOffset == initalOffset do
             yTileOffset = memory.readbyte(0x0023)
             c.PushUpAndLeft()
+            if _playerDied() then
+                return false
+            end
         end
 
         local totalFrames = emu.framecount() - startFrame
@@ -558,18 +591,22 @@ c = {
         for i = 1, totalFrames - 2, 1 do
             c.PushLeft()
         end
-        c.PushUpAndLeft()
+        c.PushUp()
+
+        return true
     end,
     RightUntilLadderGrab = function()
         c.Save('right-ladder-grab')
         local startFrame = emu.framecount()
 
-        -- todo call c.Player() and use those vallues instead of reading memory directly
-        local yTileOffset = memory.readbyte(0x0023)
-        local initalOffset = memory.readbyte(0x0023)
+        local yTileOffset = c.Player().yTilOffset
+        local initalOffset = yTileOffset
         while yTileOffset == initalOffset do
-            yTileOffset = memory.readbyte(0x0023)
+            yTileOffset = c.Player().yTilOffset
             c.PushUpAndRight()
+            if _playerDied() then
+                return false
+            end
         end
 
         local totalFrames = emu.framecount() - startFrame
@@ -577,16 +614,18 @@ c = {
         for i = 1, totalFrames - 2, 1 do
             c.PushRight()
         end
-        c.PushUpAndRight()
+        c.PushUp()
 
+        return true
     end,
-    UpUntil = function(targetY)
+    ClimbUntil = function(targetY)
         local player = c.Player()
         local y = c.Player().levelY
+
         while y ~= targetY do
-            y = c.Player().levelY
             c.PushUp()
-            if c.Player().isalive == false then
+            y = c.Player().levelY
+            if c.Player().isAlive == false then
 
                 c.Debug('Player died while trying to move up until ' .. targetY)
                 return false
@@ -595,7 +634,11 @@ c = {
 
         return true
     end,
-    UpUntilLevelEnd = function()
+    ClimbFor = function (tiles)
+        local currentTile = c.Player().levelY
+        return c.ClimbUntil(currentTile - tiles)
+    end,
+    ClimbUntilLevelEnd = function()
         local start = emu.framecount()
         c.Save('up-until-level-end-')
         while not emu.islagged() do
@@ -608,16 +651,13 @@ c = {
         -- We want to end 1 frame before the level ends, to manipulate the next level
         c.PushFor('Up', length - 2)
         if tastudio.engaged() then
-            for k, v in pairs(_buttons()) do
-                tastudio.submitinputchange(final - 1, k, v)
-                tastudio.submitinputchange(final - 2, k, v)
-            end
-            tastudio.applyinputchanges()
+            c.WaitFor(2)
+            tastudio.setplayback(emu.framecount() - 2)
         end
 
     end,
-    UpUntilRight = function()
-        c.PushUpAndRight()
+    ClimbRight = function()
+        c.PushUp()
         c.Save('up-until-right')
 
         local startFrame = emu.framecount()
@@ -633,9 +673,13 @@ c = {
             c.PushUp()
         end
         c.PushUpAndRight()
+        if tastudio.engaged() then
+            c.WaitFor(2)
+            tastudio.setplayback(emu.framecount() - 2)
+        end
     end,
     UpUntilLeft = function()
-        c.PushUpAndLeft()
+        c.PushUp()
         c.Save('up-until-left')
 
         local startFrame = emu.framecount()
@@ -708,6 +752,9 @@ c = {
     end,
     GameMode = function()
         return memory.readbyte(0x00DB)
+    end,
+    GameSpeed = function()
+        return memory.readbyte(0x00E5)
     end,
     GraphicsMode = function()
         return memory.readbyte(0x0003)

@@ -59,6 +59,7 @@ end
 while not c.IsDone() do
     c.Load('find-skip-start')
     c.BestSearch(FindSkip, 15)
+    c.Marker('scroll-skip')
     c.Done()
 end
 

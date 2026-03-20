@@ -12,9 +12,9 @@ end
 c.Start()
 
 function IncreaseSpeed(last)
-    local speed = memory.readbyte(0x00E5)
+    local speed = c.GameSpeed()
     c.PushAAndSelect()
-    local newSpeed = memory.readbyte(0x00E5)
+    local newSpeed = c.GameSpeed()
     if newSpeed >= speed then
         error('failed to increase speed ' .. speed .. '-' .. newSpeed)
     end

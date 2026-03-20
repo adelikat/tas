@@ -61,41 +61,49 @@ while not c.IsDone() do
     end
 
     c.LeftUntilLadderGrab()
-    c.UpUntilRight()
-    c.RightUntil(15)
-    c.PushFor('Right', 2)
+    c.ClimbFor(2)
+    c.RightFor(12)
+    c.PushRight()
     c.PushDown()
 
     --Requires very a specific frame to start pushing a, or else the spawn timer lags
-    --c.UntilDigAppears('Right', 'A')
-    c.PushFor('Right', 7)
-    c.PushA()
+    ----c.UntilDigAppears('Right', 'A')
+    -- c.PushFor('Right', 7)
+    -- c.PushA()
 
-    c.WaitFor(20)
+    -- c.WaitFor(20)
 
-    found = c.FrameSearch(FindRightAfterFirstDig, 50)
-    if not found then
-        error('Failed to find right after digging')
-    end
+    -- found = c.FrameSearch(FindRightAfterFirstDig, 50)
+    -- if not found then
+    --     error('Failed to find right after digging')
+    -- end
 
-    c.RightUntilLadderGrab()
-    c.UpUntilLeft()
-    c.LeftUntilLadderGrab()
-    c.UpUntil(6)
-    c.UpUntilRight()
-    c.RightUntilLadderGrab()
-    c.UpUntilLeft()
-    c.LeftUntil(19)
+    --c.RightUntilLadderGrab()
+    --Going until ladder grab creates extra inputs that lag the drop counter
+    --Must do these precisely instead
+    -- c.RightUntil(26)
+    -- c.PushRight()
+    -- c.PushUp()
 
-    -- -- TODO: bot this with lots of randomness to try to find a faster end
+    -- c.UpUntilLeft()
+    -- c.LeftUntilLadderGrab()
+    -- c.UpUntil(6)
+    -- c.UpUntilRight()
+    -- c.RightUntilLadderGrab()
+    -- c.UpUntilLeft()
+    -- c.LeftUntil(19)
+
     -- -- This is hardcoded input patterns found manually
-    c.WaitFor(30)
-    c.PushB()
-    c.WaitFor(52)
-    c.PushFor('Left', 3)
-    c.UpUntilLevelEnd()
+    -- c.WaitFor(30)
+    -- c.PushB()
+    -- c.WaitFor(52)
+    -- c.PushFor('Left', 3)
+    -- c.UpUntilLevelEnd()
 
-    c.Marker('lv 1 end')
+    --c.Marker('lv 1 end')
+
+    --todo: delete me
+
     c.Done()
 end
 

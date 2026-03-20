@@ -1,14 +1,6 @@
 SystemID NES
-00E5	b	u	0	RAM	Game Speed
 0093	b	u	0	RAM	Gold Left
 0004	b	u	0	RAM	Camera X
 0053	b	u	0	RAM	Spawn/Drop Timer
-0703	b	u	0	RAM	Screen X
-0704	b	u	0	RAM	Screen Y
-0020	b	u	0	RAM	Block X
-0021	b	u	0	RAM	Block Y
-00DB	b	u	0	RAM	Game Mode
-00A6	b	u	0	RAM	Level
-009A	b	u	0	RAM	Is Alive
 00A0	b	u	0	RAM	Dig sequence
 
