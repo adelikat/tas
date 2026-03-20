@@ -17,6 +17,7 @@ SystemID NES
 00C4	b	u	0	RAM	Gold Collected
 0093	b	u	0	RAM	Gold Remaining
 0098	b	u	0	RAM	Current Player # of lives
+009B	b	u	0	RAM	Is Falling (32 - on ground, 0 = falling)
 009E	b	u	0	RAM	Global Timer 0-255
 00A0	b	u	0	RAM	Dig sequence (current animation state)
 00A6	b	u	0	RAM	Current Player Current Level

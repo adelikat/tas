@@ -3,7 +3,7 @@ dofile('lode-runner-core.lua')
 local function toCoordsStr(obj)
     local x = '' .. obj.levelX .. '.' .. obj.xTileOffset
     local y = '' .. obj.levelY .. '.' .. obj.yTileOffset
-    return string.format('(%s,%s)', x, y)
+    return string.format('(%s,%s)', string.format('%.3f', obj.xPos()), string.format('%.3f', obj.yPos()))
 end
 
 local function drawEnemy(e)

@@ -1,6 +1,6 @@
 SystemID NES
 0093	b	u	0	RAM	Gold Left
-0004	b	u	0	RAM	Camera X
 0053	b	u	0	RAM	Spawn/Drop Timer
+0004	b	u	0	RAM	Camera X
 00A0	b	u	0	RAM	Dig sequence
 

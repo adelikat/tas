@@ -524,6 +524,14 @@ c = {
             color = colors[i] or 'magenta'
         }
 
+        enemy.xPos = function()
+            return enemy.levelX + (enemy.xTileOffset / 8)
+        end
+
+        enemy.yPos = function()
+            return enemy.levelY + (enemy.yTileOffset / 8)
+        end
+
         return enemy
     end,
     Player = function()
@@ -533,7 +541,16 @@ c = {
             xTileOffset = memory.readbyte(0x0022),
             yTileOffset = memory.readbyte(0x0023),
             isAlive = memory.readbyte(0x009A) == 1,
+            isFalling = memory.readbyte(0x009B) == 0
         }
+
+        player.xPos = function()
+            return player.levelX + (player.xTileOffset / 8)
+        end
+
+        player.yPos = function()
+            return player.levelY + (player.yTileOffset / 8)
+        end
 
         return player
     end,
@@ -572,49 +589,48 @@ c = {
         local currentTile = c.Player().levelX
         return c.RightUntil(currentTile + tiles)
     end,
-    LeftUntilLadderGrab = function()
-        c.Save('left-ladder-grab')
+    UntilLadderGrab = function(direction)
+        if (direction ~= 'Left' and direction ~= 'Right') then
+            error('invalid direction for ladder grab: ' .. direction)
+        end
+
+        -- This is needed if coming off of a ladder because the player isn't done moving up for a few frames after the first one necessary to move
+        -- This could be a problem if this method is run too close to a successful grab
+        c.PushFor(direction, 2)
+
+
+        local stateName = direction..'-ladder-grab'
         local startFrame = emu.framecount()
 
-        local yTileOffset = memory.readbyte(0x0023)
-        local initalOffset = memory.readbyte(0x0023)
-        while yTileOffset == initalOffset do
-            yTileOffset = memory.readbyte(0x0023)
-            c.PushUpAndLeft()
+        local initial = c.Player().yPos()
+        local done = false
+        while not done do
+            c.Save(stateName)
+            c.PushBtnsFor({direction, 'Up'})
+
             if _playerDied() then
                 return false
             end
-        end
 
-        local totalFrames = emu.framecount() - startFrame
-        c.Load('left-ladder-grab')
-        for i = 1, totalFrames - 2, 1 do
-            c.PushLeft()
-        end
-        c.PushUp()
-
-        return true
-    end,
-    RightUntilLadderGrab = function()
-        c.Save('right-ladder-grab')
-        local startFrame = emu.framecount()
-
-        local yTileOffset = c.Player().yTilOffset
-        local initalOffset = yTileOffset
-        while yTileOffset == initalOffset do
-            yTileOffset = c.Player().yTilOffset
-            c.PushUpAndRight()
-            if _playerDied() then
-                return false
+            if c.Player().yPos() < initial then
+                done = true
+            else
+                c.Load(stateName)
+                c.PushFor(direction)
             end
         end
 
-        local totalFrames = emu.framecount() - startFrame
-        c.Load('right-ladder-grab')
-        for i = 1, totalFrames - 2, 1 do
-            c.PushRight()
-        end
+        -- Test if pushing Up is equal or faster than pushing both btns
+        -- Even if equal we prefer because it can affect the spawn timer, and it is cleaner anyway
+        local finalPos = c.Player().yPos()
+        c.Load(stateName)
         c.PushUp()
+
+        local newFinalPos = c.Player().yPos()
+        if newFinalPos < finalPos then
+            c.Load(stateName)
+            c.PushBtnsFor({direction, 'Up'})
+        end
 
         return true
     end,
@@ -678,7 +694,7 @@ c = {
             tastudio.setplayback(emu.framecount() - 2)
         end
     end,
-    UpUntilLeft = function()
+    ClimbLeft = function()
         c.PushUp()
         c.Save('up-until-left')
 
@@ -695,6 +711,29 @@ c = {
             c.PushUp()
         end
         c.PushUpAndLeft()
+        if tastudio.engaged() then
+            c.WaitFor(2)
+            tastudio.setplayback(emu.framecount() - 2)
+        end
+    end,
+    FinishFalling = function()
+        c.Save('finish-falling')
+        local startFrame = emu.framecount()
+        local test = memory.readbyte(0x009B)
+        console.log('teswt', test)
+        if not c.Player().isFalling then
+            c.Debug('Player was not falling ' .. emu.framecount())
+            return
+        end
+
+        while c.Player().isFalling do
+            c.WaitFor(1)
+        end
+
+        local endFrame = emu.framecount()
+        c.Load('finish-falling')
+        c.WaitFor(endFrame - startFrame - 1)
+
     end,
     FindSelectSkip = function(direction, maxDelay)
         if direction ~= 'Right' and direction ~= 'Left' then
@@ -761,6 +800,9 @@ c = {
     end,
     CamX = function()
         return memory.readbyte(0x0004)
+    end,
+    SpawnTimer = function()
+        return memory.readbyte(0x0053)
     end,
     UntilLevelAppears = function()
         while c.GraphicsMode() ~= 8 do

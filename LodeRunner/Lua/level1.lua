@@ -60,51 +60,63 @@ while not c.IsDone() do
         error('Failed to find level 1 select skip')
     end
 
-    c.LeftUntilLadderGrab()
+    c.UntilLadderGrab('Left')
     c.ClimbFor(2)
     c.RightFor(12)
     c.PushRight()
     c.PushDown()
-
+    c.FinishFalling()
     --Requires very a specific frame to start pushing a, or else the spawn timer lags
     ----c.UntilDigAppears('Right', 'A')
-    -- c.PushFor('Right', 7)
-    -- c.PushA()
+    c.PushFor('Right', 2)
+    c.PushA()
 
-    -- c.WaitFor(20)
+    c.WaitFor(20)
 
-    -- found = c.FrameSearch(FindRightAfterFirstDig, 50)
-    -- if not found then
-    --     error('Failed to find right after digging')
-    -- end
+    found = c.FrameSearch(FindRightAfterFirstDig, 50)
+    if not found then
+        error('Failed to find right after digging')
+    end
 
-    --c.RightUntilLadderGrab()
-    --Going until ladder grab creates extra inputs that lag the drop counter
-    --Must do these precisely instead
-    -- c.RightUntil(26)
-    -- c.PushRight()
-    -- c.PushUp()
+    c.UntilLadderGrab('Right')
+    c.ClimbFor(1)
+    c.UntilLadderGrab('Left')
 
-    -- c.UpUntilLeft()
-    -- c.LeftUntilLadderGrab()
-    -- c.UpUntil(6)
-    -- c.UpUntilRight()
-    -- c.RightUntilLadderGrab()
-    -- c.UpUntilLeft()
-    -- c.LeftUntil(19)
+    c.ClimbFor(5)
+    c.UntilLadderGrab('Right')
 
-    -- -- This is hardcoded input patterns found manually
-    -- c.WaitFor(30)
-    -- c.PushB()
-    -- c.WaitFor(52)
-    -- c.PushFor('Left', 3)
-    -- c.UpUntilLevelEnd()
+    c.ClimbFor(2)
+    c.LeftUntil(19)
 
-    --c.Marker('lv 1 end')
+    -- This is hardcoded input patterns found manually
+    c.WaitFor(34)
+    c.PushB()
+    c.WaitFor(51)
+    c.PushFor('Left', 3)
+    c.WaitFor(4)
+    c.PushFor('Up', 9)
+    c.WaitFor(4)
+    c.PushFor('Up', 1)
 
-    --todo: delete me
-
-    c.Done()
+    if (c.SpawnTimer() ~= 22 and c.SpawnTimer() ~= 23) then
+        error('bad spawn timer: ' .. c.SpawnTimer() .. ' something went wrong')
+        c.Done()
+    else
+        c.Marker('lv 1 end')
+        c.UntilNextInputFrame()
+        c.PushSelect()
+        c.UntilNextLagFrame()
+        c.UntilNextInputFrame()
+        c.PushStart()
+        c.UntilNextLagFrame()
+        c.UntilNextInputFrame()
+        c.UntilNextLagFrame()
+        c.UntilNextInputFrame()
+        c.WaitFor(5)
+        c.PushBtnsFor({'Left', 'Select'})
+        c.Marker('lv 2')
+        c.Done()
+    end
 end
 
 c.Finish()
