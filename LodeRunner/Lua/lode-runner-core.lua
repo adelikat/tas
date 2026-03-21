@@ -507,6 +507,10 @@ c = {
     ---------------------------------------------------------------------
     --------------------Game specific functions below--------------------
     ---------------------------------------------------------------------
+    Directions = {
+        Left = 1,
+        Right = 65
+    },
     CurrentLevel = function()
         return memory.readbyte(0x00A6)
     end,
@@ -541,7 +545,8 @@ c = {
             timer = c.ToSignedByte(memory.readbyte(0x0671 + i)),
             xTileOffset = memory.readbyte(0x0679 + i),
             yTileOffset = memory.readbyte(0x0681 + i),
-            color = colors[i] or 'magenta'
+            color = colors[i] or 'magenta',
+            direction = memory.readbyte(0x0722 + (i * 16))
         }
 
         enemy.xPos = function()
@@ -658,15 +663,33 @@ c = {
     end,
     LeftFor = function (tiles)
         local currentTile = c.Player().levelX
-        return c.RightUntil(currentTile - tiles)
+        return c.LeftUntil(currentTile - tiles)
     end,
     RightFor = function (tiles)
         local currentTile = c.Player().levelX
         return c.RightUntil(currentTile + tiles)
     end,
-    UntilLadderGrab = function(direction)
+    UntilGold = function(direction)
         if (direction ~= 'Left' and direction ~= 'Right') then
             error('invalid direction for ladder grab: ' .. direction)
+        end
+        local currentGold = memory.readbyte(0x0093)
+        while memory.readbyte(0x0093) == currentGold do
+            c.PushFor(direction)
+        end
+        return true
+    end,
+    UntilLadderGrab = function(direction, grabDirection)
+        if (direction ~= 'Left' and direction ~= 'Right') then
+            error('invalid direction for ladder grab: ' .. direction)
+        end
+
+        if not grabDirection then
+            grabDirection = 'Up'
+        end
+
+        if grabDirection ~= 'Up' and grabDirection ~= 'Down' then
+            error('invalid grab direction for ladder grab: ' .. direction)
         end
 
         -- This is needed if coming off of a ladder because the player isn't done moving up for a few frames after the first one necessary to move
@@ -677,18 +700,23 @@ c = {
         local startFrame = emu.framecount()
 
         local initial = c.Player().yPos()
-        console.log('initital', initial)
         local done = false
         while not done do
             c.Save(stateName)
-            c.PushBtnsFor({direction, 'Up'})
+            c.PushBtnsFor({direction, grabDirection})
 
             if _playerDied() then
                 return false
             end
 
-            if c.Player().yPos() < initial then
-                console.log('done, new pos: ' .. c.Player().yPos())
+            local isSuccess
+            if grabDirection == 'Up' then
+                isSuccess = c.Player().yPos() < initial
+            else
+                isSuccess = c.Player().yPos() > initial
+            end
+
+            if isSuccess then
                 done = true
             else
                 c.Load(stateName)
@@ -700,12 +728,17 @@ c = {
         -- Even if equal we prefer because it can affect the spawn timer, and it is cleaner anyway
         local finalPos = c.Player().yPos()
         c.Load(stateName)
-        c.PushUp()
+        c.PushFor(grabDirection)
 
-        local newFinalPos = c.Player().yPos()
-        if newFinalPos > finalPos then
+        if grabDirection == 'Up' then
+            isSuccess = c.Player().yPos() > finalPos
+        else
+            isSuccess = c.Player().yPos() < finalPos
+        end
+
+        if isSuccess then
             c.Load(stateName)
-            c.PushBtnsFor({direction, 'Up'})
+            c.PushBtnsFor({direction, grabDirection})
         end
 
         return true
@@ -714,12 +747,21 @@ c = {
         local currentTile = c.Player().levelY
         return c.ClimbUntil(currentTile - tiles)
     end,
+    ClimbDown = function (tiles)
+        local currentTile = c.Player().levelY
+        return c.ClimbUntil(currentTile + tiles)
+    end,
     ClimbUntil = function(targetY)
         local player = c.Player()
         local y = c.Player().levelY
 
+        local direction = 'Up'
+        if y < targetY then
+            direction = 'Down'
+        end
+
         while y ~= targetY do
-            c.PushUp()
+            c.PushFor(direction)
             y = c.Player().levelY
             if c.Player().isAlive == false then
 
@@ -752,7 +794,6 @@ c = {
         c.Save('finish-falling')
         local startFrame = emu.framecount()
         local test = memory.readbyte(0x009B)
-        console.log('teswt', test)
         if not c.Player().isFalling then
             c.Debug('Player was not falling ' .. emu.framecount())
             return
@@ -772,9 +813,29 @@ c = {
         end
     end,
     UntilDigAppears = function(moveDirection, digBtn)
-        console.log(memory.readbyte(0x00A0))
-        while memory.readbyte(0x00A0) ~= 1 do
-            c.PushBtnsFor({moveDirection, digBtn}, 1)
+        local function checkFrame()
+            c.Save('temp')
+            c.PushFor(digBtn)
+            c.WaitFor(2)
+
+            local success = memory.readbyte(0x00A0) == 1
+
+            c.Load('temp')
+            return success
+        end
+
+        local done = false
+        while not done do
+            if checkFrame() then
+                c.PushFor(digBtn)
+                done = true
+            else
+                c.PushFor(moveDirection)
+            end
+        end
+
+        while memory.readbyte(0x00A0) < 0x0C do
+            c.WaitFor(1)
         end
      end,
 }
