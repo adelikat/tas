@@ -114,7 +114,7 @@ local function _untilNextInputFrameTastudio()
         c.WaitFor(1)
         if not emu.islagged() then
             c.Save('error')
-            error('This function must be run during lag, or one frame before it')
+            error('This function must be run during lag, or one frame before it ' .. emu.framecount())
         end
     end
 
@@ -504,6 +504,43 @@ c = {
         console.log('No attempts succeeded')
         return false
     end,
+    --[[
+    receives an array of paramterless boolean functions, runs each one and evaluates which one is fastest,
+    then replays that one
+    ]]
+    BestOf = function(funcs)
+        c.Save('best-of')
+        best = 999999
+        bestFunc = function() return true end
+        for i, fn in ipairs(funcs) do
+            c.Load('best-of')
+            local result = fn()
+            if result then
+                local current = emu.framecount()
+                if current < best then
+                    console.log('new best: ' .. current)
+                    best = current
+                    bestFunc = fn
+                end
+            end
+        end
+
+        if best == 999999 then
+            console.log('BestOf - no route finished successfully')
+            return false
+        end
+
+        c.Load('best-of')
+        return bestFunc()
+    end,
+    UntilLag = function(btns)
+        c.Save('until-lag')
+        while not emu.islagged() do
+            c.Save('until-lag')
+            c.PushBtnsFor(btns)
+        end
+        c.Load('until-lag')
+    end,
     ---------------------------------------------------------------------
     --------------------Game specific functions below--------------------
     ---------------------------------------------------------------------
@@ -694,6 +731,7 @@ c = {
 
         -- This is needed if coming off of a ladder because the player isn't done moving up for a few frames after the first one necessary to move
         -- This could be a problem if this method is run too close to a successful grab
+        -- TODO: this is bad though if going at max speed and the ladder is 1 away from the ladder you are on
         c.PushFor(direction, 2)
 
         local stateName = direction..'-ladder-grab'
@@ -744,10 +782,18 @@ c = {
         return true
     end,
     Climb = function (tiles)
+        if not tiles then
+            tiles = 1
+        end
+
         local currentTile = c.Player().levelY
         return c.ClimbUntil(currentTile - tiles)
     end,
     ClimbDown = function (tiles)
+        if not tiles then
+            tiles = 1
+        end
+
         local currentTile = c.Player().levelY
         return c.ClimbUntil(currentTile + tiles)
     end,
@@ -789,6 +835,11 @@ c = {
             tastudio.setplayback(emu.framecount() - 2)
         end
 
+    end,
+    UntilFall = function(moveDirection)
+        while not c.Player().isFalling do
+            c.PushFor(moveDirection)
+        end
     end,
     FinishFalling = function()
         c.Save('finish-falling')

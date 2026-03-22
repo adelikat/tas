@@ -18,8 +18,6 @@ local function PushSelectUntilLevelSkip()
             frames = frames + 1
         end
     end
-
-
 end
 
 function FindSkipFromBeginningOfLevel()
@@ -40,7 +38,7 @@ function FindSkipFromBeginningOfLevel()
 end
 
 local function FindSkip()
-    c.PushFor('Up', 2) -- 2 frames to ensure it ends the level
+    c.UntilLag({'Up'});
     c.UntilNextInputFrame()
 
     PushSelectUntilLevelSkip()
@@ -58,6 +56,7 @@ end
 
 while not c.IsDone() do
     c.Load('find-skip-start')
+    c.WaitFor(3)
     c.BestSearch(FindSkip, 15)
     c.Marker('scroll-skip')
     c.Done()
