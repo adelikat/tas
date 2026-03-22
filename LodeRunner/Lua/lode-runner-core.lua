@@ -447,6 +447,9 @@ c = {
     return false
     ]]
     FrameSearch = function(func, limit)
+        if limit == nil then
+            error('limit not provided to FrameSearch')
+        end
         c.Save('frame-search-temp-' .. limit)
         local delay = 0;
 
@@ -675,10 +678,10 @@ c = {
         return true
     end,
     LeftUntil = function(targetX)
-        local x = memory.readbyte(0x0020)
+        local x = c.Player().levelX
         while x ~= targetX do
-            x = memory.readbyte(0x0020)
             c.PushLeft()
+            x = c.Player().levelX
             if _playerDied() then
                 return false
             end
@@ -837,6 +840,10 @@ c = {
 
     end,
     UntilFall = function(moveDirection)
+        if moveDirection ~= 'Left' and moveDirection ~= 'Right' then
+            error('Invalid direction for UntilFall: ' .. moveDirection)
+        end
+
         while not c.Player().isFalling do
             c.PushFor(moveDirection)
         end
@@ -864,6 +871,10 @@ c = {
         end
     end,
     UntilDigAppears = function(moveDirection, digBtn)
+        if digBtn ~= 'A' and digBtn ~= 'B' then
+            error('Invalid dig direction: ' .. digBtn)
+        end
+
         local function checkFrame()
             c.Save('temp')
             c.PushFor(digBtn)
@@ -876,7 +887,12 @@ c = {
         end
 
         local done = false
+
         while not done do
+            if not c.Player().isAlive then
+                return false
+            end
+
             if checkFrame() then
                 c.PushFor(digBtn)
                 done = true
@@ -885,8 +901,16 @@ c = {
             end
         end
 
+        local limit = 50
+        local count = 0
         while memory.readbyte(0x00A0) < 0x0C do
             c.WaitFor(1)
+            count = count + 1
+            if count > limit then
+                return false
+            end
         end
+
+        return true
      end,
 }
