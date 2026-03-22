@@ -280,7 +280,7 @@ c = {
 			slotNum = 10
 		end
 
-		if slotNum ~= nill and slotNum > 0 and slotNum <= 10 then
+		if slotNum ~= nil and slotNum > 0 and slotNum <= 10 then
             local orig = _config.Savestates.SaveScreenshot
             _config.Savestates.SaveScreenshot = true
 			savestate.saveslot(slot)
@@ -707,7 +707,7 @@ c = {
         return c.RightUntil(currentTile + tiles)
     end,
     UntilGold = function(direction)
-        if (direction ~= 'Left' and direction ~= 'Right') then
+        if (direction ~= 'Left' and direction ~= 'Right' and direction ~= 'Up' and direction ~= 'Down') then
             error('invalid direction for ladder grab: ' .. direction)
         end
         local currentGold = memory.readbyte(0x0093)

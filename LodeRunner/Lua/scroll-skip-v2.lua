@@ -1,3 +1,5 @@
+local maxDelay = 9
+
 -- Start at the end of a level, where pressing up for 1 frame will end the level
 dofile('lode-runner-core.lua')
 
@@ -51,14 +53,19 @@ local function FindSkip()
     c.UntilNextLagFrame() -- Level jingle
     c.UntilNextInputFrame()
 
-    return c.FrameSearch(FindSkipFromBeginningOfLevel, 100)
+    local result = c.FrameSearch(FindSkipFromBeginningOfLevel, 100)
+
+    if tastudio.engaged() then
+        tastudio.createnewbranch()
+    end
+
+    return result
 end
 
 while not c.IsDone() do
     c.Load('find-skip-start')
-    c.WaitFor(3)
-    c.BestSearch(FindSkip, 15)
-    c.Marker('scroll-skip')
+    c.BestSearch(FindSkip, maxDelay)
+    c.Marker('lv ' .. c.CurrentLevel())
     c.Done()
 end
 
