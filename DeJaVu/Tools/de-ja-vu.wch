@@ -1,4 +1,5 @@
 SystemID NES
 00A5	b	u	0	RAM	X
 00A6	b	u	0	RAM	Y
+0035	w	u	0	RAM	RNG
 
