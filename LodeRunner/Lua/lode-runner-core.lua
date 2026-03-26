@@ -849,6 +849,11 @@ c = {
         end
 
     end,
+    Fall = function(moveDirection)
+        local result = c.UntilFall(moveDirection)
+        if not result then return false end
+        return c.FinishFalling()
+    end,
     UntilFall = function(moveDirection)
         if moveDirection ~= 'Left' and moveDirection ~= 'Right' then
             error('Invalid direction for UntilFall: ' .. moveDirection)
@@ -879,6 +884,7 @@ c = {
         local endFrame = emu.framecount()
         c.Load('finish-falling')
         c.WaitFor(endFrame - startFrame - 1)
+        return c.Player().isAlive
     end,
     UntilLevelAppears = function()
         while c.GraphicsMode() ~= 8 do
