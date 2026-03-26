@@ -1,4 +1,10 @@
 local maxDelay = 9
+local maxSkipDelay = 20
+local direction = 'Left'
+
+if direction ~= 'Left' and direction ~= 'Right' then
+    error('invalid directiono')
+end
 
 -- Start at the end of a level, where pressing up for 1 frame will end the level
 dofile('lode-runner-core.lua')
@@ -25,7 +31,7 @@ end
 function FindSkipFromBeginningOfLevel()
     local origPlayer = c.Player()
     local origX = (origPlayer.levelX * 16) + origPlayer.xTileOffset
-    c.PushLeftAndSelect()
+    c.PushBtnsFor({direction, 'Select'})
 
     c.Save('lv1-select-skip')
     local startFrame = emu.framecount()
@@ -40,7 +46,9 @@ function FindSkipFromBeginningOfLevel()
 end
 
 local function FindSkip()
-    c.UntilLag({'Up'});
+    local result = c.UntilLag({'Up'});
+    if not result then return false end
+
     c.UntilNextInputFrame()
 
     PushSelectUntilLevelSkip()
@@ -53,10 +61,14 @@ local function FindSkip()
     c.UntilNextLagFrame() -- Level jingle
     c.UntilNextInputFrame()
 
-    local result = c.FrameSearch(FindSkipFromBeginningOfLevel, 100)
+    result = c.FrameSearch(FindSkipFromBeginningOfLevel, maxSkipDelay)
 
-    if tastudio.engaged() then
-        tastudio.createnewbranch()
+    if result then
+        if tastudio.engaged() then
+            tastudio.createnewbranch()
+        end
+    else
+        console.log('could not find skip')
     end
 
     return result
@@ -64,9 +76,16 @@ end
 
 while not c.IsDone() do
     c.Load('find-skip-start')
-    c.BestSearch(FindSkip, maxDelay)
-    c.Marker('lv ' .. c.CurrentLevel())
-    c.Done()
+    local bestResult = c.BestSearch(FindSkip, maxDelay)
+
+    if  bestResult then
+        c.Marker('lv ' .. c.CurrentLevel())
+        c.Done()
+    else
+        console.log('---------------')
+        console.log('Could not find any level skip!')
+        c.Fail()
+    end
 end
 
 c.Finish()

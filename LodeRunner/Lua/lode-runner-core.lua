@@ -1,4 +1,5 @@
 local _done = false
+local _success = true
 local _config = client.getconfig()
 
 local function _tastudioGoToFrame(frame)
@@ -233,6 +234,10 @@ c = {
 			console.log(msg)
 		end
 	end,
+    Fail = function()
+        _success = false
+        c.Done()
+    end,
     Done = function()
         c.Scrub(100)
 		_done = true
@@ -261,9 +266,14 @@ c = {
         client.speedmode(100)
         client.pause()
         if _done then
-		    console.log('Success!')
-            c.Save('Success' .. emu.framecount())
-		    c.Save(99)
+            if _success then
+                console.log('Success!')
+                c.Save('Success' .. emu.framecount())
+                c.Save(99)
+            else
+                console.log('Failure! No Successful Result')
+            end
+
         end
     end,
     Marker = function(markerName)
@@ -549,8 +559,12 @@ c = {
         while not emu.islagged() do
             c.Save('until-lag')
             c.PushBtnsFor(btns)
+            if not c.Player().isAlive then
+                return false
+            end
         end
         c.Load('until-lag')
+        return true
     end,
     ---------------------------------------------------------------------
     --------------------Game specific functions below--------------------
@@ -853,6 +867,12 @@ c = {
         local result = c.UntilFall(moveDirection)
         if not result then return false end
         return c.FinishFalling()
+    end,
+    FallLeft = function()
+        return c.Fall('Left')
+    end,
+    FallRight = function()
+        return c.Fall('Right')
     end,
     UntilFall = function(moveDirection)
         if moveDirection ~= 'Left' and moveDirection ~= 'Right' then
