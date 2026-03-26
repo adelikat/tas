@@ -18,7 +18,7 @@ while not c.IsDone() do
     c.ClimbUntil(1)
     c.RightUntil(25)
 
-    c.WaitFor(2) -- We have to wait anyway at the ladder, might as well use those frames to help with lag
+    --c.WaitFor(1) -- We have to wait anyway at the ladder, might as well use those frames to help with lag
 
     c.PushDown()
     c.FinishFalling()

@@ -1,6 +1,6 @@
-local maxDelay = 9
-local maxSkipDelay = 20
-local direction = 'Left'
+local maxDelay = 15
+local maxSkipDelay = 40
+local direction = 'Right'
 
 if direction ~= 'Left' and direction ~= 'Right' then
     error('invalid directiono')
