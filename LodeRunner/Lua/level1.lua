@@ -67,7 +67,7 @@ while not c.IsDone() do
     c.PushDown()
     c.FinishFalling()
     --Requires very a specific frame to start pushing a, or else the spawn timer lags
-    ----c.UntilDigAppears('Right', 'A')
+    ----c.UntilDig('Right', 'A')
     c.PushFor('Right', 2)
     c.PushA()
 

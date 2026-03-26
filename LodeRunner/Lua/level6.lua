@@ -16,14 +16,14 @@ end
 
 --
 local function GetTopLeftGoldLeft()
-    c.UntilDigAppears('Left', 'A')
+    c.UntilDig('Left', 'A')
     c.UntilGold('Left')
     c.UntilFall('Right')
     return true
 end
 
 local function GetTopLeftGoldDownLeft()
-    c.UntilDigAppears('Left', 'A')
+    c.UntilDig('Left', 'A')
     c.UntilGold('Left')
     c.UntilFall('Right')
     c.ClimbDown()
@@ -49,14 +49,14 @@ end
 --
 
 local function MiddleMultiDig1()
-    c.UntilDigAppears('Right', 'A')
-    c.UntilDigAppears('Left', 'A')
-    c.UntilDigAppears('Right', 'A')
+    c.UntilDig('Right', 'A')
+    c.UntilDig('Left', 'A')
+    c.UntilDig('Right', 'A')
     c.UntilFall('Right')
     c.FinishFalling()
     c.RightFor(1)
 
-    c.UntilDigAppears('Left', 'B')
+    c.UntilDig('Left', 'B')
     c.UntilFall('Left')
     c.FinishFalling()
     c.UntilGold('Right')
@@ -65,11 +65,11 @@ end
 
 local function MiddleMultiDig2()
     c.RightFor(1)
-    c.UntilDigAppears('Right', 'A')
-    c.UntilDigAppears('Left', 'A')
-    c.UntilDigAppears('Right', 'A')
+    c.UntilDig('Right', 'A')
+    c.UntilDig('Left', 'A')
+    c.UntilDig('Right', 'A')
     c.UntilFall('Right')
-    c.UntilDigAppears('Left', 'A')
+    c.UntilDig('Left', 'A')
     c.UntilFall('Right')
     c.FinishFalling()
     c.UntilGold('Right')
@@ -86,29 +86,29 @@ local function DodgeEnemiesBeforeBigDig()
     c.ClimbUntil(6)
 
     c.LeftFor(4)
-    local result = c.UntilDigAppears('Left', 'B')
+    local result = c.UntilDig('Left', 'B')
     if not result then return false end
 
-    result = c.UntilDigAppears('Right', 'B')
+    result = c.UntilDig('Right', 'B')
     if not result then return false end
 
-    result = c.UntilDigAppears('Right', 'B')
+    result = c.UntilDig('Right', 'B')
     if not result then return false end
 
     c.UntilFall('Left')
     c.FinishFalling()
     c.LeftFor(1)
 
-    result = c.UntilDigAppears('Left', 'B')
+    result = c.UntilDig('Left', 'B')
     if not result then return false end
 
-    result = c.UntilDigAppears('Right', 'B')
+    result = c.UntilDig('Right', 'B')
     if not result then return false end
 
-    result = c.UntilDigAppears('Left', 'B')
+    result = c.UntilDig('Left', 'B')
     if not result then return false end
 
-    result = c.UntilDigAppears('Left', 'A')
+    result = c.UntilDig('Left', 'A')
     if not result then return false end
 
     c.UntilFall('Right')
@@ -150,7 +150,7 @@ local function DodgeE2GoldGet()
 end
 
 local function FinalSection()
-    c.UntilDigAppears('Right', 'A')
+    c.UntilDig('Right', 'A')
 
     local result = c.FrameSearch(RightToFinalLadder, 20)
     if not result then
@@ -159,9 +159,9 @@ local function FinalSection()
     end
 
     c.ClimbUntil(2)
-    c.UntilDigAppears('Up', 'B')
-    c.UntilDigAppears('Down', 'B')
-    c.UntilDigAppears('Down', 'B')
+    c.UntilDig('Up', 'B')
+    c.UntilDig('Down', 'B')
+    c.UntilDig('Down', 'B')
 
     c.BestOf({
         LastGoldLeft,
@@ -179,12 +179,12 @@ end
 -- The enemy patters are very slightly different and causes significant lag differences
 while not c.IsDone() do
     c.RightFor(1)
-    c.UntilDigAppears('Right', 'B')
-    c.UntilDigAppears('Right', 'B')
-    c.UntilDigAppears('Left', 'B')
-    c.UntilDigAppears('Right', 'B')
-    c.UntilDigAppears('Left', 'B')
-    c.UntilDigAppears('Right', 'B')
+    c.UntilDig('Right', 'B')
+    c.UntilDig('Right', 'B')
+    c.UntilDig('Left', 'B')
+    c.UntilDig('Right', 'B')
+    c.UntilDig('Left', 'B')
+    c.UntilDig('Right', 'B')
 
     c.BestOf({
         Get1stGoldLeft,
@@ -200,7 +200,7 @@ while not c.IsDone() do
     c.ClimbUntil(2)
     c.LeftFor(2)
     c.UntilLadderGrab('Left')
-    c.UntilDigAppears('Up', 'B')
+    c.UntilDig('Up', 'B')
 
     c.BestOf({
         GetTopLeftGoldLeft,

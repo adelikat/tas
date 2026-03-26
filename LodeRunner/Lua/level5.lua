@@ -11,7 +11,7 @@ end
 local function FirstDig()
     function dig()
         c.Climb(2)
-        local result = c.UntilDigAppears('Up', 'A')
+        local result = c.UntilDig('Up', 'A')
         if not result then
             return false
         end
@@ -100,7 +100,7 @@ while not c.IsDone() do
 
     Fall()
 
-    c.UntilDigAppears('Right', 'A')
+    c.UntilDig('Right', 'A')
     c.WaitFor(2)
     c.FrameSearch(Right3Tiles, 25)
 

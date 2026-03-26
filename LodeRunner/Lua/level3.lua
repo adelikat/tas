@@ -21,7 +21,7 @@ end
 
 local function DigThenGetGold()
     c.UntilLadderGrab('Right', 'Down')
-    c.UntilDigAppears('Down', 'A')
+    c.UntilDig('Down', 'A')
     c.ClimbDown()
     c.UntilGold('Left')
     c.UntilFall('Right')

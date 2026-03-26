@@ -212,6 +212,7 @@ end
 -- a key value pair of label and frame number to store when c.Save is called with that label
 local saveFrameDict = {}
 
+local _slowMode = false
 c = {
     --------------------Core functions--------------------
     ToSignedByte = function(b)
@@ -239,9 +240,16 @@ c = {
 	IsDone = function()
 		return _done
 	end,
+    SlowMode = function()
+        _slowMode = true
+    end,
     Start = function()
         client.unpause()
-        client.speedmode(1600)
+        if _slowMode then
+            client.speedmode(25)
+        else
+            client.speedmode(1600)
+        end
 
         if tastudio.engaged() then
             local frame = tastudio.find_marker_on_or_before(emu.framecount())
@@ -448,7 +456,7 @@ c = {
     ]]
     FrameSearch = function(func, limit)
         if limit == nil then
-            error('limit not provided to FrameSearch')
+            limit = 25
         end
         c.Save('frame-search-temp-' .. limit)
         local delay = 0;
@@ -719,7 +727,7 @@ c = {
         end
         return true
     end,
-    UntilLadderGrab = function(direction, grabDirection)
+    UntilLadderGrab = function(direction, grabDirection, skipLadderAdjust)
         if (direction ~= 'Left' and direction ~= 'Right') then
             error('invalid direction for ladder grab: ' .. direction)
         end
@@ -734,8 +742,10 @@ c = {
 
         -- This is needed if coming off of a ladder because the player isn't done moving up for a few frames after the first one necessary to move
         -- This could be a problem if this method is run too close to a successful grab
-        -- TODO: this is bad though if going at max speed and the ladder is 1 away from the ladder you are on
-        c.PushFor(direction, 2)
+        -- so we do this bad hack instead
+        if not skipLadderAdjust then
+            c.PushFor(direction, 2)
+        end
 
         local stateName = direction..'-ladder-grab'
         local startFrame = emu.framecount()
@@ -846,7 +856,12 @@ c = {
 
         while not c.Player().isFalling do
             c.PushFor(moveDirection)
+            if not c.Player().isAlive then
+                return false
+            end
         end
+
+        return true
     end,
     FinishFalling = function()
         c.Save('finish-falling')
@@ -870,7 +885,7 @@ c = {
             c.WaitFor(1)
         end
     end,
-    UntilDigAppears = function(moveDirection, digBtn)
+    UntilDig = function(moveDirection, digBtn)
         if digBtn ~= 'A' and digBtn ~= 'B' then
             error('Invalid dig direction: ' .. digBtn)
         end

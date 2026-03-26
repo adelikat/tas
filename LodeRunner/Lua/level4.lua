@@ -177,7 +177,7 @@ while not c.IsDone() do
 
     c.Climb(2)
     c.UntilFall('Right')
-    c.UntilDigAppears('Right', 'A')
+    c.UntilDig('Right', 'A')
     c.UntilFall('Right')
     c.FinishFalling()
     c.ClimbDown(4)
