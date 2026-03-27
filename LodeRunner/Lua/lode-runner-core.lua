@@ -741,6 +741,70 @@ c = {
         end
         return true
     end,
+    -- Intended to obsolete UntilLadderGrab, will grab the ladder and climb 1 tile
+    -- Not ready, DO NOT USE, still fails
+    LadderGrabAndClimb = function(direction, grabDirection)
+        console.log('do not use!')
+        if (direction ~= 'Left' and direction ~= 'Right') then
+            error('invalid direction for ladder grab: ' .. direction)
+        end
+
+        if not grabDirection then
+            grabDirection = 'Up'
+        end
+
+        if grabDirection ~= 'Up' and grabDirection ~= 'Down' then
+            error('invalid grab direction for ladder grab: ' .. direction)
+        end
+
+        local currentY = c.Player().levelY
+        local targetY = currentY - 1
+        if grabDirection == 'Down' then
+            targetY = currentY + 1
+        end
+
+        local stateName = direction..'-ladder-grab-climb'
+        local startFrame = emu.framecount()
+        local endFrame
+        c.Save(stateName)
+
+        while not endFrame do
+            c.PushBtnsFor({direction, grabDirection})
+
+            if _playerDied() then
+                return false
+            end
+
+            local isSuccess = c.Player().levelY == targetY
+            if isSuccess then
+                endFrame = emu.framecount()
+            end
+        end
+
+        -- Now that we know the number of frames needed, go back and try to minimize presses
+        c.Load(stateName)
+        for i = startFrame, endFrame - 1 do
+            c.Save(stateName .. '-temp')
+
+
+            c.PushBtnsFor({direction, grabDirection})
+            local targetXPos = c.Player().xPos()
+            local targetYPos = c.Player().yPos()
+            c.WaitFor(1)
+
+            c.Load(stateName .. '-temp')
+            c.PushBtnsFor({direction})
+            if c.Player().xPos() ~= targetXPos  or c.Player().yPos() ~= targetYPos then
+                c.Load(stateName .. '-temp')
+                c.PushBtnsFor({grabDirection})
+                if c.Player().xPos() ~= targetXPos or c.Player().yPos() ~= targetYPos then
+                    c.Load(stateName .. '-temp')
+                    c.PushBtnsFor({direction, grabDirection})
+                end
+            end
+        end
+
+    end,
     UntilLadderGrab = function(direction, grabDirection, skipLadderAdjust)
         if (direction ~= 'Left' and direction ~= 'Right') then
             error('invalid direction for ladder grab: ' .. direction)

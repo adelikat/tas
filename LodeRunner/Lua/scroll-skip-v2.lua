@@ -1,5 +1,5 @@
-local maxDelay = 15
-local maxSkipDelay = 40
+local maxDelay = 25
+local maxSkipDelay = 25
 local direction = 'Right'
 
 if direction ~= 'Left' and direction ~= 'Right' then
