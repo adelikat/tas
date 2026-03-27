@@ -754,7 +754,7 @@ c = {
         end
 
         if grabDirection ~= 'Up' and grabDirection ~= 'Down' then
-            error('invalid grab direction for ladder grab: ' .. direction)
+            error('invalid grab direction for ladder grab: ' .. grabDirection)
         end
 
         local currentY = c.Player().levelY

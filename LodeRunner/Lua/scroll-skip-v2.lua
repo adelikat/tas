@@ -3,7 +3,7 @@ local maxSkipDelay = 25
 local direction = 'Right'
 
 if direction ~= 'Left' and direction ~= 'Right' then
-    error('invalid directiono')
+    error('invalid direction')
 end
 
 -- Start at the end of a level, where pressing up for 1 frame will end the level
