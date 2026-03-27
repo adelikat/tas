@@ -490,9 +490,9 @@ c = {
     if the boolean function never returns true on any attempt, will return false
     ]]
     BestSearch = function(func, limit)
-        local saveStateName = 'frame-search-temp-' .. limit
+        local saveStateName = 'best-search-temp-' .. limit
         c.Save(saveStateName)
-        --TODO
+
         local delay = 0
         local best = 9999999
         local bestDelay = 0
@@ -827,6 +827,10 @@ c = {
     ClimbUntil = function(targetY)
         local player = c.Player()
         local y = c.Player().levelY
+
+        if y == targetY then
+            return true
+        end
 
         local direction = 'Up'
         if y < targetY then

@@ -1,4 +1,5 @@
--- Starts in the lag frames before the level appears
+-- Starts on the frame after pressing select to do the scroll skip
+-- all levels from this file onward do this
 dofile('lode-runner-core.lua')
 
 c.Start()

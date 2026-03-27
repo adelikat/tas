@@ -1,4 +1,3 @@
--- Starts in the lag frames before the level appears
 dofile('lode-runner-core.lua')
 
 c.Start()

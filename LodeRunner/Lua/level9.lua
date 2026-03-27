@@ -1,4 +1,3 @@
--- Start at the end of a level, where pressing up for 1 frame will end the level
 dofile('lode-runner-core.lua')
 
 c.Start()
@@ -18,7 +17,7 @@ while not c.IsDone() do
     c.ClimbUntil(1)
     c.RightUntil(25)
 
-    --c.WaitFor(1) -- We have to wait anyway at the ladder, might as well use those frames to help with lag
+    c.WaitFor(1) -- We have to wait anyway at the ladder, might as well use those frames to help with lag, this seems to consisently be better
 
     c.PushDown()
     c.FinishFalling()
