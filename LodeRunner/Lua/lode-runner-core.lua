@@ -965,13 +965,19 @@ c = {
     ClimbUntilLevelEnd = function()
         local start = emu.framecount()
         c.Save('up-until-level-end-')
+
         while not emu.islagged() do
+            if emu.framecount() - start > 200 then
+                c.Debug('ClimbUntilEnd failed tot get to the end, aborting after 200 frames')
+                return false
+            end
             c.PushUp()
         end
 
         local final = emu.framecount()
         local length = final - start
         c.Load('up-until-level-end-')
+
         -- We want to end 1 frame before the level ends, to manipulate the next level
         c.PushFor('Up', length - 2)
         if tastudio.engaged() then
@@ -979,6 +985,7 @@ c = {
             tastudio.setplayback(emu.framecount() - 2)
         end
 
+        return true
     end,
     Fall = function(moveDirection)
         local result = c.UntilFall(moveDirection)

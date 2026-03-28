@@ -68,8 +68,7 @@ while not c.IsDone() do
     c.ClimbUntil(3)
     c.GrabLadderRight()
     c.ClimbUntil(2)
-    c.RightFor(5)
-    c.GrabLadderRight()
+    c.RightUntil(27)
     c.ClimbUntilLevelEnd()
     c.Marker('lv 3 end')
 

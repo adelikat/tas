@@ -13,98 +13,88 @@ end
 
 -- Options for top left section after getting 1st gold
 local function RightDown()
-    c.RightFor(3)
-    c.ClimbDown(2)
+    c.RightUntil(5)
+    c.ClimbUntil(5)
     c.FinishFalling()
-    c.RightFor(1)
-    c.UntilGold('Right')
+    c.RightFor(3)
+    c.GrabLadderRight()
     return true
 end
 
 local function DownThenRight()
-    c.ClimbDown(3)
-    c.UntilGold('Right')
-    c.RightFor(1)
-    c.UntilGold('Right')
-
+    c.ClimbUntil(5)
+    c.RightFor(6)
+    c.GrabLadderRight()
     return true
 end
 
 local function DownRightDown()
     c.RightFor(1)
-    c.ClimbDown()
+    c.ClimbUntil(3)
     c.RightFor(1)
-    c.ClimbDown()
+    c.ClimbUntil(4)
     c.RightFor(1)
-    c.ClimbDown()
+    c.ClimbUntil(5)
     c.FinishFalling()
     c.RightFor(2)
-    c.UntilGold('Right')
-
+    c.GrabLadderRight()
     return true
 end
 
 local function DownRightDown2()
     c.RightFor(1)
-    c.ClimbDown(2)
+    c.ClimbUntil(4)
     c.FinishFalling()
-    c.UntilGold('Right')
-    c.RightFor(2)
-    c.UntilGold('Right')
-
+    c.RightFor(5)
+    c.GrabLadderRight()
     return true
 end
 
 --
 
 -- Options on top left after getting last gold (on top right)
-local function JustLeft()
-    c.LeftFor(3)
-    c.UntilLadderGrab('Left')
-    return true
-end
-
 local function DownThenLeft()
-    c.ClimbDown()
+    c.ClimbUntil(3)
     c.LeftFor(3)
-    c.UntilLadderGrab('Left')
+    c.GrabLadderLeft()
     return true
 end
 
 local function LeftDownLeft()
     c.LeftFor(1)
-    c.ClimbDown()
-    c.LeftFor(1)
-    c.UntilLadderGrab('Left')
+    c.ClimbUntil(3)
+    c.LeftFor(2)
+    c.GrabLadderLeft()
     return true
 end
 
 --Options for top right after getting right most gold, gets gold in middle and falls
 local function ZigZag()
-    c.ClimbDown()
+    c.ClimbUntil(3)
     c.LeftFor(1)
-    c.ClimbDown()
+    c.ClimbUntil(4)
     c.FinishFalling()
     c.UntilGold('Left')
-    c.UntilLadderGrab('Right', 'Down')
+    c.GrabLadderRight('Down')
     return true
 end
 
 local function LeftThenDown()
     c.LeftFor(3)
-    c.ClimbDown(2)
+    c.ClimbUntil(5)
     c.FinishFalling()
-    c.UntilLadderGrab('Right', 'Down')
+    c.RightFor(2)
+    c.GrabLadderRight('Down')
     return true
 end
 
 local function Left2DownLeft()
-    c.LeftFor(2)
-    c.FinishFalling()
-    c.ClimbDown(2)
+    c.FallLeft()
+    c.ClimbUntil(5)
     c.FinishFalling()
     c.UntilGold('Left')
-    c.UntilLadderGrab('Right', 'Down')
+    c.RightFor(2)
+    c.GrabLadderRight('Down')
     return true
 end
 
@@ -120,7 +110,7 @@ local function FindLatest()
     while not done do
         c.Load('temp')
         c.WaitFor(delay)
-        c.Climb()
+        c.ClimbUntil(11)
         if not c.Player().isAlive then
             done = true
         else
@@ -135,31 +125,27 @@ local function FindLatest()
 end
 
 local function FromRightUntilEnd()
-    c.UntilFall('Left')
-    c.FinishFalling()
+    c.FallLeft()
     c.LeftFor(12)
 
     local delayAmt = FindLatest()
     console.log('waiting for ' .. delayAmt .. ' frames')
     c.WaitFor(delayAmt)
-    c.Climb(3)
-    local result = c.UntilLadderGrab('Left')
-    if not result then
-        return false
-    end
+    c.ClimbUntil(9)
+    local result = c.GrabLadderLeft()
+    if not result then return false end
 
     c.ClimbUntilLevelEnd()
     return true
 end
 
 while not c.IsDone() do
-    c.LeftFor(5)
-    c.UntilLadderGrab('Left')
-    c.Climb(10)
-    c.RightFor(2)
+    c.LeftUntil(1)
 
+    c.GrabLadderLeft()
+    c.ClimbUntil(1)
+    c.RightUntil(2)
     c.PushDown()
-    c.WaitFor(2)
     c.FinishFalling()
 
     c.BestOf({
@@ -169,37 +155,32 @@ while not c.IsDone() do
         DownRightDown2,
     })
 
-    --DownRightDown()
-
-    c.UntilLadderGrab('Right')
-    c.UntilGold('Up')
+    c.ClimbUntilGold('Left')
 
     c.BestOf({
-        JustLeft,
-        DownThenLeft,
-        LeftDownLeft,
+           c.GrabLadderLeft,
+           DownThenLeft,
+           LeftDownLeft,
     })
 
-    --JustLeft()
-
-    c.Climb(2)
-    c.UntilFall('Right')
+    c.ClimbUntil(1)
+    c.FallRight()
     c.UntilDig('Right', 'A')
-    c.UntilFall('Right')
-    c.FinishFalling()
-    c.ClimbDown(4)
-    c.FinishFalling()
-    c.UntilLadderGrab('Right')
+    c.FallRight()
 
-    c.Climb(3)
-    c.UntilLadderGrab('Right')
-    c.Climb()
-    c.UntilLadderGrab('Left')
-    c.UntilGold('Up')
+    c.ClimbUntil(9)
+    c.FinishFalling()
+    c.GrabLadderRight()
+
+    c.ClimbUntil(6)
+    c.GrabLadderRight()
+    c.ClimbUntil(5)
+    c.GrabLadderLeft()
+    c.ClimbUntilGold('Right')
 
     c.RightFor(6)
-    c.UntilLadderGrab('Right')
-    c.Climb()
+    c.GrabLadderRight()
+    c.ClimbUntil(2)
     c.UntilGold('Right')
 
     c.BestOf({
@@ -208,20 +189,15 @@ while not c.IsDone() do
         Left2DownLeft,
     })
 
-    --ZigZag()
-
-
-    c.ClimbDown(3)
+    c.ClimbUntil(7)
     c.FinishFalling()
     c.UntilGold('Left')
+    c.WaitFor(5)
     c.LeftFor(3)
 
-    local result = c.FrameSearch(FromRightUntilEnd, 10)
-    if not result then
-        error('could not find ending delay')
-    end
+    c.Assert(c.FrameSearch(FromRightUntilEnd))
 
-    c.Marker('lv 4 end')
+    -- c.Marker('lv 4 end')
     c.Done()
 
 end
