@@ -1,6 +1,7 @@
 local maxDelay = 10
-local maxSkipDelay = 300
+local maxSkipDelay = 10
 local direction = 'Right'
+local changeSpeed = true
 
 if direction ~= 'Left' and direction ~= 'Right' then
     error('invalid direction')
@@ -42,7 +43,10 @@ function FindSkipFromBeginningOfLevel()
     local newX = (newPlayer.levelX * 16) + newPlayer.xTileOffset
 
     c.Load('lv1-select-skip')
-    return gameMode == 1 and newX < origX
+
+    c.Debug(string.format('evail: GameMode %s, origX: %s, newX: %s', gameMode, origX, newX))
+
+    return gameMode == 1 and newX ~= origX
 end
 
 local function FindSkip()
@@ -54,6 +58,19 @@ local function FindSkip()
     PushSelectUntilLevelSkip()
     c.UntilNextLagFrame()
     c.UntilNextInputFrame()
+    if changeSpeed then
+        if c.GameSpeed() ~= 1 then
+            error('attempted to change game speed slower when not at 1, ' .. c.GameSpeed())
+        end
+        c.PushBtnsFor({'Select', 'B'})
+        c.PushSelect()
+        c.PushBtnsFor({'Select', 'B'})
+        c.PushSelect()
+        c.PushBtnsFor({'Select', 'B'})
+        if c.GameSpeed() ~= 4 then
+            error('failed to set game speed')
+        end
+    end
     c.PushStart()
     c.UntilNextLagFrame()
     c.UntilNextInputFrame()
