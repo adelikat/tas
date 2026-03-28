@@ -81,6 +81,15 @@ function drawLevel()
     gui.text(8, 8, 'Level ' .. c.CurrentLevel(), 'white', 'bottomright')
 end
 
+function drawYNumbers()
+    gui.drawText(1, 10, '1')
+    gui.drawText(1, 42, '3')
+    gui.drawText(1, 74, '5')
+    gui.drawText(1, 106, '7')
+    gui.drawText(1, 138, '9')
+    gui.drawText(1, 170, '11')
+end
+
 while true do
     gui.clearGraphics()
     if c.GameMode() == 1 then
@@ -93,6 +102,7 @@ while true do
         drawSpawnPrediction(4)
         drawPlayer()
         drawLevel()
+        drawYNumbers()
     else
         drawGameSpeed()
     end

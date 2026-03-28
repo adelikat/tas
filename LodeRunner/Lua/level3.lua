@@ -1,5 +1,4 @@
--- Starts on the frame after pressing select to do the scroll skip
--- all levels from this file onward do this
+-- Starts on the frame immediately after pressing select to do the select skip
 dofile('lode-runner-core.lua')
 
 c.Start()
@@ -12,80 +11,65 @@ if c.GameMode() ~= 1 then
     error('must be run in level mode')
 end
 
-local function GoLeftButClimbDownLadder()
-    c.UntilLadderGrab('Left', 'Down')
-    c.ClimbDown()
-    c.PushFor('Left', 2)
-    c.FinishFalling()
-    c.UntilLadderGrab('Left')
-end
-
-local function DigThenGetGold()
-    c.UntilLadderGrab('Right', 'Down')
-    c.UntilDig('Down', 'A')
-    c.ClimbDown()
-    c.UntilGold('Left')
-    c.UntilFall('Right')
-    c.FinishFalling()
-    c.UntilGold('Right')
+local function LeftClimb()
+    c.ClimbUntil(9)
+    c.PushRight()
+    return c.ClimbUntil(5)
 end
 
 local function WaitForE2ThenClimb()
-    c.Climb()
-    local result = c.UntilLadderGrab('Left')
-    if not result then
-        return false
-    end
-    return c.Climb(2)
+    c.ClimbUntil(8)
+    c.LeftFor(4)
+    local result = c.GrabLadderLeft()
+    if not result then return false end
+    return c.ClimbUntil(6)
 end
 
 while not c.IsDone() do
-    c.UntilLadderGrab('Right')
-    c.Climb(2)
+    c.RightFor(3)
+    c.GrabLadderRight()
+    c.ClimbUntil(10)
     c.UntilGold('Right')
 
-    c.WaitFor(2)
+    c.WaitFor(2) -- Magic delay saves a lag frame throughout the level, and different spawn timer
 
-    GoLeftButClimbDownLadder()
-    c.WaitFor(1)
-    c.Climb(3)
-    c.PushRight()
-    c.Climb(4)
+    c.GrabLadderLeft('Down')
+    c.ClimbUntil(11)
+    c.FallLeft()
+    c.LeftUntil(3)
 
-    --
+    c.Assert(c.FrameSearch(LeftClimb))
 
     c.UntilGold('Left')
-    c.UntilLadderGrab('Right')
-    c.Climb(3)
+    c.GrabLadderRight()
+    c.ClimbUntil(2)
     c.UntilGold('Left')
-    c.UntilLadderGrab('Left')
-    c.Climb()
+    c.GrabLadderLeft()
+    c.ClimbUntil(1)
     c.UntilGold('Right')
 
-    DigThenGetGold()
+    c.GrabLadderRight('Down')
+    c.UntilDig('Down', 'A')
+    c.ClimbUntil(3)
+    c.UntilGold('Left')
+    c.FallRight()
+    c.UntilGold('Right')
 
     c.PushBtnsFor({'Left', 'Down'}, 2)
     c.FinishFalling()
-    c.ClimbDown(3)
+    c.ClimbUntil(12)
     c.UntilGold('Left')
-    c.UntilLadderGrab('Right')
-    c.Climb(3)
-    c.UntilLadderGrab('Left')
+    c.GrabLadderRight()
+    c.ClimbUntil(9)
+    c.GrabLadderLeft()
 
-
-    local result = c.FrameSearch(WaitForE2ThenClimb, 30)
-    if not result then
-        error('could not find frame')
-    end
-
-    c.RightFor(1)
-    c.UntilLadderGrab('Right')
-    c.Climb(3)
-    c.RightFor(1)
-    c.UntilLadderGrab('Right')
-    c.Climb()
-    c.RightFor(1)
-    c.UntilLadderGrab('Right')
+    c.Assert(c.FrameSearch(WaitForE2ThenClimb))
+    c.GrabLadderRight()
+    c.ClimbUntil(3)
+    c.GrabLadderRight()
+    c.ClimbUntil(2)
+    c.RightFor(5)
+    c.GrabLadderRight()
     c.ClimbUntilLevelEnd()
     c.Marker('lv 3 end')
 

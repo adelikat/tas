@@ -3,7 +3,6 @@ dofile('lode-runner-core.lua')
 
 c.Start()
 
-
 if c.CurrentLevel() ~= 1 then
     error('must be run in level 1')
 end
@@ -60,14 +59,14 @@ while not c.IsDone() do
         error('Failed to find level 1 select skip')
     end
 
-    c.UntilLadderGrab('Left')
-    c.Climb(2)
+    c.LeftFor(3)
+    c.GrabLadderLeft()
+    c.ClimbUntil(10)
     c.RightFor(12)
     c.PushRight()
     c.PushDown()
     c.FinishFalling()
     --Requires very a specific frame to start pushing a, or else the spawn timer lags
-    ----c.UntilDig('Right', 'A')
     c.PushFor('Right', 2)
     c.PushA()
 
@@ -78,29 +77,28 @@ while not c.IsDone() do
         error('Failed to find right after digging')
     end
 
-    c.UntilLadderGrab('Right')
-    c.Climb(1)
-    c.UntilLadderGrab('Left')
+    c.GrabLadderRight()
+    c.ClimbUntil(10)
+    c.GrabLadderLeft()
+    c.ClimbUntil(5)
+    c.GrabLadderRight()
 
-    c.Climb(5)
-    c.UntilLadderGrab('Right')
-
-    c.Climb(2)
+    c.ClimbUntil(3)
     c.LeftUntil(19)
 
-    -- This is hardcoded input patterns found manually
+    -- -- This is hardcoded input patterns found manually
     c.WaitFor(34)
     c.PushB()
     c.WaitFor(51)
     c.PushFor('Left', 3)
     c.WaitFor(4)
-    c.PushFor('Up', 9)
+    c.PushBtnsFor({'Up', 'Right'}, 9) -- Prevents "select lag" on level end screen
     c.WaitFor(4)
     c.PushFor('Up', 1)
 
     if (c.SpawnTimer() ~= 22 and c.SpawnTimer() ~= 23) then
         error('bad spawn timer: ' .. c.SpawnTimer() .. ' something went wrong')
-        c.Done()
+        c.Fail()
     else
         c.Marker('lv 1 end')
         c.UntilNextInputFrame()
@@ -112,11 +110,13 @@ while not c.IsDone() do
         c.UntilNextInputFrame()
         c.UntilNextLagFrame()
         c.UntilNextInputFrame()
-        c.WaitFor(5)
+        c.WaitFor(6)
         c.PushBtnsFor({'Left', 'Select'})
         c.Marker('lv 2')
         c.Done()
     end
+
+    c.Done()
 end
 
 c.Finish()

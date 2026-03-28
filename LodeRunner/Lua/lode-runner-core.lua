@@ -480,6 +480,11 @@ c = {
         end
         _tastudioGoToFrame(frame)
     end,
+    Assert = function(bool)
+        if not bool then
+            error('Assertion failed')
+        end
+    end,
     --[[
     runs a parameterless boolean function, delaying 1 frame each attempt, until it
     returns true or the limit is reached in which it will
@@ -527,7 +532,7 @@ c = {
                 anySuccess = true
                 local final = emu.framecount()
                 if final < best then
-                     console.log('New best found, delay: ' .. delay)
+                    console.log(string.format('New best found %s delay %s', final, delay))
                     best = final
                     bestDelay = delay
                 end
@@ -915,6 +920,7 @@ c = {
         return true
     end,
     Climb = function (tiles)
+        console.log('obsolete, use ClimbUntil, this can be inaccurate')
         if not tiles then
             tiles = 1
         end
@@ -923,6 +929,7 @@ c = {
         return c.ClimbUntil(currentTile - tiles)
     end,
     ClimbDown = function (tiles)
+        console.log('obsolete, use ClimbUntil, this can be inaccurate')
         if not tiles then
             tiles = 1
         end
