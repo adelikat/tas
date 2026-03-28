@@ -1,7 +1,8 @@
-local maxDelay = 10
-local maxSkipDelay = 10
-local direction = 'Right'
-local changeSpeed = true
+local maxDelay = 15
+local maxSkipDelay = 15
+local direction = 'Left'
+local changeSpeedSlower = false
+local changeSpeedFaster = true
 
 if direction ~= 'Left' and direction ~= 'Right' then
     error('invalid direction')
@@ -58,7 +59,7 @@ local function FindSkip()
     PushSelectUntilLevelSkip()
     c.UntilNextLagFrame()
     c.UntilNextInputFrame()
-    if changeSpeed then
+    if changeSpeedSlower then
         if c.GameSpeed() ~= 1 then
             error('attempted to change game speed slower when not at 1, ' .. c.GameSpeed())
         end
@@ -68,6 +69,19 @@ local function FindSkip()
         c.PushSelect()
         c.PushBtnsFor({'Select', 'B'})
         if c.GameSpeed() ~= 4 then
+            error('failed to set game speed')
+        end
+    elseif changeSpeedFaster then
+        if c.GameSpeed() ~= 4 then
+            error('attempted to change game speed faster when not at 4, ' .. c.GameSpeed())
+        end
+
+        c.PushBtnsFor({'Select', 'A'})
+        c.PushSelect()
+        c.PushBtnsFor({'Select', 'A'})
+        c.PushSelect()
+        c.PushBtnsFor({'Select', 'A'})
+        if c.GameSpeed() ~= 1 then
             error('failed to set game speed')
         end
     end
