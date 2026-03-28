@@ -22,6 +22,8 @@ SystemID NES
 00A0	b	u	0	RAM	Dig sequence (current animation state)
 00A6	b	u	0	RAM	Current Player Current Level
 00C5	b	u	0	RAM	Kill Count
+00D9	b	u	0	RAM	Pole Sound Effect
+00DA	b	u	0	RAM	Climb Sound Effect
 00DB	b	u	0	RAM	Game Mode (1 = playing a level)
 00E5	b	u	0	RAM	Game Speed
 0	S	_	1

@@ -2,6 +2,27 @@ local _done = false
 local _success = true
 local _config = client.getconfig()
 
+local function _validateDirection(direction)
+    if direction ~= 'Up'
+        and direction ~= 'Down'
+        and direction ~= 'Left'
+        and direction ~= 'Right' then
+            error('Invalid direction: ' .. direction)
+    end
+end
+
+local function _validateHorizontalDirection(direction)
+    if direction ~= 'Left' and direction ~= 'Right' then
+        error('Invalid horizontal direction: ' .. direction)
+    end
+end
+
+local function _validateVerticalDirection(direction)
+    if direction ~= 'Up' and direction ~= 'Down' then
+        error('Invalid direction: ' .. direction)
+    end
+end
+
 local function _tastudioGoToFrame(frame)
     tastudio.setplayback(frame)
     client.unpause()
@@ -213,7 +234,7 @@ end
 -- a key value pair of label and frame number to store when c.Save is called with that label
 local saveFrameDict = {}
 
-local _slowMode = false
+local _debugMode = false
 c = {
     --------------------Core functions--------------------
     ToSignedByte = function(b)
@@ -245,12 +266,12 @@ c = {
 	IsDone = function()
 		return _done
 	end,
-    SlowMode = function()
-        _slowMode = true
+    DebugMode = function()
+        _debugMode = true
     end,
     Start = function()
         client.unpause()
-        if _slowMode then
+        if _debugMode then
             client.speedmode(25)
         else
             client.speedmode(1600)
@@ -732,6 +753,10 @@ c = {
         return c.RightUntil(currentTile + tiles)
     end,
     UntilGold = function(direction)
+        if direction == 'Up' then
+            console.log('Do not use UntilGold with Up, use ClimbUntilGold instead')
+        end
+
         if (direction ~= 'Left' and direction ~= 'Right' and direction ~= 'Up' and direction ~= 'Down') then
             error('invalid direction for ladder grab: ' .. direction)
         end
@@ -741,71 +766,88 @@ c = {
         end
         return true
     end,
-    -- Intended to obsolete UntilLadderGrab, will grab the ladder and climb 1 tile
-    -- Not ready, DO NOT USE, still fails
-    LadderGrabAndClimb = function(direction, grabDirection)
-        console.log('do not use!')
-        if (direction ~= 'Left' and direction ~= 'Right') then
-            error('invalid direction for ladder grab: ' .. direction)
-        end
-
-        if not grabDirection then
-            grabDirection = 'Up'
-        end
-
-        if grabDirection ~= 'Up' and grabDirection ~= 'Down' then
-            error('invalid grab direction for ladder grab: ' .. grabDirection)
-        end
-
-        local currentY = c.Player().levelY
-        local targetY = currentY - 1
-        if grabDirection == 'Down' then
-            targetY = currentY + 1
-        end
-
-        local stateName = direction..'-ladder-grab-climb'
-        local startFrame = emu.framecount()
-        local endFrame
-        c.Save(stateName)
-
-        while not endFrame do
-            c.PushBtnsFor({direction, grabDirection})
-
-            if _playerDied() then
+    ClimbUntilGold = function(nextDirection)
+        _validateDirection(nextDirection)
+        c.Save('climb-until-gold')
+        local startGold = memory.readbyte(0x0093)
+        local done = false
+        while not done do
+            if not c.Player().isAlive then
                 return false
             end
 
-            local isSuccess = c.Player().levelY == targetY
-            if isSuccess then
-                endFrame = emu.framecount()
+            c.Save('climb-until-gold')
+            c.PushFor(nextDirection)
+            local newGold = memory.readbyte(0x0093)
+            c.Load('climb-until-gold')
+
+            if newGold < startGold then
+                done = true
+            else
+                c.PushFor('Up')
+                newGold = memory.readbyte(0x0093)
+                if newGold < startGold then
+                    done = true
+                end
             end
         end
+        return true
+    end,
+    GrabLadderLeft = function(nextDirection)
+        return c.GrabLadder('Left', nextDirection)
+    end,
+    GrabLadderRight = function(nextDirection)
+        return c.GrabLadder('Right', nextDirection)
+    end,
+    -- Intended to obsolete UntilLadderGrab
+    GrabLadder = function(horizontalDirection, nextDirection)
+        _validateHorizontalDirection(horizontalDirection)
+        if not nextDirection then
+            nextDirection = 'Up'
+        end
+        _validateVerticalDirection(nextDirection)
 
-        -- Now that we know the number of frames needed, go back and try to minimize presses
-        c.Load(stateName)
-        for i = startFrame, endFrame - 1 do
-            c.Save(stateName .. '-temp')
+        local done = false
+        local origY = c.Player().yPos()
+        local newY
+        local isFalling = c.Player().isFalling
+        while not done do
+            if not c.Player().isAlive then
+                return false
+            end
+            origY = c.Player().yPos()
+            c.Save('grab-ladder')
+            c.PushFor(horizontalDirection)
+            newY = c.Player().yPos()
+            c.Load('grab-ladder')
 
-
-            c.PushBtnsFor({direction, grabDirection})
-            local targetXPos = c.Player().xPos()
-            local targetYPos = c.Player().yPos()
-            c.WaitFor(1)
-
-            c.Load(stateName .. '-temp')
-            c.PushBtnsFor({direction})
-            if c.Player().xPos() ~= targetXPos  or c.Player().yPos() ~= targetYPos then
-                c.Load(stateName .. '-temp')
-                c.PushBtnsFor({grabDirection})
-                if c.Player().xPos() ~= targetXPos or c.Player().yPos() ~= targetYPos then
-                    c.Load(stateName .. '-temp')
-                    c.PushBtnsFor({direction, grabDirection})
+            if newY ~= origY then
+                c.Debug(string.format('Pushing %s changed Y: %s: %s', horizontalDirection, origY, newY))
+                c.PushFor(horizontalDirection)
+            else
+                c.Save('grab-ladder')
+                c.PushFor(nextDirection, 2)
+                newY = c.Player().yPos()
+                isFalling = c.Player().isFalling
+                c.Load('grab-ladder')
+                -- Check falling status because we could have started this process on a pole
+                if newY ~= origY and not isFalling then
+                    c.Debug(string.format('Pushing %s for 2 frames changed Y: %s: %s, falling? %s', nextDirection, origY, newY, tostring(isFalling)))
+                    -- TODO: what if pushing both btns is faster? I think that is possible
+                    -- Pressing next direction started changing y pos so we knwo we are done
+                    c.PushFor(nextDirection)
+                    done = true
+                else
+                    c.Debug(string.format('Pushing %s for 2 frames changed nothing: %s: %s, falling? %s', nextDirection, origY, newY, tostring(isFalling)))
+                    c.PushFor(horizontalDirection)
                 end
             end
         end
 
+        return true
     end,
     UntilLadderGrab = function(direction, grabDirection, skipLadderAdjust)
+        console.log('UntilLadderGrab is obsolete use GrabLadder instead')
         if (direction ~= 'Left' and direction ~= 'Right') then
             error('invalid direction for ladder grab: ' .. direction)
         end
@@ -961,8 +1003,14 @@ c = {
         local startFrame = emu.framecount()
         local test = memory.readbyte(0x009B)
         if not c.Player().isFalling then
-            c.Debug('Player was not falling ' .. emu.framecount())
-            return
+            -- Wait 1 frame, if still not falling, give up
+            c.Save('temp')
+            c.WaitFor(1)
+            if not c.Player().isFalling then
+                c.Debug('Player was not falling ' .. emu.framecount())
+                c.Load('temp')
+                return
+            end
         end
 
         while c.Player().isFalling do
