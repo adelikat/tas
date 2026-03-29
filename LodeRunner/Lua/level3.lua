@@ -25,6 +25,39 @@ local function WaitForE2ThenClimb()
     return c.ClimbUntil(6)
 end
 
+local function End()
+    c.ClimbUntil(1)
+    c.UntilGold('Right')
+
+    c.GrabLadderRight('Down')
+    c.UntilDig('Down', 'A')
+    c.ClimbUntil(3)
+    c.UntilGold('Left')
+    c.FallRight()
+    c.UntilGold('Right')
+
+    c.LeftUntil(26)
+    c.PushDown()
+    c.FinishFalling()
+    c.ClimbUntil(12)
+    c.UntilGold('Left')
+    c.GrabLadderRight()
+    c.ClimbUntil(9)
+    c.GrabLadderLeft()
+
+    c.Assert(c.FrameSearch(WaitForE2ThenClimb))
+    c.GrabLadderRight()
+    c.ClimbUntil(3)
+    c.GrabLadderRight()
+    c.ClimbUntil(2)
+    c.RightUntil(27)
+    c.ClimbUntilLevelEnd()
+    if tastudio.engaged() then
+        tastudio.createnewbranch()
+    end
+    return true
+end
+
 while not c.IsDone() do
     c.RightFor(3)
     c.GrabLadderRight()
@@ -44,32 +77,11 @@ while not c.IsDone() do
     c.GrabLadderRight()
     c.ClimbUntil(2)
     c.UntilGold('Left')
-    c.GrabLadderLeft()
-    c.ClimbUntil(1)
-    c.UntilGold('Right')
 
-    c.GrabLadderRight('Down')
-    c.UntilDig('Down', 'A')
-    c.ClimbUntil(3)
-    c.UntilGold('Left')
-    c.FallRight()
-    c.UntilGold('Right')
+    c.LeftUntil(0)
 
-    c.PushBtnsFor({'Left', 'Down'}, 2)
-    c.FinishFalling()
-    c.ClimbUntil(12)
-    c.UntilGold('Left')
-    c.GrabLadderRight()
-    c.ClimbUntil(9)
-    c.GrabLadderLeft()
+    c.BestSearch(End, 13)
 
-    c.Assert(c.FrameSearch(WaitForE2ThenClimb))
-    c.GrabLadderRight()
-    c.ClimbUntil(3)
-    c.GrabLadderRight()
-    c.ClimbUntil(2)
-    c.RightUntil(27)
-    c.ClimbUntilLevelEnd()
     c.Marker('lv 3 end')
 
     c.Done()
