@@ -849,7 +849,7 @@ c = {
             end
         end
 
-        return true
+        return c.Player().isAlive
     end,
     UntilLadderGrab = function(direction, grabDirection, skipLadderAdjust)
         console.log('UntilLadderGrab is obsolete use GrabLadder instead')

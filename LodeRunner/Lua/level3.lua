@@ -82,6 +82,7 @@ while not c.IsDone() do
 
     c.BestSearch(End, 13)
 
+    -- Note some extra Up presses were manually put in at the end to cause the spawn timer to lag by 1 to get the perfect 14 needed for lv 4
     c.Marker('lv 3 end')
 
     c.Done()

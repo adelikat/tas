@@ -198,7 +198,7 @@ while not c.IsDone() do
 
     c.LeftFor(3)
 
-    c.Assert(c.BestSearch(FromRightUntilEnd, 9))
+    c.Assert(c.FrameSearch(FromRightUntilEnd, 9))
 
     c.Marker('lv 4 end')
     c.Done()

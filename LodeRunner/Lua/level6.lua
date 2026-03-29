@@ -1,88 +1,22 @@
+-- Starts on the frame immediately after pressing select to do the select skip
 dofile('lode-runner-core.lua')
 
 c.Start()
 
-local function Get1stGoldLeft()
-    c.UntilGold('Left')
-    return true
+if c.CurrentLevel() ~= 6 then
+    error('must be run in level 6')
 end
 
-local function Get1stGoldDownLeft()
-    c.ClimbDown()
-    c.UntilGold('Left')
-    return true
+if c.GameMode() ~= 1 then
+    error('must be run in level mode')
 end
-
---
-local function GetTopLeftGoldLeft()
-    c.UntilDig('Left', 'A')
-    c.UntilGold('Left')
-    c.UntilFall('Right')
-    return true
-end
-
-local function GetTopLeftGoldDownLeft()
-    c.UntilDig('Left', 'A')
-    c.UntilGold('Left')
-    c.UntilFall('Right')
-    c.ClimbDown()
-    return true
-end
-
---
-
-local function DodgeE2()
-    c.ClimbUntil(9)
-    c.UntilLadderGrab('Right')
-    c.ClimbUntil(6)
-    local result = c.UntilLadderGrab('Right')
-    if not result then
-        return false
-    end
-
-    c.Climb(2)
-
-    return c.Player().isAlive
-end
-
---
-
-local function MiddleMultiDig1()
-    c.UntilDig('Right', 'A')
-    c.UntilDig('Left', 'A')
-    c.UntilDig('Right', 'A')
-    c.UntilFall('Right')
-    c.FinishFalling()
-    c.RightFor(1)
-
-    c.UntilDig('Left', 'B')
-    c.UntilFall('Left')
-    c.FinishFalling()
-    c.UntilGold('Right')
-    return true
-end
-
-local function MiddleMultiDig2()
-    c.RightFor(1)
-    c.UntilDig('Right', 'A')
-    c.UntilDig('Left', 'A')
-    c.UntilDig('Right', 'A')
-    c.UntilFall('Right')
-    c.UntilDig('Left', 'A')
-    c.UntilFall('Right')
-    c.FinishFalling()
-    c.UntilGold('Right')
-    return true
-end
-
---
 
 local function DodgeEnemiesBeforeBigDig()
     c.ClimbUntil(9)
     c.UntilGold('Left')
     c.UntilGold('Left')
-    c.UntilLadderGrab('Right')
-    c.ClimbUntil(6)
+    c.GrabLadderRight()
+    c.ClimbUntilGold('Left')
 
     c.LeftFor(4)
     local result = c.UntilDig('Left', 'B')
@@ -94,8 +28,7 @@ local function DodgeEnemiesBeforeBigDig()
     result = c.UntilDig('Right', 'B')
     if not result then return false end
 
-    c.UntilFall('Left')
-    c.FinishFalling()
+    c.FallLeft()
     c.LeftFor(1)
 
     result = c.UntilDig('Left', 'B')
@@ -110,40 +43,7 @@ local function DodgeEnemiesBeforeBigDig()
     result = c.UntilDig('Left', 'A')
     if not result then return false end
 
-    c.UntilFall('Right')
-    c.FinishFalling()
-
-    return c.Player().isAlive
-end
-
-local function RightToFinalLadder()
-    return c.UntilLadderGrab('Right')
-end
-
-local function LastGoldLeft()
-    c.UntilGold('Left')
-    return c.UntilLadderGrab('Right')
-end
-
-local function LastGoldDownLeft()
-    c.ClimbDown()
-    c.UntilGold('Left')
-    return c.UntilLadderGrab('Right')
-end
-
-local function DodgeE2GoldGet()
-    c.ClimbUntil(9)
-    c.UntilLadderGrab('Right')
-    c.ClimbUntil(6)
-    local result = c.UntilGold('Right')
-    console.log('gold get right', tostring(result))
-    if not result then return false end
-
-
-    --result = c.UntilLadderGrab('Left')
-    --if not result then return false end
-    c.PushLeft() -- Hack, ladder grab doesn't work when only 1 frame is enough
-    c.Climb(2)
+    c.FallRight()
 
     return c.Player().isAlive
 end
@@ -151,11 +51,13 @@ end
 local function FinalSection()
     c.UntilDig('Right', 'A')
 
-    local result = c.FrameSearch(RightToFinalLadder, 20)
+    local result = c.FrameSearch(function() return c.RightFor(3) end)
     if not result then
         error('did not dodge the enemy')
         return false
     end
+
+    c.GrabLadderRight()
 
     c.ClimbUntil(2)
     c.UntilDig('Up', 'B')
@@ -163,11 +65,18 @@ local function FinalSection()
     c.UntilDig('Down', 'B')
 
     c.BestOf({
-        LastGoldLeft,
-        LastGoldDownLeft
+        function()
+            c.UntilGold('Left')
+            return c.GrabLadderRight()
+        end,
+        function()
+            c.ClimbUntil(4)
+            c.UntilGold('Left')
+            return c.GrabLadderRight()
+        end,
     })
 
-    c.Climb()
+    c.ClimbUntil(2)
     c.ClimbUntilLevelEnd()
     return true
 end
@@ -186,53 +95,78 @@ while not c.IsDone() do
     c.UntilDig('Right', 'B')
 
     c.BestOf({
-        Get1stGoldLeft,
-        Get1stGoldDownLeft,
+        function()
+            return c.UntilGold('Left')
+        end,
+        function()
+            c.ClimbUntil(12)
+            return c.UntilGold('Left')
+        end
     })
 
-    c.UntilLadderGrab('Right')
-    c.Climb(2)
+    c.GrabLadderRight()
+    c.ClimbUntil(9)
     c.RightFor(1)
-    c.UntilLadderGrab('Right')
-    c.UntilGold('Up')
-    c.UntilLadderGrab('Left')
+    c.GrabLadderRight()
+    c.ClimbUntilGold('Left')
+
+    c.GrabLadderLeft()
+
     c.ClimbUntil(2)
     c.LeftFor(2)
-    c.UntilLadderGrab('Left')
+    c.GrabLadderLeft()
     c.UntilDig('Up', 'B')
 
+    c.Marker('temp')
+
     c.BestOf({
-        GetTopLeftGoldLeft,
-        GetTopLeftGoldDownLeft,
+        function()
+            c.UntilDig('Left', 'A')
+            c.UntilGold('Left')
+            return c.FallRight()
+        end,
+        function()
+            c.UntilDig('Left', 'A')
+            c.UntilGold('Left')
+            return c.FallRight()
+        end,
     })
 
-    c.FinishFalling()
-
-    c.UntilLadderGrab('Right')
+    c.GrabLadderRight()
     c.ClimbUntil(10)
 
-    local result = c.FrameSearch(DodgeE2GoldGet, 20)
-    if not result then
-        error('Fail')
-    end
+    c.Assert(c.FrameSearch(function()
+        c.ClimbUntil(9)
+        c.RightUntil(8)
+        c.ClimbUntil(6)
+        local result = c.GrabLadderRight()
+        if not result then return false end
+        return c.ClimbUntil(3)
+    end))
 
-    c.ClimbUntil(2)
-    c.UntilLadderGrab('Left')
+    c.ClimbUntilGold('Left')
+    c.LeftUntil(5)
+    c.ClimbUntil(1)
     c.RightUntil(16)
 
-    MiddleMultiDig1()
+    c.UntilDig('Right', 'A')
+    c.UntilDig('Left', 'A')
+    c.UntilDig('Right', 'A')
+    c.FallRight()
+    c.UntilGold('Right')
+    c.UntilGold('Right')
+    c.UntilDig('Left', 'A')
+    c.FallRight()
+    c.RightFor(4)
+    c.GrabLadderRight('Down')
+    c.ClimbUntil(7)
 
-    c.ClimbDown()
-
-    local result = c.FrameSearch(DodgeEnemiesBeforeBigDig, 30)
-    if not result then
-        error('Failed to dodge enemy')
-    end
+    c.Assert(c.FrameSearch(DodgeEnemiesBeforeBigDig))
 
     c.UntilGold('Left')
     c.RightUntil(21)
 
-    c.BestSearch(FinalSection, 8)
+    c.BestSearch(FinalSection, 7)
 
     c.Marker('lv 6 end')
 
