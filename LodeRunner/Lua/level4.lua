@@ -189,15 +189,18 @@ while not c.IsDone() do
         Left2DownLeft,
     })
 
-    c.ClimbUntil(7)
-    c.FinishFalling()
-    c.UntilGold('Left')
-    c.WaitFor(5)
+    c.FrameSearch(function()
+        c.ClimbUntil(7)
+        c.FinishFalling()
+        c.UntilGold('Left')
+        return c.Enemy(2).timer >= 0
+    end)
+
     c.LeftFor(3)
 
-    c.Assert(c.FrameSearch(FromRightUntilEnd))
+    c.Assert(c.BestSearch(FromRightUntilEnd, 9))
 
-    -- c.Marker('lv 4 end')
+    c.Marker('lv 4 end')
     c.Done()
 
 end
