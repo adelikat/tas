@@ -49,7 +49,8 @@ local function DodgeEnemiesBeforeBigDig()
 end
 
 local function FinalSection()
-    c.UntilDig('Right', 'A')
+    local result = c.UntilDig('Right', 'A')
+    if not result then return false end
 
     local result = c.FrameSearch(function() return c.RightFor(3) end)
     if not result then
@@ -81,6 +82,26 @@ local function FinalSection()
     return true
 end
 
+local function FinalDigSequences()
+    c.RightUntil(17)
+    c.UntilDig('Right', 'A')
+    c.UntilDig('Left', 'A')
+    c.UntilDig('Right', 'A')
+    c.FallRight()
+    c.UntilGoldLeft()
+    c.UntilDig('Left', 'A')
+    c.FallRight()
+    c.GrabLadderRight('Down')
+    c.ClimbUntil(7)
+
+    c.WaitFor(7)
+    c.Assert(c.FrameSearch(DodgeEnemiesBeforeBigDig))
+
+    c.UntilGold('Left')
+    c.RightUntil(21)
+    return true
+end
+
 -- TODO: this depends on the spawn timer for a gold drop, validate the correct range of values
 -- Note: getting the gold rather than letting the enemy drop it, is the same number of steps
 -- Logic would make you think that this would be equal and less timing dependent, but it is actually slower
@@ -105,19 +126,16 @@ while not c.IsDone() do
     })
 
     c.GrabLadderRight()
+    c.RightUntil(12)
     c.ClimbUntil(9)
-    c.RightFor(1)
     c.GrabLadderRight()
     c.ClimbUntilGold('Left')
 
     c.GrabLadderLeft()
 
     c.ClimbUntil(2)
-    c.LeftFor(2)
     c.GrabLadderLeft()
     c.UntilDig('Up', 'B')
-
-    c.Marker('temp')
 
     c.BestOf({
         function()
@@ -149,24 +167,9 @@ while not c.IsDone() do
     c.ClimbUntil(1)
     c.RightUntil(16)
 
-    c.UntilDig('Right', 'A')
-    c.UntilDig('Left', 'A')
-    c.UntilDig('Right', 'A')
-    c.FallRight()
-    c.UntilGold('Right')
-    c.UntilGold('Right')
-    c.UntilDig('Left', 'A')
-    c.FallRight()
-    c.RightFor(4)
-    c.GrabLadderRight('Down')
-    c.ClimbUntil(7)
+    c.BestSearch(FinalDigSequences, 8)
 
-    c.Assert(c.FrameSearch(DodgeEnemiesBeforeBigDig))
-
-    c.UntilGold('Left')
-    c.RightUntil(21)
-
-    c.BestSearch(FinalSection, 7)
+    c.BestSearch(FinalSection, 3)
 
     c.Marker('lv 6 end')
 

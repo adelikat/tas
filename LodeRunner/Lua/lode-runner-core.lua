@@ -727,6 +727,9 @@ c = {
     end,
     LeftUntil = function(targetX)
         local x = c.Player().levelX
+        if targetX > x then
+            error(string.format('LeftUntil - Cannot move left from %s to %s', x, targetX))
+        end
         while x ~= targetX do
             c.PushLeft()
             x = c.Player().levelX
@@ -739,6 +742,9 @@ c = {
     end,
     RightUntil = function(targetX)
         local x = c.Player().levelX
+        if targetX < x then
+            error(string.format('RightUntil - Cannot move right from %s to %s', x, targetX))
+        end
         while x ~= targetX do
             c.PushRight()
             x = c.Player().levelX
@@ -756,6 +762,12 @@ c = {
     RightFor = function (tiles)
         local currentTile = c.Player().levelX
         return c.RightUntil(currentTile + tiles)
+    end,
+    UntilGoldLeft = function()
+        return c.UntilGold('Left')
+    end,
+    UntilGoldRight = function()
+        return c.UntilGold('Right')
     end,
     UntilGold = function(direction)
         if direction == 'Up' then
@@ -804,8 +816,75 @@ c = {
     GrabLadderRight = function(nextDirection)
         return c.GrabLadder('Right', nextDirection)
     end,
-    -- Intended to obsolete UntilLadderGrab
-    GrabLadder = function(horizontalDirection, nextDirection)
+    GrabLadder = function(horizontalDirection, verticalDirection)
+        -- validation
+        _validateHorizontalDirection(horizontalDirection)
+        if not verticalDirection then
+            verticalDirection = 'Up'
+        end
+        _validateVerticalDirection(verticalDirection)
+
+        -- step 1, move to the next tile, this still stabalize the player y, if they are currently on a ladder, before making any y based decisions later
+        c.Debug('GrabLadder')
+        local startingX = c.Player().levelX
+        local startFrame = emu.framecount()
+        c.Save('grab-start')
+
+        while c.Player().levelX == startingX do
+            c.PushFor(horizontalDirection)
+        end
+
+        local endFrame = emu.framecount()
+        local framesUntilNextLevelX = endFrame - startFrame
+        c.Debug(string.format('player will cross to the next level x in %s frames', framesUntilNextLevelX))
+        c.Load('grab-start')
+        c.PushFor(horizontalDirection, framesUntilNextLevelX - 1)
+
+        -- step 2, keep trying to press vertically until y changes, if it does not, just press horizontal
+        local done = false
+        while not done do
+            c.Save('grab-try')
+            local before = c.Player().yPos()
+            c.PushBtnsFor({horizontalDirection, verticalDirection})
+            local after = c.Player().yPos()
+            c.Debug(string.format('Pushing both btns before: %s, after: %s)', before, after))
+
+            if before == after or c.Player().levelX == startingX then
+                -- if no change in Y then we know we only need to push the horizontal direction
+                -- or Y did change but x is still the original levelX, that can only mean we are still climbing a previous ladder, we cannot treat this as a success
+                c.Load('grab-try')
+                c.PushFor(horizontalDirection)
+            else
+                c.Debug('change in Y detected')
+                done = true
+                -- Try just pushing the vertical btn, if that is better, then we just push it
+                -- Either way we know we are done since y position started to change
+                c.Load('grab-try')
+                c.PushFor(verticalDirection)
+
+                local verticalAfter = c.Player().yPos()
+
+                if (verticalDirection == 'Up' and verticalAfter <= after)
+                    or (verticalDirection == 'Down' and verticalAfter >= after)
+                then
+                    c.Debug(string.format('pushing vertical was preferred over pushing both btns, both: %s, vertical only: %s', after, verticalAfter))
+                else
+                    c.Debug('pushing both btns was necessary')
+                    c.Load('grab-try')
+                    c.PushBtnsFor({horizontalDirection, verticalDirection})
+                end
+            end
+
+
+            -- if player is falling or dead, then all of this failed, bail out before repeating or exiting the while loop
+            if not c.Player().isAlive or c.Player().isFalling then
+                return false
+            end
+        end
+
+        return true
+    end,
+    GrabLadderOld = function(horizontalDirection, nextDirection)
         _validateHorizontalDirection(horizontalDirection)
         if not nextDirection then
             nextDirection = 'Up'
@@ -838,86 +917,48 @@ c = {
                 -- Check falling status because we could have started this process on a pole
                 if newY ~= origY and not isFalling then
                     c.Debug(string.format('Pushing %s for 2 frames changed Y: %s: %s, falling? %s', nextDirection, origY, newY, tostring(isFalling)))
-                    -- TODO: what if pushing both btns is faster? I think that is possible
+
                     -- Pressing next direction started changing y pos so we knwo we are done
-                    c.PushFor(nextDirection)
                     done = true
+                    local debugFrameCount = emu.framecount()
+
+                    c.Save('grab-ladder-diagonal-check')
+
+                    c.PushFor(nextDirection)
+                    c.WaitFor(1)
+
+                    local yPos = c.Player().yPos()
+                    c.Load('grab-ladder-diagonal-check')
+                    c.PushBtnsFor({horizontalDirection, nextDirection})
+                    c.WaitFor(1)
+                    local newYpos = c.Player().yPos()
+                    local keep = false
+                    console.log(debugFrameCount .. ' old: ' .. yPos)
+                    console.log(debugFrameCount ..  ' new: ' .. newYpos)
+                    if nextDirection == 'Up' and newYpos < yPos then
+                        console.log('keep!')
+                        keep = true
+                    elseif nextDirection =='Down' and newYpos > yPos then
+                        console.log('keep!')
+                        keep = true
+                    end
+
+                    c.Load('grab-ladder-diagonal-check')
+                    if keep then
+                        console.log('keeping so pushing both')
+                        c.PushBtnsFor({horizontalDirection, nextDirection})
+                    else
+                        console.log('did not keep so pushing just ' .. nextDirection)
+                        c.PushFor(nextDirection)
+                    end
                 else
-                    c.Debug(string.format('Pushing %s for 2 frames changed nothing: %s: %s, falling? %s', nextDirection, origY, newY, tostring(isFalling)))
+                    c.Debug(string.format('%s Pushing %s for 2 frames changed nothing: %s: %s, falling? %s', emu.framecount(),  nextDirection, origY, newY, tostring(isFalling)))
                     c.PushFor(horizontalDirection)
                 end
             end
         end
 
         return c.Player().isAlive
-    end,
-    UntilLadderGrab = function(direction, grabDirection, skipLadderAdjust)
-        console.log('UntilLadderGrab is obsolete use GrabLadder instead')
-        if (direction ~= 'Left' and direction ~= 'Right') then
-            error('invalid direction for ladder grab: ' .. direction)
-        end
-
-        if not grabDirection then
-            grabDirection = 'Up'
-        end
-
-        if grabDirection ~= 'Up' and grabDirection ~= 'Down' then
-            error('invalid grab direction for ladder grab: ' .. direction)
-        end
-
-        -- This is needed if coming off of a ladder because the player isn't done moving up for a few frames after the first one necessary to move
-        -- This could be a problem if this method is run too close to a successful grab
-        -- so we do this bad hack instead
-        if not skipLadderAdjust then
-            c.PushFor(direction, 2)
-        end
-
-        local stateName = direction..'-ladder-grab'
-        local startFrame = emu.framecount()
-
-        local initial = c.Player().yPos()
-        local done = false
-        while not done do
-            c.Save(stateName)
-            c.PushBtnsFor({direction, grabDirection})
-
-            if _playerDied() then
-                return false
-            end
-
-            local isSuccess
-            if grabDirection == 'Up' then
-                isSuccess = c.Player().yPos() < initial
-            else
-                isSuccess = c.Player().yPos() > initial
-            end
-
-            if isSuccess then
-                done = true
-            else
-                c.Load(stateName)
-                c.PushFor(direction)
-            end
-        end
-
-        -- Test if pushing Up is equal or faster than pushing both btns
-        -- Even if equal we prefer because it can affect the spawn timer, and it is cleaner anyway
-        local finalPos = c.Player().yPos()
-        c.Load(stateName)
-        c.PushFor(grabDirection)
-
-        if grabDirection == 'Up' then
-            isSuccess = c.Player().yPos() > finalPos
-        else
-            isSuccess = c.Player().yPos() < finalPos
-        end
-
-        if isSuccess then
-            c.Load(stateName)
-            c.PushBtnsFor({direction, grabDirection})
-        end
-
-        return true
     end,
     Climb = function (tiles)
         console.log('obsolete, use ClimbUntil, this can be inaccurate')
