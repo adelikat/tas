@@ -11,12 +11,6 @@ if c.GameMode() ~= 1 then
     error('must be run in level mode')
 end
 
-local function KeepE3OnLeft()
-    c.ClimbUntil(6)
-    c.RightUntil(17)
-    return c.Enemy(3).levelX < 4
-end
-
 local function AvoidE2()
     c.ClimbUntil(11)
     c.FinishFalling()
@@ -37,16 +31,18 @@ local function LastAvoid()
     c.LeftFor(5)
     local result = c.GrabLadderLeft()
     if not result then return false end
-    return c.Climb(2)
+    return c.ClimbUntil(4)
 end
 
 while not c.IsDone() do
     -- Left section
-    c.UntilGold('Right')
+    c.UntilGoldRight()
     c.LeftFor(3)
     c.GrabLadderLeft()
     c.ClimbUntilGold('Left')
-    c.LeftUntil(0)
+    c.LeftUntil(1)
+    c.FinishFalling()
+    c.GrabLadderLeft()
     c.ClimbUntil(5)
     c.RightUntil(10)
     c.GrabLadderRight()
@@ -55,6 +51,7 @@ while not c.IsDone() do
     c.GrabLadderLeft()
     c.ClimbUntilGold('Left')
     c.LeftUntil(8)
+    c.FinishFalling()
 
     c.GrabLadderLeft()
     c.ClimbUntil(5)
@@ -65,6 +62,7 @@ while not c.IsDone() do
     c.GrabLadderLeft()
     c.ClimbUntil(1)
     c.LeftUntil(3)
+    c.FinishFalling()
     c.GrabLadderLeft()
     c.ClimbUntil(1)
     c.LeftUntil(0)
@@ -77,7 +75,12 @@ while not c.IsDone() do
     c.GrabLadderRight()
     c.ClimbUntil(10)
 
-    c.FrameSearch(KeepE3OnLeft)
+    -- Keep E3 on the left
+    c.Assert(c.FrameSearch(function()
+        c.ClimbUntil(6)
+        c.RightUntil(17)
+        return c.Enemy(3).levelX < 4
+    end))
 
     c.ClimbUntil(1)
     c.FallLeft()
@@ -85,7 +88,7 @@ while not c.IsDone() do
     c.FinishFalling()
     c.RightFor(1)
     c.FinishFalling()
-    c.RightUntil(17)
+    c.GrabLadderRight()
     c.ClimbUntil(4)
     c.FallRight()
 
