@@ -16,9 +16,10 @@ local function AvoidEnemyPickups()
     c.FinishFalling()
     c.LeftFor(1)
     c.FallLeft()
-    c.UntilGold('Right')
+    c.UntilGoldRight()
     return c.Enemy(1).timer >= 0 and c.Enemy(2).timer >= 0 and c.Enemy(3).timer >= 0
         and c.Enemy(1).levelY <= 10
+        --and c.Player().isAlive and c.Enemy(1).levelX < 13
 end
 
 local function End(amt)
@@ -30,14 +31,14 @@ local function End(amt)
     c.PushDown()
     if amt < 5 then
         c.LeftUntil(19)
-        c.UntilGold('Left')
+        c.UntilGoldLeft()
     end
 
     c.FallRight()
-    c.UntilLadderGrab('Right')
-    c.Climb(3)
-    c.UntilGold('Right')
-    c.UntilLadderGrab('Left')
+    c.GrabLadderRight()
+    c.ClimbUntil(6)
+    c.UntilGoldRight()
+    c.GrabLadderLeft()
     c.Climb(3)
     c.UntilGold('Right')
     c.UntilLadderGrab('Left')
@@ -64,9 +65,9 @@ local function End5()
     c.Climb(3)
     c.UntilGold('Right')
     c.UntilLadderGrab('Left')
-    c.Climb(4)
-    c.UntilGold('Right')
-    c.UntilLadderGrab('Left')
+    c.ClimbUntil(2)
+    c.UntilGoldRight()
+    c.GrabLadderLeft()
     c.ClimbUntilLevelEnd()
 
 
@@ -74,35 +75,38 @@ local function End5()
 end
 
 while not c.IsDone() do
-    c.UntilGold('Left')
+    c.UntilGoldLeft()
     c.RightFor(5)
-    c.UntilLadderGrab('Right')
+    c.WaitFor(4) -- Manip gold drop -- wait of 3 costs no frames, but 4 costs 6, weird
+    c.GrabLadderRight()
+    c.ClimbUntil(11)
+    c.WaitFor(1) -- more manip
     c.ClimbUntil(9)
-    c.UntilGold('Left')
-    c.UntilLadderGrab('Left')
+    c.UntilGoldLeft()
+    c.GrabLadderLeft()
 
     c.ClimbUntil(7)
-    c.UntilLadderGrab('Right')
+    c.GrabLadderRight()
 
     c.ClimbUntil(6)
-    c.PushFor('Right', 3)
+    c.GrabLadderRight()
 
     c.ClimbUntil(5)
-    c.UntilLadderGrab('Right')
+    c.GrabLadderRight()
 
     c.ClimbUntil(4)
-    c.PushRight()
-    c.UntilLadderGrab('Right')
+    c.GrabLadderRight()
 
     c.ClimbUntil(2)
-    c.RightUntil(17)
-    c.UntilLadderGrab('Right')
+    c.RightUntil(16)
+    c.GrabLadderRight()
     c.ClimbUntil(1)
     c.LeftUntil(5)
     c.PushDown()
     c.FinishFalling()
     c.LeftFor(2)
     c.UntilDig('Left', 'A')
+
     c.UntilDig('Left', 'A')
     c.UntilDig('Left', 'A')
     c.FallRight()
@@ -113,24 +117,54 @@ while not c.IsDone() do
     c.UntilDig('Right', 'B')
     c.FallLeft()
     c.UntilDig('Left', 'A')
-    c.UntilGold('Left')
+    c.UntilGoldLeft()
     c.FallRight()
 
     c.RightUntil(15)
 
-    c.FrameSearch(AvoidEnemyPickups)
-    c.UntilLadderGrab('Right')
+    -- --c.Marker('temp')
 
-    c.Climb(2)
+    -- c.Assert(c.FrameSearch(AvoidEnemyPickups))
+    -- c.GrabLadderRight()
 
+    -- c.ClimbUntil(9)
+
+    -- c.BestOf({
+    --     function() return End(2) end,
+    --     function() return End(3) end,
+    --     function() return End(4) end,
+    --     End5
+    -- })
+
+    -- c.Marker('lv 12 end')
+    c.LeftUntil(21)
+    c.PushDown()
+    c.FinishFalling()
+    c.RightFor(1)
+    c.FallRight()
+    c.GrabLadderRight()
+    c.ClimbUntil(9)
+    c.UntilGoldRight()
+    c.GrabLadderLeft()
+    c.ClimbUntil(6)
     c.BestOf({
-        function() return End(2) end,
-        function() return End(3) end,
-        function() return End(4) end,
-        End5
+        function()
+            c.UntilGoldRight()
+            c.UntilGoldLeft()
+            return c.GrabLadderRight()
+        end,
+        function()
+            c.UntilGoldLeft()
+            c.UntilGoldRight()
+            return c.GrabLadderLeft()
+        end,
     })
 
-    c.Marker('lv 12 end')
+    c.ClimbUntil(2)
+    c.UntilGoldRight()
+    c.GrabLadderLeft()
+    c.ClimbUntilLevelEnd()
+
 
     c.Done()
 end
