@@ -1,6 +1,15 @@
+-- Starts on the frame immediately after pressing select to do the select skip
 dofile('lode-runner-core.lua')
 
 c.Start()
+
+if c.CurrentLevel() ~= 14 then
+    error('must be run in level 14')
+end
+
+if c.GameMode() ~= 1 then
+    error('must be run in level mode')
+end
 
 local function KeepE3OnLeft()
     c.ClimbUntil(6)
