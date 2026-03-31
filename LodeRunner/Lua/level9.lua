@@ -2,18 +2,8 @@ dofile('lode-runner-core.lua')
 
 c.Start()
 
-local function TrapEnemy()
-    c.ClimbUntil(1)
-    return c.Enemy(1).yPos() >= 2
-end
-
-local function Cycle2Route1()
-    c.PushDown()
-    c.UntilDig('Right', 'A')
-end
-
 while not c.IsDone() do
-    c.UntilLadderGrab('Left')
+    c.GrabLadderLeft()
     c.ClimbUntil(1)
     c.RightUntil(25)
 
@@ -24,21 +14,20 @@ while not c.IsDone() do
     c.UntilDig('Right', 'A')
     c.UntilDig('Left', 'A')
     c.UntilDig('Left', 'A')
-    c.Fall('Right')
+    c.FallRight()
     c.UntilDig('Right', 'B')
     c.UntilDig('Right', 'B')
-    c.Fall('Left')
+    c.FallLeft()
     c.UntilDig('Left', 'A')
-    c.UntilGold('Left')
-    c.Fall('Right')
+    c.UntilGoldLeft()
+    c.FallRight()
     c.ClimbUntil(11)
-    c.LeftFor(1)
-    c.UntilLadderGrab('Left')
-    c.Climb()
+    c.GrabLadderLeft()
+    c.ClimbUntil(10)
     c.LeftUntil(13)
     c.UntilDig('Left', 'B')
     c.LeftUntil(2)
-    c.UntilLadderGrab('Left')
+    c.GrabLadderLeft()
 
     c.ClimbUntil(1)
     c.RightUntil(13)
@@ -46,21 +35,26 @@ while not c.IsDone() do
     c.FinishFalling()
     c.UntilDig('Right', 'A')
     c.UntilDig('Left', 'A')
-    c.Fall('Right')
+    c.FallRight()
     c.UntilDig('Right', 'A')
-    c.Fall('Right')
+    c.FallRight()
     c.UntilDig('Right', 'B')
     c.UntilDig('Right', 'B')
-    c.Fall('Left')
+    c.FallLeft()
     c.UntilDig('Left', 'B')
-    c.Fall('Left')
+    c.FallLeft()
     c.LeftUntil(13)
     c.UntilDig('Left', 'B')
     c.LeftUntil(2)
-    c.UntilLadderGrab('Left')
+    c.GrabLadderLeft()
 
     c.ClimbUntil(5)
-    c.FrameSearch(TrapEnemy)
+
+    c.FrameSearch(function()
+        c.ClimbUntil(1)
+        return c.Enemy(1).yPos() >= 2
+    end)
+
     c.RightUntil(9)
 
     c.PushDown()
@@ -70,7 +64,7 @@ while not c.IsDone() do
     c.FallRight()
     c.UntilDig('Right', 'A')
     c.FallRight()
-    c.UntilGold('Right')
+    c.UntilGoldRight()
     c.UntilDig('Left', 'A')
     c.UntilDig('Left', 'A')
     c.FallRight()
@@ -78,7 +72,7 @@ while not c.IsDone() do
     c.FallRight()
     c.UntilDig('Right', 'B')
     c.LeftUntil(2)
-    c.UntilLadderGrab('Left')
+    c.GrabLadderLeft()
     c.ClimbUntilLevelEnd()
 
     c.Marker('lv 9 end')
