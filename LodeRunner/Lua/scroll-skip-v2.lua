@@ -1,6 +1,6 @@
-local maxDelay = 5
-local maxSkipDelay = 40
-local direction = 'Right'
+local maxDelay = 7
+local maxSkipDelay = 30
+local direction = 'Left'
 local changeSpeedSlower = false
 local changeSpeedFaster = false
 

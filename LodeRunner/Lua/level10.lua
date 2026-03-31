@@ -1,20 +1,29 @@
+-- Starts on the frame immediately after pressing select to do the select skip
 dofile('lode-runner-core.lua')
 
 c.Start()
 
+if c.CurrentLevel() ~= 10 then
+    error('must be run in level 10')
+end
+
+if c.GameMode() ~= 1 then
+    error('must be run in level mode')
+end
+
 while not c.IsDone() do
-    c.UntilLadderGrab('Right')
-    c.Climb(3)
-    c.UntilLadderGrab('Left')
+    c.GrabLadderRight()
+    c.ClimbUntil(9)
+    c.GrabLadderLeft()
     c.ClimbUntil(1)
-    c.UntilGold('Left')
+    c.UntilGoldLeft()
     c.UntilDig('Right', 'A')
     c.FallRight()
     c.RightFor(1)
     c.UntilDig('Right', 'A')
     c.WaitFor(7) -- optimization
     c.FrameSearch(function() return c.RightFor(2) end)
-        c.WaitFor(1) -- Manip enemy spawn
+    --     c.WaitFor(1) -- Manip enemy spawn here, if needed
     c.RightFor(2)
     c.UntilDig('Left', 'B')
     c.UntilDig('Right', 'B')
@@ -29,35 +38,40 @@ while not c.IsDone() do
     c.UntilDig('Right', 'B')
     c.FallLeft()
     c.UntilDig('Left', 'B')
-    c.UntilGold('Left')
-    c.UntilGold('Left')
-    c.UntilGold('Left')
+    c.UntilGoldLeft()
+    c.UntilGoldLeft()
+    c.UntilGoldLeft()
     c.UntilDig('Right', 'A')
     c.FallRight()
 
-    c.UntilLadderGrab('Right')
-    c.Climb(3)
-    c.UntilGold('Right')
+    c.GrabLadderRight()
+    c.ClimbUntil(9)
+    c.UntilGoldRight()
     c.RightFor(1)
     c.UntilDig('Right', 'A')
 
     c.FrameSearch(function() return c.RightFor(2) end)
 
     c.BestOf({
-        function() return c.UntilLadderGrab('Right') end,
-        function() c.ClimbDown() return c.UntilLadderGrab('Right') end,
+        function()
+            c.RightFor(2)
+            return c.GrabLadderRight()
+        end,
+        function()
+            c.ClimbUntil(10)
+            return c.GrabLadderRight()
+        end,
     })
 
-    c.Climb(3)
-    c.LeftFor(2)
-    c.UntilGold('Left')
-    c.UntilLadderGrab('Right')
-    c.Climb(3)
-    c.UntilGold('Right')
-    c.UntilLadderGrab('Left')
+    c.ClimbUntil(7)
+    c.UntilGoldLeft()
+    c.GrabLadderRight()
+    c.ClimbUntil(4)
+    c.UntilGoldRight()
+    c.GrabLadderLeft()
     c.ClimbUntil(1)
-    c.UntilGold('Left')
-    c.UntilLadderGrab('Right')
+    c.UntilGoldLeft()
+    c.GrabLadderRight()
     c.ClimbUntilLevelEnd()
 
     c.Marker('lv 10 end')

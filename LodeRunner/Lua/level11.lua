@@ -1,87 +1,90 @@
+-- Starts on the frame immediately after pressing select to do the select skip
 dofile('lode-runner-core.lua')
 
 c.Start()
 
-local function Left()
-    c.LeftUntil(2)
-    return c.UntilLadderGrab('Left')
+if c.CurrentLevel() ~= 11 then
+    error('must be run in level 11')
 end
 
-local function DownLeft()
-    c.UntilLadderGrab('Left', 'Down')
-    c.ClimbDown()
-    return c.UntilLadderGrab('Left')
-end
-
-local function DigE3()
-    c.FallRight()
-    c.UntilDig('Right', 'A')
-    return c.Player().isAlive
+if c.GameMode() ~= 1 then
+    error('must be run in level mode')
 end
 
 while not c.IsDone() do
     c.BestOf({
-        DownLeft,
-        Left,
+        function()
+            c.LeftUntil(2)
+            return c.GrabLadderLeft()
+        end,
+        function()
+            c.GrabLadderLeft('Down')
+            c.ClimbUntil(13)
+            c.GrabLadderLeft()
+        end,
     })
     c.ClimbUntil(1)
-    c.UntilGold('Right')
+    c.UntilGoldRight()
 
-    c.FrameSearch(DigE3)
+    c.Assert(c.FrameSearch(function()
+        c.FallRight()
+        c.UntilDig('Right', 'A')
+        return c.Player().isAlive
+    end))
+
     c.FrameSearch(function() return c.RightFor(2) end)
 
     c.RightUntil(10)
     c.UntilDig('Right', 'A')
 
-    c.WaitFor(4) -- Delay to ensure enemy dies, and has favorable spawn
-    c.PushBtnsFor({'Left', 'A'})
-    c.WaitFor(10)
+    c.WaitFor(2) -- Manip enemy dying and getting favorable spawn
+    c.UntilDig('Left', 'A')
 
     c.UntilDig('Left', 'B')
     c.FrameSearch(function() return c.RightFor(3) end)
-    c.UntilGold('Right')
+    c.UntilGoldRight()
 
     c.UntilDig('Right', 'B')
     c.FrameSearch(function() return c.LeftFor(2) end)
 
     c.ClimbUntil(11)
-    c.UntilGold('Left')
+    c.UntilGoldLeft()
 
-    c.UntilLadderGrab('Right')
+    c.GrabLadderRight()
     c.ClimbUntil(10)
-    c.UntilGold('Right')
+    c.UntilGoldRight()
 
-    c.UntilLadderGrab('Left')
+    c.GrabLadderLeft()
     c.ClimbUntil(9)
-    c.UntilGold('Left')
+    c.UntilGoldLeft()
 
-    c.UntilLadderGrab('Right')
+    c.GrabLadderRight()
     c.ClimbUntil(8)
-    c.UntilGold('Right')
+    c.UntilGoldRight()
 
-    c.UntilLadderGrab('Left')
+    c.GrabLadderLeft()
     c.ClimbUntil(7)
-    c.UntilGold('Left')
+    c.UntilGoldLeft()
 
-    c.UntilLadderGrab('Right')
+    c.GrabLadderRight()
     c.ClimbUntil(6)
-    c.UntilGold('Right')
+    c.UntilGoldRight()
 
-    c.UntilLadderGrab('Left')
+    c.GrabLadderLeft()
     c.ClimbUntil(5)
-    c.UntilGold('Left')
+    c.UntilGoldLeft()
 
-    c.UntilLadderGrab('Right')
+    c.GrabLadderRight()
     c.ClimbUntil(4)
-    c.UntilGold('Right')
+    c.UntilGoldRight()
 
-    c.UntilLadderGrab('Left')
+    c.GrabLadderLeft()
     c.ClimbUntil(3)
-    c.UntilLadderGrab('Left')
+    c.GrabLadderLeft()
 
     c.ClimbUntil(2)
-    c.LeftFor(2)
-    c.UntilLadderGrab('Left')
+    c.LeftFor(1)
+    c.GrabLadderLeft()
     c.ClimbUntilLevelEnd()
 
     c.Marker('lv 11 end')
