@@ -19,65 +19,13 @@ local function AvoidEnemyPickups()
     c.UntilGoldRight()
     return c.Enemy(1).timer >= 0 and c.Enemy(2).timer >= 0 and c.Enemy(3).timer >= 0
         and c.Enemy(1).levelY <= 10
-        --and c.Player().isAlive and c.Enemy(1).levelX < 13
-end
-
-local function End(amt)
-    if not amt or amt < 2 then
-        error('must be 2 or more')
-    end
-
-    c.LeftFor(amt)
-    c.PushDown()
-    if amt < 5 then
-        c.LeftUntil(19)
-        c.UntilGoldLeft()
-    end
-
-    c.FallRight()
-    c.GrabLadderRight()
-    c.ClimbUntil(6)
-    c.UntilGoldRight()
-    c.GrabLadderLeft()
-    c.Climb(3)
-    c.UntilGold('Right')
-    c.UntilLadderGrab('Left')
-    c.Climb(4)
-    c.UntilGold('Right')
-    c.UntilLadderGrab('Left')
-    c.ClimbUntilLevelEnd()
-
-
-    return true
-end
-
-local function End5()
-    c.LeftFor(5)
-    c.PushDown()
-    c.FinishFalling()
-    c.RightFor(1)
-
-    c.FallRight()
-    c.UntilLadderGrab('Right')
-    c.Climb(3)
-    c.UntilGold('Right')
-    c.UntilLadderGrab('Left')
-    c.Climb(3)
-    c.UntilGold('Right')
-    c.UntilLadderGrab('Left')
-    c.ClimbUntil(2)
-    c.UntilGoldRight()
-    c.GrabLadderLeft()
-    c.ClimbUntilLevelEnd()
-
-
-    return true
 end
 
 while not c.IsDone() do
     c.UntilGoldLeft()
     c.RightFor(5)
     c.WaitFor(4) -- Manip gold drop -- wait of 3 costs no frames, but 4 costs 6, weird
+
     c.GrabLadderRight()
     c.ClimbUntil(11)
     c.WaitFor(1) -- more manip
@@ -119,24 +67,13 @@ while not c.IsDone() do
     c.UntilDig('Left', 'A')
     c.UntilGoldLeft()
     c.FallRight()
-
     c.RightUntil(15)
 
-    -- --c.Marker('temp')
+    c.Assert(c.FrameSearch(AvoidEnemyPickups))
+    c.GrabLadderRight()
 
-    -- c.Assert(c.FrameSearch(AvoidEnemyPickups))
-    -- c.GrabLadderRight()
+    c.ClimbUntil(9)
 
-    -- c.ClimbUntil(9)
-
-    -- c.BestOf({
-    --     function() return End(2) end,
-    --     function() return End(3) end,
-    --     function() return End(4) end,
-    --     End5
-    -- })
-
-    -- c.Marker('lv 12 end')
     c.LeftUntil(21)
     c.PushDown()
     c.FinishFalling()
@@ -165,7 +102,7 @@ while not c.IsDone() do
     c.GrabLadderLeft()
     c.ClimbUntilLevelEnd()
 
-
+    c.Marker('lv 12 end')
     c.Done()
 end
 
