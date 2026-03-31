@@ -1,11 +1,20 @@
+-- Starts on the frame immediately after pressing select to do the select skip
 dofile('lode-runner-core.lua')
 
 c.Start()
 
+if c.CurrentLevel() ~= 8 then
+    error('must be run in level 8')
+end
+
+if c.GameMode() ~= 1 then
+    error('must be run in level mode')
+end
+
 --Right until ladder, then down
 local function LeftFall1()
     c.RightUntil(9)
-    c.ClimbDown()
+    c.ClimbUntil(2)
     c.FinishFalling()
     c.ClimbUntil(12)
     c.RightUntil(11)
@@ -14,8 +23,7 @@ end
 
 -- Right one, fall on brick, run right
 local function LeftFall2()
-    c.RightFor(1)
-    c.FinishFalling()
+    c.FallRight()
     c.PushDown()
     c.FinishFalling()
     c.PushDown()
@@ -37,9 +45,9 @@ end
 
 --Down ladder for 1, then to right and fall
 local function LeftFall4()
-    c.ClimbDown()
+    c.ClimbUntil(2)
     c.RightUntil(9)
-    c.ClimbDown()
+    c.ClimbUntil(3)
     c.FinishFalling()
     c.ClimbUntil(12)
     c.RightUntil(11)
@@ -48,7 +56,7 @@ end
 
 -- Down ladder until pole, then right down
 local function LeftFall5()
-    c.ClimbDown(6)
+    c.ClimbUntil(7)
     c.RightUntil(9)
     c.ClimbUntil(12)
     c.RightUntil(11)
@@ -58,67 +66,31 @@ end
 -- so many ways to do this one thing!
 -- same as 5 but go right 1 square from the bottom
 local function LeftFall6()
-    c.ClimbDown(6)
+    c.ClimbUntil(7)
     c.RightUntil(9)
     c.ClimbUntil(11)
     c.RightUntil(11)
     return true
 end
 
--- Left until ladder and climb
-local function RightFall1()
-    c.LeftUntil(18)
-    c.Climb()
-    c.Fall('Left')
-    return true
-end
-
--- Climb down then left
-local function RightFall2()
-    c.ClimbDown()
-    c.LeftUntil(18)
-    c.Climb()
-    c.Fall('Left')
-    return true
-end
-
--- Climb down and ensure E2 follows
-local function WaitForEnemy()
-    c.ClimbDown(2)
-    return c.Enemy(2).xPos() > 14
-end
-
-local function FallThenGo()
-    c.Fall('Left')
-    c.UntilLadderGrab('Left')
-    c.ClimbUntilLevelEnd()
-    return true
-end
-
-local function ClimbDownThenGo()
-    c.ClimbDown()
-    c.UntilLadderGrab('Left')
-    c.ClimbUntilLevelEnd()
-end
-
 while not c.IsDone() do
-    c.UntilLadderGrab('Left')
+    c.GrabLadderLeft()
     c.ClimbUntil(1)
     c.RightFor(1)
     c.UntilDig('Right', 'A')
-    c.UntilFall('Right')
-    c.Fall('Right')
+    c.FallRight()
     c.RightUntil(4)
     c.UntilDig('Left', 'B')
-    c.Fall('Left')
-    c.UntilLadderGrab('Left')
+    c.FallLeft()
+    c.GrabLadderLeft()
     c.ClimbUntil(10)
 
-    c.PushUp() -- This might be variable but this exact input worked and better than the built in methods
-    c.WaitFor(4)
+    -- Hardcoded magic frames that depend on the Enemy being in precise places
+    -- Delays and extraneous input can manip the enemy into the ideal place
+    c.WaitFor(1)
     c.PushFor('Up', 3)
 
-    c.FrameSearch(function() return c.Climb(4) end)
+    c.Assert(c.FrameSearch(function() return c.ClimbUntil(6) end))
     c.ClimbUntil(1)
     c.RightUntil(6)
 
@@ -131,35 +103,59 @@ while not c.IsDone() do
         LeftFall6,
     })
 
-
-    c.UntilLadderGrab('Right')
+    c.GrabLadderRight()
     c.ClimbUntil(7)
-    c.UntilLadderGrab('Right')
+    c.GrabLadderRight()
     c.ClimbUntil(1)
     c.RightFor(1)
     c.UntilDig('Right', 'A')
-    c.Fall('Right')
+    c.FallRight()
     c.RightUntil(25)
+    c.WaitFor(1) -- Magic frame that made enemy in the ideal place and maybe reduced lag?
     c.UntilDig('Left', 'B')
-    c.Fall('Left')
-    c.UntilLadderGrab('Right')
+
+    -- Hardcoded magic frames that depend on the Enemy being in precise places
+    -- Delays and possibly extraneous input can manip the enemy into the ideal place
+    c.FallLeft()
+    c.GrabLadderRight()
 
     c.ClimbUntil(8)
+
     c.PushUp()
-    c.FrameSearch(function() return c.Climb(4) end)
-    c.ClimbUntil(1)
+    c.FrameSearch(function() return c.ClimbUntil(1) end)
+
     c.LeftUntil(21)
 
     c.BestOf({
-        RightFall1,
-        RightFall2,
+        function()
+            c.LeftUntil(18)
+            c.ClimbUntil(1)
+            return c.FallLeft()
+        end,
+        function()
+            c.ClimbUntil(2)
+            c.LeftUntil(18)
+            c.ClimbUntil(1)
+            return c.FallLeft()
+        end
     })
 
-    c.FrameSearch(WaitForEnemy, 25)
+    c.Assert(c.FrameSearch(function()
+        c.ClimbUntil(8)
+        return c.Enemy(2).xPos() > 14
+    end))
 
     c.BestOf({
-        FallThenGo,
-        ClimbDownThenGo,
+        function()
+            c.FallLeft()
+            c.GrabLadderLeft()
+            return c.ClimbUntilLevelEnd()
+        end,
+        function()
+            c.ClimbUntil(9)
+            c.GrabLadderLeft()
+            return c.ClimbUntilLevelEnd()
+        end,
     })
 
     c.Marker('lv 8 end')
