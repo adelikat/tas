@@ -884,24 +884,6 @@ c = {
 
         return true
     end,
-    Climb = function (tiles)
-        console.log('obsolete, use ClimbUntil, this can be inaccurate')
-        if not tiles then
-            tiles = 1
-        end
-
-        local currentTile = c.Player().levelY
-        return c.ClimbUntil(currentTile - tiles)
-    end,
-    ClimbDown = function (tiles)
-        console.log('obsolete, use ClimbUntil, this can be inaccurate')
-        if not tiles then
-            tiles = 1
-        end
-
-        local currentTile = c.Player().levelY
-        return c.ClimbUntil(currentTile + tiles)
-    end,
     ClimbUntil = function(targetY)
         local player = c.Player()
         local y = c.Player().levelY
