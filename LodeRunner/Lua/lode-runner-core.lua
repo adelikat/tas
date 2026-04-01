@@ -7,19 +7,19 @@ local function _validateDirection(direction)
         and direction ~= 'Down'
         and direction ~= 'Left'
         and direction ~= 'Right' then
-            error('Invalid direction: ' .. direction)
+            error('Invalid direction: ' .. tostring(direction))
     end
 end
 
 local function _validateHorizontalDirection(direction)
     if direction ~= 'Left' and direction ~= 'Right' then
-        error('Invalid horizontal direction: ' .. direction)
+        error('Invalid horizontal direction: ' .. tostring(direction))
     end
 end
 
 local function _validateVerticalDirection(direction)
     if direction ~= 'Up' and direction ~= 'Down' then
-        error('Invalid direction: ' .. direction)
+        error('Invalid direction: ' .. tostring(direction))
     end
 end
 
@@ -934,8 +934,8 @@ c = {
 
         return true
     end,
-    Fall = function(moveDirection)
-        local result = c.UntilFall(moveDirection)
+    Fall = function(horizontalDirection)
+        local result = c.UntilFall(horizontalDirection)
         if not result then return false end
         return c.FinishFalling()
     end,
@@ -945,13 +945,21 @@ c = {
     FallRight = function()
         return c.Fall('Right')
     end,
-    UntilFall = function(moveDirection)
-        if moveDirection ~= 'Left' and moveDirection ~= 'Right' then
-            error('Invalid direction for UntilFall: ' .. moveDirection)
+    UntilFall = function(horizontalDirection)
+        _validateHorizontalDirection(horizontalDirection)
+
+        -- If already falling, give it 1 frame before giving up, so we can stack these
+        if c.Player().isFalling then
+            c.PushFor(horizontalDirection)
+        end
+
+        if c.Player().isFalling then
+            console.log('Player is already falling')
+            return true
         end
 
         while not c.Player().isFalling do
-            c.PushFor(moveDirection)
+            c.PushFor(horizontalDirection)
             if not c.Player().isAlive then
                 return false
             end
@@ -988,7 +996,8 @@ c = {
             c.WaitFor(1)
         end
     end,
-    UntilDig = function(moveDirection, digBtn)
+    UntilDig = function(horizontalDirection, digBtn)
+        _validateHorizontalDirection(horizontalDirection)
         if digBtn ~= 'A' and digBtn ~= 'B' then
             error('Invalid dig direction: ' .. digBtn)
         end
@@ -1015,7 +1024,7 @@ c = {
                 c.PushFor(digBtn)
                 done = true
             else
-                c.PushFor(moveDirection)
+                c.PushFor(horizontalDirection)
             end
         end
 
@@ -1030,5 +1039,28 @@ c = {
         end
 
         return true
+     end,
+     WalkOverEnemy = function(horizontalDirection)
+        _validateHorizontalDirection(horizontalDirection)
+        local p = c.Player()
+        local currentX = p.levelX
+        local currentY = p.levelY
+        local targetX = p.levelX + 2
+        if horizontalDirection == 'Left' then
+            targetX = p.levelX - 2
+        end
+
+        return c.FrameSearch(function()
+            local done = false
+            while not done do
+                c.PushFor(horizontalDirection)
+                local newP = c.Player()
+                if newP.levelX == targetX then
+                    return true
+                end
+
+                done = (not newP.isAlive) or newP.isFalling
+            end
+        end)
      end,
 }
