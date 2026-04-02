@@ -1004,7 +1004,18 @@ c = {
 
         local function checkFrame()
             c.Save('temp')
-            c.PushFor(digBtn)
+            c.PushBtnsFor({horizontalDirection, digBtn})
+            c.WaitFor(2)
+
+            local success = memory.readbyte(0x00A0) == 1
+
+            c.Load('temp')
+            return success
+        end
+
+        local function checkJustDig()
+            c.Save('temp')
+            c.PushBtnsFor({digBtn})
             c.WaitFor(2)
 
             local success = memory.readbyte(0x00A0) == 1
@@ -1021,7 +1032,11 @@ c = {
             end
 
             if checkFrame() then
-                c.PushFor(digBtn)
+                if checkJustDig() then
+                    c.PushFor(digBtn)
+                else
+                    c.PushBtnsFor({horizontalDirection, digBtn})
+                end
                 done = true
             else
                 c.PushFor(horizontalDirection)

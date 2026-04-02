@@ -98,28 +98,28 @@ while not c.IsDone() do
         return c.ClimbUntil(10)
     end))
 
-    -- c.Assert(c.FrameSearch(function()
-    --     local result = c.ClimbUntil(8)
-    --     if not result then return false end
-    --     c.PushUp()
+    c.Assert(c.FrameSearch(function()
+        local result = c.ClimbUntil(8)
+        if not result then return false end
+        c.PushUp()
 
-    --     local result = c.Player().isAlive and c.Player().yPos() < 8.5
-    --     return result
-    --     end
-    -- ))
+        local result = c.Player().isAlive and c.Player().yPos() < 8.5
+        return result
+        end
+    ))
 
-    -- c.Assert(c.FrameSearch(function() return c.ClimbUntil(2) end))
+    c.Assert(c.FrameSearch(function() return c.ClimbUntil(2) end))
 
     -- This hardcoded pattern was 1 frame faster than what the search patterns found
-    c.WaitFor(3)
-    c.PushFor('Up', 4)
-    c.WaitFor(1)
-    c.PushFor('Up', 2)
-    c.WaitFor(4)
+    -- c.WaitFor(3)
+    -- c.PushFor('Up', 4)
+    -- c.WaitFor(1)
+    -- c.PushFor('Up', 2)
+    -- c.WaitFor(4)
 
     c.ClimbUntilLevelEnd()
 
-    c.Marker('lv 17 end')
+    -- c.Marker('lv 17 end')
 
     c.Done()
 end
