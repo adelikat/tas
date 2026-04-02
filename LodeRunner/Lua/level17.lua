@@ -50,6 +50,7 @@ while not c.IsDone() do
     c.UntilDig('Left', 'A')
 
     c.WalkOverEnemy('Right')
+    c.GrabLadderRight()
     c.ClimbUntil(8)
     c.GrabLadderLeft()
     c.ClimbUntil(4)
@@ -117,7 +118,7 @@ while not c.IsDone() do
     -- c.PushFor('Up', 2)
     -- c.WaitFor(4)
 
-    c.ClimbUntilLevelEnd()
+    -- c.ClimbUntilLevelEnd()
 
     -- c.Marker('lv 17 end')
 

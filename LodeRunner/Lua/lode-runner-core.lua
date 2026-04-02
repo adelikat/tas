@@ -741,11 +741,21 @@ c = {
         return true
     end,
     RightUntil = function(targetX)
+        local startFrame = emu.framecount()
         local x = c.Player().levelX
         if targetX < x then
             error(string.format('RightUntil - Cannot move right from %s to %s', x, targetX))
         end
+
+        local tilesToWalk = math.abs(targetX - x)
+        local panicAbort = (tilesToWalk * 16) + 16
+        c.Debug(string.format('Need to talk %s tiles, expecting no more than %s frames to succeed', tilesToWalk, panicAbort))
+
         while x ~= targetX do
+            if emu.framecount() - startFrame > panicAbort then
+                c.Debug(string.format('Failed to reach destination after %s frames, aborting', panicAbort))
+                return false
+            end
             c.PushRight()
             x = c.Player().levelX
             if _playerDied() then
@@ -1068,9 +1078,12 @@ c = {
         return c.FrameSearch(function()
             local done = false
             while not done do
+                c.Save('walk-over-enemy-temp')
                 c.PushFor(horizontalDirection)
                 local newP = c.Player()
                 if newP.levelX == targetX then
+                    -- We need to end 1 frame early, we know it will succeed so it doens't matter when we end, and we need to account for a ladder to climb being on the next tile
+                    c.Load('walk-over-enemy-temp')
                     return true
                 end
 
