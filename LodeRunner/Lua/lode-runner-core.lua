@@ -645,6 +645,10 @@ c = {
             return enemy.levelY + (enemy.yTileOffset / 8)
         end
 
+        enemy.hasGold = function()
+            return enemy.timer < 0
+        end
+
         return enemy
     end,
     Player = function()
