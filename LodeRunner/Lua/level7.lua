@@ -11,7 +11,6 @@ if c.GameMode() ~= 1 then
     error('must be run in level mode')
 end
 
-
 local function ClimbAndDigLeft()
     local result = c.ClimbUntil(3)
     if not result then return false end
