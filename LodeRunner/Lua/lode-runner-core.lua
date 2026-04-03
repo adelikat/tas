@@ -994,6 +994,9 @@ c = {
 
         while c.Player().isFalling do
             c.WaitFor(1)
+            if not c.Player().isAlive then
+                return false
+            end
         end
 
         local endFrame = emu.framecount()
@@ -1006,15 +1009,15 @@ c = {
             c.WaitFor(1)
         end
     end,
-    UntilDig = function(horizontalDirection, digBtn)
-        _validateHorizontalDirection(horizontalDirection)
+    UntilDig = function(direction, digBtn)
+        _validateDirection(direction)
         if digBtn ~= 'A' and digBtn ~= 'B' then
             error('Invalid dig direction: ' .. digBtn)
         end
 
         local function checkFrame()
             c.Save('temp')
-            c.PushBtnsFor({horizontalDirection, digBtn})
+            c.PushBtnsFor({direction, digBtn})
             c.WaitFor(2)
 
             local success = memory.readbyte(0x00A0) == 1
@@ -1035,9 +1038,17 @@ c = {
         end
 
         local done = false
+        local startFrame = emu.framecount()
+        local panicAbort = 50
 
         while not done do
             if not c.Player().isAlive then
+                c.Debug('Player died')
+                return false
+            end
+
+            if emu.framecount() - startFrame > panicAbort then
+                c.Debug(string.format('Aborting after %s frames of no success', panicAbort))
                 return false
             end
 
@@ -1045,11 +1056,11 @@ c = {
                 if checkJustDig() then
                     c.PushFor(digBtn)
                 else
-                    c.PushBtnsFor({horizontalDirection, digBtn})
+                    c.PushBtnsFor({direction, digBtn})
                 end
                 done = true
             else
-                c.PushFor(horizontalDirection)
+                c.PushFor(direction)
             end
         end
 

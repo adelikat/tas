@@ -35,8 +35,6 @@ while not c.IsDone() do
     c.WalkOverEnemy('Left')
     c.LeftUntil(24)
 
-    -- c.Marker('temp')
-
     c.UntilDig('Left', 'B')
     c.WalkOverEnemy('Left')
 
@@ -55,13 +53,6 @@ while not c.IsDone() do
     c.GrabLadderLeft()
     c.ClimbUntil(9)
     c.UntilGoldLeft()
-
-    -- Hack to reduce lag potentially
-    -- c.GrabLadderRight('Down')
-    -- c.ClimbUntil(10)
-    -- c.WaitFor(4)
-    -- c.ClimbUntil(9)
-    ---------------------
 
     c.Assert(c.FrameSearch(function() return c.RightUntil(18) end, 35))
     c.GrabLadderRight()
