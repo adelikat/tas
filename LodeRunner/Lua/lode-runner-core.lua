@@ -788,11 +788,15 @@ c = {
             console.log('Do not use UntilGold with Up, use ClimbUntilGold instead')
         end
 
-        if (direction ~= 'Left' and direction ~= 'Right' and direction ~= 'Up' and direction ~= 'Down') then
-            error('invalid direction for ladder grab: ' .. direction)
-        end
+        _validateDirection(direction)
+
+        --TODO: panic bail after x number of frames
         local currentGold = memory.readbyte(0x0093)
         while memory.readbyte(0x0093) == currentGold do
+            if not c.Player().isAlive then
+                c.Debug('Player died while attempting to get gold')
+                return false
+            end
             c.PushFor(direction)
         end
         return true
