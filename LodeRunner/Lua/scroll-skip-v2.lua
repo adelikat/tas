@@ -45,7 +45,7 @@ function FindSkipFromBeginningOfLevel()
 
     c.Load('lv1-select-skip')
 
-    c.Debug(string.format('evail: GameMode %s, origX: %s, newX: %s', gameMode, origX, newX))
+    c.Debug(string.format('eval: GameMode %s, origX: %s, newX: %s', gameMode, origX, newX))
 
     return gameMode == 1 and newX ~= origX
 end
