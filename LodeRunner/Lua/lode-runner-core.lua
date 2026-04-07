@@ -915,7 +915,15 @@ c = {
             direction = 'Down'
         end
 
+        local panicAbort = 50
+        local startFrame = emu.framecount()
+
         while y ~= targetY do
+            if emu.framecount() - startFrame > panicAbort then
+                c.Debug(string.format('Aborting after %s frames of no success', panicAbort))
+                return false
+            end
+
             c.PushFor(direction)
             y = c.Player().levelY
             if c.Player().isAlive == false then
