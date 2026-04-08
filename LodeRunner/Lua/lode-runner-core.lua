@@ -819,10 +819,17 @@ c = {
             if newGold < startGold then
                 done = true
             else
-                c.PushFor('Up')
-                newGold = memory.readbyte(0x0093)
+                -- Try pushing both and see if gold is obtained
+                c.PushBtnsFor({'Up', nextDirection})
+                local newGold = memory.readbyte(0x0093)
                 if newGold < startGold then
                     done = true
+                else
+                    c.PushFor('Up')
+                    newGold = memory.readbyte(0x0093)
+                    if newGold < startGold then
+                        done = true
+                    end
                 end
             end
         end
