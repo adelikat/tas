@@ -783,16 +783,23 @@ c = {
     UntilGoldRight = function()
         return c.UntilGold('Right')
     end,
-    UntilGold = function(direction)
+    UntilGold = function(direction, paniceAbortFrames)
         if direction == 'Up' then
             console.log('Do not use UntilGold with Up, use ClimbUntilGold instead')
         end
 
         _validateDirection(direction)
 
-        --TODO: panic bail after x number of frames
+        local panicAbort = paniceAbortFrames or 75
+        local startFrame = emu.framecount()
+
         local currentGold = memory.readbyte(0x0093)
         while memory.readbyte(0x0093) == currentGold do
+            if emu.framecount() - startFrame > panicAbort then
+                c.Debug(string.format('Aborting gold get after %s frames of no success', panicAbort))
+                return false
+            end
+
             if not c.Player().isAlive then
                 c.Debug('Player died while attempting to get gold')
                 return false
@@ -867,7 +874,21 @@ c = {
 
         -- step 2, keep trying to press vertically until y changes, if it does not, just press horizontal
         local done = false
+        local lastX = c.Player().xPos()
+        local numberOfTimesSame = -1
         while not done do
+            local newX = c.Player().xPos()
+            if newX ~= lastX then
+                lastX = newX
+            else
+                numberOfTimesSame = numberOfTimesSame + 1
+            end
+
+            -- If we fail to make progress we maybe running into a wall, something is wrong so bail out
+            if numberOfTimesSame > 16 then
+                return false
+            end
+
             c.Save('grab-try')
             local before = c.Player().yPos()
             c.PushBtnsFor({horizontalDirection, verticalDirection})
