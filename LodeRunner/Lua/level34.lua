@@ -55,9 +55,9 @@ local function DigRoute()
     c.GrabLadderLeft()
     c.ClimbUntil(5)
 
-    --c.GrabLadderRight()
-    c.PushRight() --Ugh
-    c.PushUpAndRight()
+    c.GrabLadderRight()
+    --c.PushRight() --Ugh
+    --c.PushUpAndRight()
 
     c.ClimbUntil(4)
     c.GrabLadderRight()
@@ -151,9 +151,9 @@ local function V5Route()
     c.GrabLadderRight()
     c.ClimbUntil(5)
 
-    --c.GrabLadderLeft()
-    c.PushLeft()  --ugh
-    c.PushUpAndLeft()
+    c.GrabLadderLeft()
+    --c.PushLeft()  --ugh
+    --c.PushUpAndLeft()
 
     c.ClimbUntil(4)
     c.GrabLadderLeft('Down')
