@@ -12,6 +12,14 @@ if c.GameMode() ~= 1 then
 end
 
 while not c.IsDone() do
+    c.UntilGoldRight()
+    c.GrabLadderLeft()
+    c.ClimbUntil(11)
+
+
+    c.GrabAndClimbOneRight()
+    c.GrabAndClimbOneLeft()
+
     c.Done()
 end
 

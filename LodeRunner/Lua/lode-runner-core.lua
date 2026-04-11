@@ -23,6 +23,36 @@ local function _validateVerticalDirection(direction)
     end
 end
 
+function _tableToString(tbl, indent)
+    indent = indent or 0
+    local result = "{\n"
+    local indentStr = string.rep("  ", indent + 1)
+
+    for k, v in pairs(tbl) do
+        local key
+        if type(k) == "string" then
+            key = string.format("%q", k)
+        else
+            key = tostring(k)
+        end
+
+        result = result .. indentStr .. "[" .. key .. "] = "
+
+        if type(v) == "table" then
+            result = result .. _tableToString(v, indent + 1)
+        elseif type(v) == "string" then
+            result = result .. string.format("%q", v)
+        else
+            result = result .. tostring(v)
+        end
+
+        result = result .. ",\n"
+    end
+
+    result = result .. string.rep("  ", indent) .. "}"
+    return result
+end
+
 local function _tastudioGoToFrame(frame)
     tastudio.setplayback(frame)
     client.unpause()
@@ -230,6 +260,12 @@ local function _playerDied()
 
     return false
 end
+
+function _lvXYStr()
+    local p = c.Player()
+    return string.format('(%s,%s)', p.levelX, p.levelY)
+end
+
 
 -- a key value pair of label and frame number to store when c.Save is called with that label
 local saveFrameDict = {}
@@ -1146,4 +1182,103 @@ c = {
             end
         end)
      end,
+     GrabAndClimbOneLeft = function() return c.GrabAndClimbOne('Left') end,
+     GrabAndClimbOneRight = function() return c.GrabAndClimbOne('Right') end,
+     GrabAndClimbOne = function(horizontalDirection)
+        _validateHorizontalDirection(horizontalDirection)
+
+        local TryOne = function(h, tX, tY)
+            c.Debug(string.format('TryOne - Current: %s Target: (%s, %s)', _lvXYStr(), tX, tY))
+            c.Save('g-and-c-1')
+
+            local best = {
+                xy = 0,
+                btns = nil
+            }
+
+            local Try = function(btns)
+                c.PushBtnsFor(btns)
+                c.WaitFor(1)
+
+                local xy = c.Player().xPos() + ((13 - c.Player().yPos()) * 10)
+                if horizontalDirection == 'Left' then
+                    xy = (27 - c.Player().xPos()) + ((13 - c.Player().yPos()) * 10)
+                end
+                c.Debug(string.format('eval: x: %s y: %s eval: %s', c.Player().xPos(), c.Player().yPos(), xy))
+                if xy >= best.xy then
+                    c.Debug(string.format('New Best prev %s new %s', best.xy, xy))
+                    best.xy = xy
+                    best.btns = btns
+                    c.Debug(string.format('New best btns %s', _tableToString(best.btns)))
+                end
+            end
+
+            -- First try both
+            local btns = {h, 'Up'}
+            c.Debug('Try Up and ' .. h)
+            Try({h, 'Up'})
+
+            c.Load('g-and-c-1')
+
+            -- Try just h, if better or equal, prefer it
+            c.Debug('Try just ' .. h)
+            Try({h})
+            c.Load('g-and-c-1')
+
+            -- just u, if better or equal, prefer it
+            c.Debug('Try just Up')
+            Try({'Up'})
+            c.Load('g-and-c-1')
+
+            c.PushBtnsFor(best.btns)
+            c.Debug(string.format('eval of best: %s', best.xy))
+            c.Debug(string.format('%s', _tableToString(best.btns)))
+            c.Debug(string.format('TryOne - Final: %s Target: (%s, %s)', _lvXYStr(), tX, tY))
+        end
+
+        local x = c.Player().levelX
+        local targetX = x + (horizontalDirection == 'Left' and -1 or 1)
+
+        local y = c.Player().levelY
+        local targetY = y - 1
+
+        local foundX = false
+        local foundY = false
+
+        local abortAt = emu.framecount() + 16
+
+        c.Debug(string.format('Moving %s starting from (%s,%s) to (%s,%s)', horizontalDirection, x, y, targetX, targetY))
+
+        while not foundX or not foundY do
+            c.Debug(string.format('%s Try One', emu.framecount()))
+            TryOne(horizontalDirection, targetX, targetY)
+            if not c.Player().isAlive then
+                c.Debug('player died, aborting')
+                return false
+            end
+
+            if c.Player().isFalling then
+                c.Debug('player is falling, aborting')
+                return false
+            end
+
+            if emu.framecount() == abortAt then
+                c.Debug(string.format('attempts exceeded %s frames, aborting', abortAt))
+                return false
+            end
+
+            if c.Player().levelX == targetX then
+                c.Debug('Level X found')
+                foundX = true
+            end
+            if c.Player().levelY == targetY then
+                c.Debug('Level Y found')
+                foundY = true
+            end
+        end
+
+
+        c.Debug(string.format('Done %s', lvXYStr()))
+        return true
+    end,
 }
