@@ -1038,12 +1038,14 @@ c = {
     UntilFall = function(horizontalDirection)
         _validateHorizontalDirection(horizontalDirection)
 
+        local startX = c.Player().levelX
         -- If already falling, give it 1 frame before giving up, so we can stack these
         if c.Player().isFalling then
             c.PushFor(horizontalDirection)
         end
 
-        if c.Player().isFalling then
+        -- Its possible the 1 frame was a enough to start the next fall already, so check x position too
+        if c.Player().isFalling and c.Player().levelX == startX then
             console.log('Player is already falling')
             return true
         end
