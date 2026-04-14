@@ -1280,7 +1280,7 @@ c = {
         end
 
 
-        c.Debug(string.format('Done %s', lvXYStr()))
+        c.Debug(string.format('Done %s', _lvXYStr()))
         return true
     end,
 }
