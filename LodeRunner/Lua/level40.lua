@@ -109,7 +109,7 @@ while not c.IsDone() do
     c.UntilDig('Left', 'B')
     c.FallLeft()
 
-    c.WaitFor(2)
+    c.WaitFor(2) -- Manip enemy spawn to be 20
     c.UntilDig('Left', 'B')
     c.FallLeft()
     c.LeftUntil(20)
@@ -129,7 +129,7 @@ while not c.IsDone() do
     c.Assert(c.WalkOverEnemy('Right'))
     c.GrabLadderRight()
     c.ClimbUntil(9)
-    c.PushUp()
+    c.PushUp() -- Depending on lag this might need 2 pushes
 
     c.Assert(c.FrameSearch(function()
         local result = c.ClimbUntil(8)
