@@ -12,45 +12,43 @@ if c.GameMode() ~= 1 then
 end
 
 while not c.IsDone() do
-    -- c.GrabLadderLeft()
-    -- c.ClimbUntil(11)
-    -- c.UntilDig('Left', 'A')
-    -- c.UntilGoldLeft()
-    -- c.FallRight()
-    -- c.UntilDig('Right', 'B')
+    c.GrabLadderLeft()
+    c.ClimbUntil(11)
+    c.UntilDig('Left', 'A')
+    c.UntilGoldLeft()
+    c.FallRight()
+    c.UntilDig('Right', 'B')
 
-    -- c.BestOf({
-    --     c.UntilGoldLeft,
-    --     function()
-    --         c.ClimbUntil(13)
-    --         return c.UntilGoldLeft()
-    --     end,
-    -- })
+    c.BestOf({
+        c.UntilGoldLeft,
+        function()
+            c.ClimbUntil(13)
+            return c.UntilGoldLeft()
+        end,
+    })
 
-    -- c.RightUntil(16)
-    -- c.GrabLadderRight()
-    -- c.ClimbUntil(12)
-    -- c.RightUntil(22)
+    c.RightUntil(16)
+    c.GrabLadderRight()
+    c.ClimbUntil(12)
+    c.RightUntil(22)
 
-    -- c.WaitFor(1) -- Reduces lag for some reason
-    -- c.UntilDig('Right', 'A')
-    -- c.WalkOverEnemy('Right')
-    -- c.GrabLadderRight()
+    c.WaitFor(1) -- Reduces lag for some reason
+    c.UntilDig('Right', 'A')
+    c.WalkOverEnemy('Right')
+    c.GrabLadderRight()
 
-    -- c.ClimbUntil(3)
+    c.ClimbUntil(3)
 
-    -- c.LeftUntil(16)
-    -- c.UntilDig('Left', 'B')
-    -- c.Assert(c.FrameSearch(function()
-    --     c.FallLeft()
-    --     return c.Enemy(3).levelX > 12
-    -- end))
-    -- c.GrabLadderRight()
-    -- c.ClimbUntil(7)
-    -- c.UntilGoldRight()
-    -- c.UntilGoldRight()
-
-    -- c.Marker('temp')
+    c.LeftUntil(16)
+    c.UntilDig('Left', 'B')
+    c.Assert(c.FrameSearch(function()
+        c.FallLeft()
+        return c.Enemy(3).levelX > 12
+    end))
+    c.GrabLadderRight()
+    c.ClimbUntil(7)
+    c.UntilGoldRight()
+    c.UntilGoldRight()
 
     c.GrabLadderLeft('Down')
     c.ClimbUntil(9)
@@ -103,7 +101,7 @@ while not c.IsDone() do
     c.GrabLadderLeft()
     c.ClimbUntilLevelEnd()
 
-    -- c.Marker('lv 42 end')
+    c.Marker('lv 42 end')
 
     c.Done()
 end
