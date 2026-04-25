@@ -48,41 +48,50 @@ while not c.IsDone() do
     c.RightFor(1) -- Over E3's head
     c.GrabLadderRight()
     c.ClimbUntilGold('Down')
-    c.ClimbUntil(5)
 
-    c.RightFor(1)
+    c.ClimbUntil(5)
+    c.GrabLadderRight('Down')
     c.ClimbUntil(6)
     c.FinishFalling()
-    c.GrabLadderRight('Down')
     c.ClimbUntil(8)
+    c.FinishFalling()
+    c.GrabLadderRight('Down')
+    c.ClimbUntil(9)
     c.FallRight()
-        c.LeftUntil(19)
+    c.LeftUntil(19)
+    c.GrabLadderLeft()
+    c.ClimbUntil(9)
+    c.FallRight()
     c.GrabLadderLeft()
     c.ClimbUntil(9)
     c.FallLeft()
-    c.GrabLadderRight()
-    c.ClimbUntil(9)
-    c.FallRight()
-    c.LeftUntil(16)
-    c.GrabLadderLeft()
-    c.ClimbUntil(9)
-    c.WaitFor(2)
-    c.FallLeft()
-    c.LeftUntil(13)
+
+    c.Assert(c.FrameSearch(function()
+        if not c.GrabLadderLeft() then return false end
+        if not c.ClimbUntil(10) then return false end
+        if not c.GrabLadderLeft()  then return false end
+        if not c.ClimbUntil(9)  then return false end
+        return c.FallLeft()
+    end))
+
     c.ClimbUntil(13)
     c.LeftUntil(11)
 
-    c.Assert(c.FrameSearch(function()
-        return c.ClimbUntil(10)
-    end))
-
+    c.ClimbUntil(10)
     c.ClimbUntilGold('Left')
+
+    c.GrabLadderLeft('Down')
+    c.ClimbUntil(11)
     c.FallLeft()
+
     c.GrabLadderLeft()
     c.ClimbUntil(9)
     c.FallLeft()
     c.GrabLadderRight()
+    c.WaitFor(1) -- reduces lag
     c.ClimbUntilLevelEnd()
+
+    c.Marker('lv 44 end')
 
     c.Done()
 end
