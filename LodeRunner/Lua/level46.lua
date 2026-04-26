@@ -36,6 +36,8 @@ while not c.IsDone() do
     c.ClimbUntil(1)
     c.RightUntil(9)
 
+            c.WaitFor(1) -- Manip E3 spawn
+
     c.UntilDig('Right', 'A')
     c.LeftUntil(7)
     c.UntilDig('Left', 'A')
@@ -61,7 +63,7 @@ while not c.IsDone() do
     c.FallRight()
     c.LeftUntil(20)
 
-    c.WaitFor(10)
+    c.WaitFor(18) -- speed optimization
     c.Assert(c.FrameSearch(function()
         if not c.ClimbUntil(9) then return false end
         if not c.LeftUntil(14) then return false end

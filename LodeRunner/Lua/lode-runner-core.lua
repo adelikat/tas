@@ -913,6 +913,10 @@ c = {
         local lastX = c.Player().xPos()
         local numberOfTimesSame = -1
         while not done do
+            if not c.Player().isAlive then
+                return false
+            end
+
             local newX = c.Player().xPos()
             if newX ~= lastX then
                 lastX = newX
