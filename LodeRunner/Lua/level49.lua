@@ -12,6 +12,8 @@ if c.GameMode() ~= 1 then
 end
 
 while not c.IsDone() do
+    c.WaitFor(16)
+    c.FallLeft()
     c.Done()
 end
 
