@@ -12,58 +12,54 @@ if c.GameMode() ~= 1 then
 end
 
 while not c.IsDone() do
-    -- c.LeftUntil(8)
-    -- c.GrabLadderLeft()
-    -- c.ClimbUntil(8)
-    -- c.UntilGoldLeft()
+    c.LeftUntil(8)
+    c.GrabLadderLeft()
+    c.ClimbUntil(8)
+    c.UntilGoldLeft()
 
-    -- c.RightUntil(6)
-    -- c.PushBtnsFor({'Right', 'Down'}, 5) -- Random btns that make E2 lag enough to walk over him at the top
-    -- c.RightUntil(8)
-    -- --c.GrabLadderRight()
-    -- c.ClimbUntil(6)
+    c.RightUntil(6)
+    c.PushBtnsFor({'Right', 'Down'}, 5) -- Random btns that make E2 lag enough to walk over him at the top
+    c.RightUntil(8)
+    --c.GrabLadderRight()
+    c.ClimbUntil(6)
 
-    -- c.WaitFor(1)
-    -- c.Assert(c.FrameSearch(function()
-    --     if not c.ClimbUntil(5) then return false end
-    --     if not c.UntilGoldLeft() then return false end
-    --     if not c.GrabLadderRight() then return false end
-    --     return c.ClimbUntil(3)
-    -- end))
+    c.WaitFor(1)
+    c.Assert(c.FrameSearch(function()
+        if not c.ClimbUntil(5) then return false end
+        if not c.UntilGoldLeft() then return false end
+        if not c.GrabLadderRight() then return false end
+        return c.ClimbUntil(3)
+    end))
 
-    -- c.UntilGoldLeft()
-    -- c.GrabLadderRight()
-    -- c.ClimbUntil(1)
-    -- c.RightUntil(9)
+    c.UntilGoldLeft()
+    c.GrabLadderRight()
+    c.ClimbUntil(1)
+    c.RightUntil(9)
 
-    -- c.UntilDig('Right', 'A')
-    -- c.LeftUntil(7)
-    -- c.UntilDig('Left', 'A')
-    -- c.UntilGoldLeft()
-    -- c.RightUntil(6)
-    -- c.Assert(c.FallRight())
+    c.UntilDig('Right', 'A')
+    c.LeftUntil(7)
+    c.UntilDig('Left', 'A')
+    c.UntilGoldLeft()
+    c.RightUntil(6)
+    c.Assert(c.FallRight())
 
-    -- c.RightUntil(14)
-    -- c.GrabLadderRight()
-    -- c.ClimbUntil(2)
+    c.RightUntil(14)
+    c.GrabLadderRight()
+    c.ClimbUntil(2)
 
-    -- c.Marker('temp')
-
-    -- c.ClimbUntilGold('Right')
-    -- c.RightUntil(26)
-    -- c.UntilDig('Right', 'B')
-    -- c.FallLeft()
-    -- c.GrabLadderLeft('Down')
-    -- c.ClimbUntil(7)
-    -- c.LeftUntil(15)
-    -- c.GrabLadderLeft('Down')
-    -- c.ClimbUntil(9)
-    -- c.RightUntil(25)
-    -- c.UntilDig('Right', 'A')
-    -- c.FallRight()
-    -- c.LeftUntil(20)
-
-    -- c.Marker('temp')
+    c.ClimbUntilGold('Right')
+    c.RightUntil(26)
+    c.UntilDig('Right', 'B')
+    c.FallLeft()
+    c.GrabLadderLeft('Down')
+    c.ClimbUntil(7)
+    c.LeftUntil(15)
+    c.GrabLadderLeft('Down')
+    c.ClimbUntil(9)
+    c.RightUntil(25)
+    c.UntilDig('Right', 'A')
+    c.FallRight()
+    c.LeftUntil(20)
 
     c.WaitFor(10)
     c.Assert(c.FrameSearch(function()
