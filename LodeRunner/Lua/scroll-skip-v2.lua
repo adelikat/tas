@@ -1,8 +1,8 @@
-local maxDelay = 15
-local maxSkipDelay = 100
+local maxDelay = 7
+local maxSkipDelay = 15
 local direction = 'Left'
 local changeSpeedSlower = false
-local changeSpeedFaster = false
+local changeSpeedFaster = true
 
 if direction ~= 'Left' and direction ~= 'Right' then
     error('invalid direction')
