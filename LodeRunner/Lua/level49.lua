@@ -115,15 +115,26 @@ while not c.IsDone() do
         end,
     })
 
+    c.LeftUntil(18)
     c.UntilDig('Left', 'B')
-    c.ClimbUntil(6)
-    c.FallLeft()
-    c.RightUntil(18)
+    c.RightUntil(19)
     c.UntilDig('Right', 'A')
-    c.UntilDig('Left', 'A')
-    c.WalkOverEnemy('Right')
-    c.GrabLadderRight()
-    c.ClimbUntil(1)
+
+    c.Assert(c.FrameSearch(function()
+        c.PushDown()
+        if not c.Player().isAlive then return false end
+        if not c.FinishFalling() then return false end
+        if not c.GrabLadderRight() then return false end
+        if not c.ClimbUntil(8) then return false end
+        if not c.UntilGoldLeft() then return false end
+        if not c.GrabLadderRight() then return false end
+        if not c.ClimbUntil(6) then return false end
+        if not c.UntilGoldLeft() then return false end
+        if not c.GrabLadderRight() then return false end
+        if not c.ClimbUntil(1) then return false end
+        return true
+    end))
+
     c.LeftUntil(15)
     c.FinishFalling()
     c.GrabLadderLeft()
@@ -135,7 +146,6 @@ while not c.IsDone() do
     c.ClimbUntilLevelEnd()
 
     c.Marker('lv 49 end')
-
 
     c.Done()
 end
