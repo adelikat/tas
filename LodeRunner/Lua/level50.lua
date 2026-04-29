@@ -13,6 +13,97 @@ end
 
 while not c.IsDone() do
     c.UntilGoldLeft()
+    c.RightUntil(11)
+    c.GrabLadderRight()
+    c.ClimbUntil(11)
+
+    c.Assert(c.FrameSearch(function()
+        if not c.ClimbUntil(10) then return false end
+        if not c.LeftFor(1) then return false end
+        if not c.GrabLadderLeft() then return false end
+        return true
+    end))
+
+    c.ClimbUntil(7)
+    c.LeftFor(2)
+    c.GrabLadderLeft()
+    c.ClimbUntil(6)
+    c.GrabAndClimbOneLeft()
+    c.ClimbUntil(2)
+    c.FallRight()
+    c.RightFor(5)
+    c.GrabLadderRight()
+    c.ClimbUntil(2)
+    c.FallRight()
+
+    c.RightFor(2)
+    c.GrabAndClimbOneRight()
+    c.GrabAndClimbOneLeft()
+    c.GrabAndClimbOneLeft()
+    c.GrabAndClimbOneLeft()
+    c.ClimbUntil(1)
+    c.GrabLadderRight('Down') -- Falling from pole but it works
+    c.UntilDig('Right', 'B')
+    c.UntilGoldRight()
+    c.FallLeft()
+
+    c.ClimbUntil(6)
+    c.FinishFalling()
+    c.PushDown()
+    c.FinishFalling()
+    c.UntilDig('Right', 'B')
+    c.FallLeft()
+    c.UntilGoldRight()
+    c.LeftUntil(23)
+    c.UntilDig('Left', 'A')
+    c.ClimbUntil(11)
+    c.FinishFalling()
+    c.UntilDig('Left', 'A')
+    c.Assert(c.FrameSearch(c.UntilGoldRight))
+    c.LeftFor(2)
+
+    c.BestOf({
+        function() -- route 1
+            c.GrabLadderLeft()
+            c.ClimbUntil(10)
+            c.LeftFor(4)
+            c.GrabLadderLeft()
+            c.ClimbUntil(8)
+            c.ClimbUntilGold('Left')
+            c.LeftFor(2)
+            c.GrabLadderLeft()
+            c.ClimbUntilGold('Left')
+            c.GrabLadderLeft()
+            c.ClimbUntil(1)
+            c.FallLeft()
+            c.LeftFor(1)
+            c.GrabLadderLeft()
+            c.ClimbUntil(3)
+            c.UntilGoldRight()
+            c.GrabLadderLeft()
+            return c.ClimbUntilLevelEnd()
+        end,
+        function() -- route 2
+            c.FallLeft()
+            c.GrabLadderLeft()
+            c.ClimbUntil(10)
+            c.LeftFor(1)
+            c.GrabLadderLeft()
+            c.ClimbUntilGold('Left')
+            c.LeftFor(2)
+            c.GrabLadderLeft()
+            c.ClimbUntilGold('Left')
+            c.GrabLadderLeft()
+            c.ClimbUntil(1)
+            c.FallLeft()
+            c.LeftFor(1)
+            c.GrabLadderLeft()
+            c.ClimbUntil(3)
+            c.UntilGoldRight()
+            c.GrabLadderLeft()
+            return c.ClimbUntilLevelEnd()
+        end
+    })
 
     c.Done()
 end
