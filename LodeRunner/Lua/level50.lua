@@ -12,6 +12,8 @@ if c.GameMode() ~= 1 then
 end
 
 while not c.IsDone() do
+    c.UntilGoldLeft()
+
     c.Done()
 end
 
