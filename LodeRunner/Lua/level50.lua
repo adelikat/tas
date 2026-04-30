@@ -24,6 +24,9 @@ while not c.IsDone() do
         return true
     end))
 
+    c.ClimbUntil(8)
+    c.WaitFor(1) -- This delay manips enemy position to save about 20 frames of lag later in the level
+
     c.ClimbUntil(7)
     c.LeftFor(2)
     c.GrabLadderLeft()
@@ -62,48 +65,35 @@ while not c.IsDone() do
     c.Assert(c.FrameSearch(c.UntilGoldRight))
     c.LeftFor(2)
 
-    c.BestOf({
-        function() -- route 1
-            c.GrabLadderLeft()
-            c.ClimbUntil(10)
-            c.LeftFor(4)
-            c.GrabLadderLeft()
-            c.ClimbUntil(8)
-            c.ClimbUntilGold('Left')
-            c.LeftFor(2)
-            c.GrabLadderLeft()
-            c.ClimbUntilGold('Left')
-            c.GrabLadderLeft()
-            c.ClimbUntil(1)
-            c.FallLeft()
-            c.LeftFor(1)
-            c.GrabLadderLeft()
-            c.ClimbUntil(3)
-            c.UntilGoldRight()
-            c.GrabLadderLeft()
-            return c.ClimbUntilLevelEnd()
-        end,
-        function() -- route 2
-            c.FallLeft()
-            c.GrabLadderLeft()
-            c.ClimbUntil(10)
-            c.LeftFor(1)
-            c.GrabLadderLeft()
-            c.ClimbUntilGold('Left')
-            c.LeftFor(2)
-            c.GrabLadderLeft()
-            c.ClimbUntilGold('Left')
-            c.GrabLadderLeft()
-            c.ClimbUntil(1)
-            c.FallLeft()
-            c.LeftFor(1)
-            c.GrabLadderLeft()
-            c.ClimbUntil(3)
-            c.UntilGoldRight()
-            c.GrabLadderLeft()
-            return c.ClimbUntilLevelEnd()
-        end
-    })
+    c.FallLeft()
+    c.GrabLadderLeft()
+
+    c.ClimbUntil(11)
+
+    c.WaitFor(8)
+    c.Assert(c.FrameSearch(function()
+        if not c.ClimbUntil(10) then return false end
+        if not c.LeftFor(1) then return false end
+        if not c.GrabLadderLeft() then return false end
+        return true
+    end))
+
+    c.ClimbUntilGold('Left')
+    c.LeftFor(2)
+    c.GrabLadderLeft()
+    c.ClimbUntil(6)
+    c.GrabAndClimbOneLeft()
+    c.ClimbUntil(2)
+    c.UntilGoldRight()
+    c.GrabLadderLeft()
+    c.ClimbUntil(1)
+    c.FallLeft()
+    c.LeftFor(1)
+    c.GrabLadderLeft()
+    c.ClimbUntil(3)
+    c.UntilGoldRight()
+    c.GrabLadderLeft()
+    c.ClimbUntilLevelEnd()
 
     c.Done()
 end

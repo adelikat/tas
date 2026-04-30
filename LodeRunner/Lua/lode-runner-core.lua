@@ -917,6 +917,7 @@ c = {
                 return false
             end
 
+
             local newX = c.Player().xPos()
             if newX ~= lastX then
                 lastX = newX
