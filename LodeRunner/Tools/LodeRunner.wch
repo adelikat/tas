@@ -3,5 +3,4 @@ SystemID NES
 0053	b	u	0	RAM	Spawn/Drop Timer
 0004	b	u	0	RAM	Camera X
 00A0	b	u	0	RAM	Dig sequence
-0742	b	u	0	RAM	
 
