@@ -1,0 +1,5 @@
+SystemID NES
+03E0	b	u	0	RAM	P X
+03E5	b	u	0	RAM	P Y
+00DA	b	u	0	RAM	P HP
+
