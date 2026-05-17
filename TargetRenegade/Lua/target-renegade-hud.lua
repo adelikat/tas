@@ -8,6 +8,10 @@ local function getEnemy(num)
 end
 
 local function drawEnemy(e)
+    if (e.hp >= 250) then
+        return
+    end
+
     local playerY = memory.readbyte(0x03E5)
 
     local color = 'white'

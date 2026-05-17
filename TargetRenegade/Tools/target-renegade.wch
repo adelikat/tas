@@ -11,4 +11,5 @@ SystemID NES
 0407	b	u	0	RAM	E3 HP
 03E4	b	u	0	RAM	E3 X
 03E9	b	u	0	RAM	E3 Y
+00C6	b	u	0	RAM	E Left
 
