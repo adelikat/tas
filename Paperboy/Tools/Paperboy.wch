@@ -1,6 +1,10 @@
 SystemID NES
+00BA	b	u	0	RAM	Speed
 0006	b	u	0	RAM	Level X
 0090	b	u	0	RAM	Level X 2nd byte
 0007	b	u	0	RAM	Level Y
 0008	b	u	0	RAM	Level Y 2nd byte
+00BB	b	u	0	RAM	Subpixel?
+00AD	b	u	0	RAM	
+008A	b	u	0	RAM	RNG
 
